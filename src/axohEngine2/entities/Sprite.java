@@ -76,7 +76,6 @@ public class Sprite extends Object {
         entity = new ImageEntity(frame);
         image = null;
         entity.setGraphics(g2d);
-        entity.setAlive(true);
         currentState = 0;
         _collided = false;
         _lifespan = 0;
@@ -204,18 +203,18 @@ public class Sprite extends Object {
      * @return - x or y position of the bound being collided
      *******************************************************************/
     public double getBoundX(int hitDir) { 
-    	if(hitDir == 0) return entity.getX() + _boundLeftX;
-    	if(hitDir == 1) return entity.getX() + _boundRightX;
-    	if(hitDir == 2) return entity.getX() + _boundHeadX;
-    	if(hitDir == 3) return entity.getX() + _boundLegX;
-    	return entity.getX() + nx;
+    	if(hitDir == 0) return _boundLeftX;
+    	if(hitDir == 1) return _boundRightX;
+    	if(hitDir == 2) return _boundHeadX;
+    	if(hitDir == 3) return _boundLegX;
+    	return nx;
     }
     public double getBoundY(int hitDir) {
-    	if(hitDir == 0) return entity.getY() + _boundLeftY;
-    	if(hitDir == 1) return entity.getY() + _boundRightY;
-    	if(hitDir == 2) return entity.getY() + _boundHeadY;
-    	if(hitDir == 3) return entity.getY() + _boundLegY;
-    	return entity.getY() + ny; 
+    	if(hitDir == 0) return _boundLeftY;
+    	if(hitDir == 1) return _boundRightY;
+    	if(hitDir == 2) return _boundHeadY;
+    	if(hitDir == 3) return _boundLegY;
+    	return ny; 
     }
     
     /********************************************************
@@ -278,14 +277,6 @@ public class Sprite extends Object {
 	    	if(nx != 0 || ny != 0) return entity.getBounds(boundSize, nx, ny); 
 	    	else return entity.getBounds(boundSize);
     }
-    
-    /***************************************************************
-     * Setting alive boolean of the sprite and checking its status
-     * 
-     * @return - Is the sprite Alive?
-     ***************************************************************/
-    public boolean alive() { return entity.isAlive(); }
-    public void setAlive(boolean alive) { entity.setAlive(alive); }
 
     /***************************************************************
      * Returns the source image width/height
@@ -329,30 +320,5 @@ public class Sprite extends Object {
      ************************************************/
     public boolean collided() { return _collided; }
     public void setCollided(boolean collide) { _collided = collide; }
-
-    /********************************************************************************************
-     * Lifespan related methods
-     * 
-     * lifespan and lifeage are used to defin the possibility of a sprite getting taken out of 
-     * the system after a period of time known as the lifespan. Each update after the sprite
-     * is created, lifeage goes up by 1. If lifeage becomes greater than lifespan, the
-     * sprite is killed and taken out of the system. This is done every update.
-     * 
-     * It is also possible to set the lifespan or lifeage at a time after the sprite has begun existing
-     * @return - Int lifespan or lifeage
-     *********************************************************************************************/
-    public int lifespan() { return _lifespan; }
-    public void setLifespan(int life) { _lifespan = life; }
-    public int lifeage() { return _lifeage; }
-    public void setLifeage(int age) { _lifeage = age; }
-    public void updateLifetime() {
-        //if lifespan is used, it must be > 0
-        if (_lifespan > 0) {
-            _lifeage++;
-            if (_lifeage > _lifespan) { //Set a time limit for a sprite to exist
-                setAlive(false);
-                _lifeage = 0;
-            }
-        }
-    }//end update lifeTime
+    
 }

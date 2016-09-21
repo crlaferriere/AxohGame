@@ -15,12 +15,14 @@ package axohEngine2.entities;
 
 //Imports
 import java.awt.Graphics2D;
+
 import java.util.LinkedList;
 import java.util.Random;
 
 import javax.swing.JFrame;
 
 import axohEngine2.project.TYPE;
+import axohEngine2.util.Vector2D;
 
 public class Mob extends AnimatedSprite{
 	
@@ -47,6 +49,7 @@ public class Mob extends AnimatedSprite{
 	private int yy;
 	private int primaryDirection = 2;  //0 = left, 1 = right, 2 = up, 3 = down
 	private int speed = 4;
+	private Vector2D position;
 	
 	private boolean attacking;
 	private boolean takenOut = false;
@@ -73,6 +76,8 @@ public class Mob extends AnimatedSprite{
 	private Graphics2D g2d;
 	private JFrame frame;
 	
+	private boolean _isAlive;
+	
 	/************************************************************************
 	 * Constructor
 	 *  
@@ -97,6 +102,8 @@ public class Mob extends AnimatedSprite{
 		setSolid(true);
 		setAlive(true);
 		setSpriteType(ai);
+		position = new Vector2D();
+
 	}
 	
 	//Getters for name and ai type
@@ -108,6 +115,12 @@ public class Mob extends AnimatedSprite{
 	public void setAi(TYPE ai) { this.ai = ai; }
 	public void setName(String name) { super._name = name; }
 	public void setSpeed(int speed) { this.speed = speed; }
+	public boolean isAlive() {
+		return _isAlive;
+	}
+	public void setAlive(boolean value) {
+		_isAlive = value;
+	}
 	
 	/**************************************************
 	 * Set all of the movement related variables to whatever nothing is
@@ -408,8 +421,8 @@ public class Mob extends AnimatedSprite{
 	 * 
 	 * @return - x or y int of location
 	 ***************************************************/
-	public double getXLoc() { return entity.getX(); }
-	public double getYLoc() { return entity.getY(); }
+	public double getXLoc() { return position.getX(); }
+	public double getYLoc() { return position.getY(); }
 	public void setLoc(int x, int y) { //Relative to current position
 		xx = xx + x;
 		yy = yy + y;
@@ -423,7 +436,7 @@ public class Mob extends AnimatedSprite{
 	 ***********************************************/
 	public void renderMob(int x, int y) {
 		g2d.drawImage(getImage(), x + xx, y + yy, getSpriteSize(), getSpriteSize(), frame);
-		entity.setX(x + xx);
-		entity.setY(y + yy);
+		position.setX(x + xx);
+		position.setY(y + yy);
 	}
 }

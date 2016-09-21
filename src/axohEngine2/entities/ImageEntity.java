@@ -24,7 +24,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
-public class ImageEntity extends BaseGameEntity {
+public class ImageEntity extends Object {
 	
 	/************************
 	 * Variables
@@ -51,7 +51,6 @@ public class ImageEntity extends BaseGameEntity {
 	public ImageEntity(JFrame frame) {
 		this.frame = frame;
 		setImage(null);
-		setAlive(true);
 	}
 	
 	/*************************************************
@@ -100,14 +99,14 @@ public class ImageEntity extends BaseGameEntity {
 	 * @return - Int center X position of an image
 	 *********************************************/
 	public double getCenterX() {
-		return getX() + width() / 2;
+		return width() / 2;
 	}
 	
 	/*********************************************
 	 * @return - Int center Y position of an image
 	 *********************************************/
 	public double getCenterY() {
-		return getY() + height() / 2;
+		return height() / 2;
 	}
 	
 	/*********************************************
@@ -148,7 +147,7 @@ public class ImageEntity extends BaseGameEntity {
 	 **********************************************************************************/
 	public Rectangle getBounds(int spriteSize) {
 		Rectangle r;
-		r = new Rectangle((int)getX(), (int)getY(), spriteSize, spriteSize);
+		r = new Rectangle(0, 0, spriteSize, spriteSize);
 		return r;
 	}
 	
@@ -164,7 +163,7 @@ public class ImageEntity extends BaseGameEntity {
 	 **********************************************************************************/
 	public Rectangle getBounds(int boundSize, int x, int y) {
 		Rectangle r;
-		r = new Rectangle((int)getX() + x, (int)getY() + y, boundSize, boundSize);
+		r = new Rectangle(x, y, boundSize, boundSize);
 		return r;
 	}
 }

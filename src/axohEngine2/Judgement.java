@@ -256,8 +256,8 @@ public class Judgement extends Game {
 			addTile(currentOverlay.accessTile(i));
 			if(currentMap.accessTile(i).hasMob()) sprites().add(currentMap.accessTile(i).mob());
 			if(currentOverlay.accessTile(i).hasMob()) sprites().add(currentOverlay.accessTile(i).mob());
-			currentMap.accessTile(i).getEntity().setX(-300);
-			currentOverlay.accessTile(i).getEntity().setX(-300);
+			//currentMap.accessTile(i).getEntity().setX(-300);
+			//currentOverlay.accessTile(i).getEntity().setX(-300);
 		}
 		
 		requestFocus(); //Make sure the game is focused on
@@ -280,7 +280,7 @@ public class Judgement extends Game {
 		// Get rid of this spamtastic logging...
 		// System.out.println(frameRate()); //Print the current framerate to the console
 		if(waitOn) wait--;
-		// System.out.println(playerX + " " + playerY + " " + mapX + " " + mapY); //print out player coordinates
+		System.out.println(playerX + " " + playerY + " " + mapX + " " + mapY); //print out player coordinates
 		// System.out.println(npcX + " " + npcY); //print out NPC coordinates
 	}
 	
@@ -367,7 +367,7 @@ public class Judgement extends Game {
 	 * hitDir is a number between and including 0 and 3, these assignments are taken care of in 'Game.java'.
 	 * What hitDir is actually referring to is the specific hit box that is on a multi-box sprite.
 	 *****************************************************************************/
-	void spriteCollision(AnimatedSprite spr1, AnimatedSprite spr2, int hitDir, int hitDir2) {
+	/*void spriteCollision(AnimatedSprite spr1, AnimatedSprite spr2, int hitDir, int hitDir2) {
 		//Get the smallest possible overlap between the two problem sprites
 		double leftOverlap = (spr1.getBoundX(hitDir) + spr1.getBoundSize() - spr2.getBoundX(hitDir2));
 		double rightOverlap = (spr2.getBoundX(hitDir2) + spr2.getBoundSize() - spr1.getBoundX(hitDir));
@@ -403,10 +403,10 @@ public class Judgement extends Game {
 			if(spr2 instanceof Mob) ((Mob) spr2).stop();
 			
 			//This piece of code is commented out because I still need the capability of getting a tile from an xand y position
-			/*if(((Mob) spr1).attacking() && currentOverlay.getFrontTile((Mob) spr1, playerX, playerY, CENTERX, CENTERY).getBounds().intersects(spr2.getBounds())){
-				((Mob) spr2).takeDamage(25);
+			//if(((Mob) spr1).attacking() && currentOverlay.getFrontTile((Mob) spr1, playerX, playerY, CENTERX, CENTERY).getBounds().intersects(spr2.getBounds())){
+				//((Mob) spr2).takeDamage(25);
 				//TODO: inside of take damage should be a number dependant on the current weapon equipped, change later
-			}*/
+			//}
 			
 			//Handle simple push back collision
 			if(playerX != 0) playerX -= shiftX;
@@ -414,7 +414,7 @@ public class Judgement extends Game {
 			if(playerX == 0) mapX -= shiftX;
 			if(playerY == 0) mapY -= shiftY;
 		}
-	}
+	}*/
 	
 	void attack(String normalAttack, int MagicDam, int StrengthDeam) {
 		
@@ -440,7 +440,7 @@ public class Judgement extends Game {
 	* 
 	* For more details on this method, refer to the spriteCollision method above
 	*************************************************************************/
-	void tileCollision(AnimatedSprite spr, Tile tile, int hitDir, int hitDir2) {
+	/*void tileCollision(AnimatedSprite spr, Tile tile, int hitDir, int hitDir2) {
 		double leftOverlap = (spr.getBoundX(hitDir) + spr.getBoundSize() - tile.getBoundX(hitDir2));
 		double rightOverlap = (tile.getBoundX(hitDir2) + tile.getBoundSize() - spr.getBoundX(hitDir));
 		double topOverlap = (spr.getBoundY(hitDir) + spr.getBoundSize() - tile.getBoundY(hitDir2));
@@ -523,7 +523,7 @@ public class Judgement extends Game {
 				((Mob) spr).resetMovement();
 			}
 		}
-	}//end tileCollision method
+	}//end tileCollision method*/
 	
 	/*****************************************************************
 	 * @param int

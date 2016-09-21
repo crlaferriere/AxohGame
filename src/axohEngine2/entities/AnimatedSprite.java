@@ -298,8 +298,6 @@ public class AnimatedSprite extends Sprite {
      * @param y - int position on the y axis in the room
      ************************************************************/
     public void render(JFrame frame, Graphics2D g2d, int x, int y) {
-    	entity.setX(x);
-    	entity.setY(y);
 		g2d.drawImage(getAnimImage(), x, y, getSpriteSize(), getSpriteSize(), frame);	
     }
     
