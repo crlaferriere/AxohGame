@@ -68,7 +68,6 @@ public class SpriteSheet extends Object {
     private void setSheet(String filename, int sheetWidth, int sheetHeight, int spriteSize) {
     	fileName = filename;
     	try{
-    		System.out.println(getClass().getResource(filename));
     		BufferedImage spriteSheet = ImageIO.read(getClass().getResource(filename));
     		buildSprites(spriteSheet, sheetWidth, sheetHeight, spriteSize);
     	}catch(IOException e){}
