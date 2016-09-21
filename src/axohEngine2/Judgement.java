@@ -280,7 +280,7 @@ public class Judgement extends Game {
 		// Get rid of this spamtastic logging...
 		// System.out.println(frameRate()); //Print the current framerate to the console
 		if(waitOn) wait--;
-		System.out.println(playerX + " " + playerY + " " + mapX + " " + mapY); //print out player coordinates
+		//System.out.println(playerX + " " + playerY + " " + mapX + " " + mapY); //print out player coordinates
 		// System.out.println(npcX + " " + npcY); //print out NPC coordinates
 	}
 	

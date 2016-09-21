@@ -283,8 +283,8 @@ public class Sprite extends Object {
      * 
      * @return - Int width or height of the image
      ***************************************************************/
-    public int imageWidth() { return entity.width(); }
-    public int imageHeight() { return entity.height(); }
+    public int imageWidth() { return entity.getWidth(); }
+    public int imageHeight() { return entity.getHeight(); }
 
     //check for collision with a rectangular shape
     public boolean collidesWith(Rectangle rect) {
