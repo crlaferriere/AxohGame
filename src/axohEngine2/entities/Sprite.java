@@ -34,8 +34,6 @@ public class Sprite extends Object {
 	//scale - The number the sprite width and height will be multiplied with when displaying the image
 	protected ImageEntity entity;
 	private Image image;
-    protected int spriteNumber;
-    protected SpriteSheet sheet;
     protected int scale;
 	
 	//currentState - Int which defines many possible states(This could be changed to an enum in the future for better readability)

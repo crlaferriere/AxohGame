@@ -54,7 +54,6 @@ public class Item extends Sprite{
 	public Item(JFrame frame, Graphics2D g2d, SpriteSheet sheet, int spriteNumber, String name, boolean equipment) {
 		super(frame, g2d);
 		setSprite(sheet, spriteNumber);
-		this.sheet = sheet;
 		isEquipment = equipment;
 		_name = name;
 	}

@@ -27,6 +27,8 @@ public class AnimatedSprite extends Sprite {
 	 *************************/
 	//animImage - Object that holds variouse image related data like x, y and size
 	private ImageEntity animImage;
+    protected SpriteSheet sheet;
+    protected int spriteNumber;
 	
 	//image - A BufferedImage java class object which is needed to display images to the window
 	//tempSurface - A surface used to render a graphic before displaying it to the user
@@ -267,16 +269,16 @@ public class AnimatedSprite extends Sprite {
     public Image getAnimImage() { return animImage.getImage(); }
     
     //Sprite and image data getters
-    public SpriteSheet getSheet() { return super.sheet; }
-    public int getSpriteNumber() { return super.spriteNumber; }
+    public SpriteSheet getSheet() { return sheet; }
+    public int getSpriteNumber() { return spriteNumber; }
     public int getSpriteSize() { return super.spriteSize; }
     public int getScale() { return super.scale; }
     
     //Setters for image data and sprites
-    public void setSheet(SpriteSheet sheet) { super.sheet = sheet; }
+    public void setSheet(SpriteSheet sheet) { this.sheet = sheet; }
     public void setSpriteSize(int spriteSize) { super.spriteSize = spriteSize; }
     public void setScale(int scale) { super.scale = scale; }
-    public void setSpriteNumber(int spriteNumber) { super.spriteNumber = spriteNumber; }
+    public void setSpriteNumber(int spriteNumber) { this.spriteNumber = spriteNumber; }
     
     //Used in the constructor to set an animated sprite's data using other given data
     private void setAnimSprite() {
