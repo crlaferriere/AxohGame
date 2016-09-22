@@ -49,8 +49,16 @@ public class ImageEntity extends Object {
 	 * @param frame - The JFrame window object that the graphic will be displayed
 	 ********************************************/
 	public ImageEntity(JFrame frame) {
-		this.frame = frame;
+		setFrame(frame);
 		setImage(null);
+	}
+	
+	private JFrame getFrame() {
+		return frame;
+	}
+	
+	private void setFrame(JFrame frame) {
+		this.frame = frame;
 	}
 	
 	/*************************************************
@@ -65,12 +73,12 @@ public class ImageEntity extends Object {
 	 * @param image - The image object that this new entity will contain.
 	 ********************************************************************/
 	public void setImage(Image image) {
-		this.image = image;
 		if(image != null) {
+			this.image = image;
 			width = image.getHeight(frame);
 			height = image.getWidth(frame);
-			double x = frame.getSize().width / 2 - getWidth() / 2;
-			double y = frame.getSize().height / 2 - getHeight() / 2;
+			double x = getFrame().getSize().width / 2 - getWidth() / 2;
+			double y = getFrame().getSize().height / 2 - getHeight() / 2;
 			at = AffineTransform.getTranslateInstance(x, y);
 		}
 	}
@@ -79,20 +87,22 @@ public class ImageEntity extends Object {
 	 * @return - Int width of an image in pixels
 	 *********************************************/
 	public int getWidth() {
-		if(image != null) 
+		if (image != null) {
 			return image.getWidth(frame);
-		else
+		} else {
 			return 0;
+		}
 	}
 	
 	/*********************************************
 	 * @return - Int height of an image in pixels
 	 *********************************************/
 	public int getHeight() {
-		if(image != null) 
+		if (image != null) {
 			return image.getHeight(frame);
-		else
+		} else {
 			return 0;
+		}
 	}
 	
 	/*********************************************
@@ -126,7 +136,7 @@ public class ImageEntity extends Object {
 	 * @param filename - String filename location
 	 *****************************************************/
 	public void load(String filename) {
-		try{	
+		try {
 			System.out.print("Trying to load: " + filename + " ... ");
 			image = ImageIO.read(getClass().getResource(filename));
 			System.out.println(" succeeded!");

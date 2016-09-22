@@ -17,6 +17,7 @@ package axohEngine2;
 
 //Imports
 import java.awt.Color;
+
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -43,6 +44,7 @@ import axohEngine2.project.OPTION;
 import axohEngine2.project.State;
 import axohEngine2.project.TYPE;
 import axohEngine2.project.TitleMenu;
+import axohEngine2.util.Vector2D;
 
 //Start class by also extending the 'Game.java' engine interface
 public class Judgement extends Game {
@@ -83,7 +85,8 @@ public class Judgement extends Game {
 	private int startPosX;
 	private int startPosY;
 	private int playerSpeed;
-	private int npcSpeed; 
+	private int npcSpeed;
+	private Vector2D camera;
 	
 	//----------- Map and input --------
 	//currentMap - The currently displayed map the player can explore
@@ -147,6 +150,7 @@ public class Judgement extends Game {
 	 **********************************************************************/
 	public Judgement() {
 		super(130, SCREENWIDTH, SCREENHEIGHT);
+		camera = new Vector2D();
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -276,7 +280,8 @@ public class Judgement extends Game {
 		if(getGameState() == State.TITLE) title.update(option, titleLocation); //Title Menu update
 		if(getGameState() == State.INGAMEMENU) inMenu.update(option, sectionLoc, playerMob.health()); //In Game Menu update
 		updateData(currentMap, currentOverlay, playerX, playerY); //Update the current file data for saving later
-		
+		camera.setLocation(playerMob.getXLoc(), playerMob.getYLoc());
+		System.out.println(playerMob.getXLoc() - camera.getX());
 		// Get rid of this spamtastic logging...
 		// System.out.println(frameRate()); //Print the current framerate to the console
 		if(waitOn) wait--;
@@ -304,9 +309,9 @@ public class Judgement extends Game {
 		//GUI rendering for when a specific State is set, only specific groups of data is drawn at specific times
 		if(getGameState() == State.GAME) {
 			//Render the map, the player, any NPCs or Monsters and the player health or status
-			currentMap.render(this, g2d, mapX, mapY);
+			currentMap.render(this, g2d, -CENTERX + (mapX - (int) camera.getX()), mapY);
 			currentOverlay.render(this, g2d, mapX, mapY);
-			playerMob.renderMob(CENTERX - playerX, CENTERY - playerY);
+			playerMob.renderMob(CENTERX + (int) (playerMob.getXLoc() - camera.getX()), CENTERY + (int) (playerMob.getYLoc() - camera.getY()));
 			//g2d.setColor(Color.GREEN);
 			//g2d.drawString("Health: " + inMenu.getHealth(), CENTERX - 650, CENTERY - 370);
 			//g2d.setColor(Color.MAGENTA);

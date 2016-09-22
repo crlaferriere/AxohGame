@@ -38,12 +38,8 @@ public class Sprite extends Object {
 	//currentState - Int which defines many possible states(This could be changed to an enum in the future for better readability)
 	//sprType - The Type of the sprite, warping, npc, player, ai etc. (Reference Type.java class)
 	//_collided - boolean defining if a sprite has recently hit something solid
-	/*_lifespan, _lifeage - lifeage always starts 0 while lifespan can be set to define a length of time for a sprite to
-	 * exist in the sytem before it is taken out. Each update, the age goes up one, if it becomes greater than the span, 
-	 * the sprite is taken out of the system. */
     protected int currentState;
     protected TYPE sprType;
-    protected int _lifespan, _lifeage;
     
     //spriteSize - pixel size of the sprite, width * height
     //boundLeg/Left/Right/HeadX/Y - X and Y ints defining Bounding boxes on the sprite used for collision (Hit boxes)
@@ -72,8 +68,6 @@ public class Sprite extends Object {
         entity = new ImageEntity(frame);
         entity.setGraphics(g2d);
         currentState = 0;
-        _lifespan = 0;
-        _lifeage = 0;
     }
     
     /*********************************************
