@@ -86,7 +86,7 @@ public class Tile extends AnimatedSprite {
 		
 		if(solid) setSpriteType(TYPE.WALL);
 		if(solid) hasProperty = true;
-		setSolid(solid); //In Sprite super class, set solid
+		//setSolid(solid); //In Sprite super class, set solid
 		setSprite(sheet, spriteNumber);
 		
 	}
@@ -111,7 +111,7 @@ public class Tile extends AnimatedSprite {
 		_breakable = breakable;
 		position = new Vector2D();
 		
-		setSolid(solid);
+		//setSolid(solid);
 		if(solid || slippery || breakable) hasProperty = true;
 		setSprite(getSheet(), getSpriteNumber());
 	}
@@ -134,7 +134,7 @@ public class Tile extends AnimatedSprite {
 		event = tile.event();
 		position = new Vector2D();
 		
-		setSolid(_solid);
+		//setSolid(_solid);
 		setSprite(tile.getSheet(), tile.getSpriteNumber());
 	}
 	

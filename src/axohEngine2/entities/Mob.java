@@ -99,7 +99,6 @@ public class Mob extends AnimatedSprite{
 		hostile = hostility;
 		setName(name);
 		health = 0;
-		setSolid(true);
 		setAlive(true);
 		setSpriteType(ai);
 		position = new Vector2D();

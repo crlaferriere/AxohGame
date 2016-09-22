@@ -33,7 +33,6 @@ public class Sprite extends Object {
 	//spriteNumber - The position on the spriteSheet the image is found
 	//scale - The number the sprite width and height will be multiplied with when displaying the image
 	protected ImageEntity entity;
-	private Image image;
     protected int scale;
 	
 	//currentState - Int which defines many possible states(This could be changed to an enum in the future for better readability)
@@ -44,7 +43,6 @@ public class Sprite extends Object {
 	 * the sprite is taken out of the system. */
     protected int currentState;
     protected TYPE sprType;
-    protected boolean _collided;
     protected int _lifespan, _lifeage;
     
     //spriteSize - pixel size of the sprite, width * height
@@ -62,9 +60,7 @@ public class Sprite extends Object {
     protected int boundSize;
     
     //nx,ny - Offset x value from the x or y position of the sprite to the hit box
-    //solid - boolean to check for a colission of a sprite
     protected int nx, ny;
-    private boolean solid = false;
 
     /*******************************************
      * Constructor - Set all default parameters
@@ -74,10 +70,8 @@ public class Sprite extends Object {
      ******************************************/
     public Sprite(JFrame frame, Graphics2D g2d) {
         entity = new ImageEntity(frame);
-        image = null;
         entity.setGraphics(g2d);
         currentState = 0;
-        _collided = false;
         _lifespan = 0;
         _lifeage = 0;
     }
@@ -90,10 +84,10 @@ public class Sprite extends Object {
      * @return - The Image object that is now the sprite
      ***********************************************/
     public Image setSprite(SpriteSheet sheet, int spriteNumber) {
-    	image = (Image) sheet.getSprite(spriteNumber);
-    	entity.setImage(image);
+    	// image = (Image) sheet.getSprite(spriteNumber);
+    	entity.setImage((Image) sheet.getSprite(spriteNumber));
     	if(spriteSize == 0) spriteSize = sheet.getSpriteSize() * sheet.getScale();
-    	return image;
+    	return entity.getImage();
     }
     
     /***********************************************
@@ -180,17 +174,9 @@ public class Sprite extends Object {
     }
     
     //Getters for image, solid, boundSize and spriteSize
-    public Image getImage() { return image; }
-    public boolean solid() { return solid; }
+    public Image getImage() { return entity.image; }
     public int getBoundSize() { return boundSize; }
     public int getSpriteSize() { return spriteSize; }
-    
-    /*******************************************
-     * Set the sprite to be solid or not
-     * 
-     * @param solid - The new solid modifier
-     *******************************************/
-    public void setSolid(boolean solid) { this.solid = solid; }
     
     /*******************************************************************
      * Get a bound x or y position based on the direction a sprite is hitting another
@@ -312,13 +298,5 @@ public class Sprite extends Object {
      *****************************************************/
     public TYPE spriteType() { return sprType; }
     public void setSpriteType(TYPE type) { sprType = type; }
-
-    /************************************************
-     * Get or set for if the sprite was just collided with
-     * 
-     * @return - Boolean for if a sprite is being collided
-     ************************************************/
-    public boolean collided() { return _collided; }
-    public void setCollided(boolean collide) { _collided = collide; }
     
 }
