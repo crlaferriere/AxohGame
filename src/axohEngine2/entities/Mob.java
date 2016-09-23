@@ -45,8 +45,8 @@ public class Mob extends AnimatedSprite{
 	private boolean hostile;
 	private int health;
 	private TYPE ai;
-	private int xx;
-	private int yy;
+	//private int xx;
+	//private int yy;
 	private int primaryDirection = 2;  //0 = left, 1 = right, 2 = up, 3 = down
 	private int speed = 4;
 	private Vector2D position;
@@ -233,15 +233,16 @@ public class Mob extends AnimatedSprite{
 	 * @param xa - Int movement in pixels on the x axis
 	 * @param ya - Int movement in pixels on the y axis
 	 ****************************************************************/
-	public void move(int xa, int ya) { 
+	public void move(double xa, double ya) {
+		position.setX(position.getX() + xa);
+		position.setY(position.getY() + ya);
 		if(xa < 0) { //left
-			xx += xa; 
-				
+			//xx += xa; 
 			if(moveDir != DIRECTION.LEFT) setAnimTo(leftAnim);
 			startAnim();
 			moveDir = DIRECTION.LEFT;
 		} else if(xa > 0) { //right
-			xx += xa; 
+			//xx += xa; 
 			
 			if(moveDir != DIRECTION.RIGHT) setAnimTo(rightAnim);
 			startAnim();
@@ -249,13 +250,13 @@ public class Mob extends AnimatedSprite{
 		}
 			
 		if(ya < 0) {  //up
-			yy += ya;
+			//yy += ya;
 
 			if(moveDir != DIRECTION.UP) setAnimTo(upAnim);
 			startAnim();
 			moveDir = DIRECTION.UP;
 		} else if(ya > 0) { //down
-			yy += ya; 
+			//yy += ya; 
 			
 			if(moveDir != DIRECTION.DOWN) setAnimTo(downAnim);
 			startAnim();
@@ -422,9 +423,10 @@ public class Mob extends AnimatedSprite{
 	 ***************************************************/
 	public double getXLoc() { return position.getX(); }
 	public double getYLoc() { return position.getY(); }
-	public void setLoc(int x, int y) { //Relative to current position
-		xx = xx + x;
-		yy = yy + y;
+	public void setLoc(double x, double y) { //Relative to current position
+		position.setLocation(x, y);
+		//xx = xx + x;
+		//yy = yy + y;
 	}
 
 	/**********************************************
@@ -433,9 +435,9 @@ public class Mob extends AnimatedSprite{
 	 * @param x - Int x position
 	 * @param y - Int y position
 	 ***********************************************/
-	public void renderMob(int x, int y) {
-		g2d.drawImage(getImage(), x + xx, y + yy, getSpriteSize(), getSpriteSize(), frame);
-		position.setX(x + xx);
-		position.setY(y + yy);
+	public void renderMob() {
+		g2d.drawImage(getImage(), (int) position.getX(), (int) position.getY(), getSpriteSize(), getSpriteSize(), frame);
+		//position.setX(x);
+		//position.setY(y);
 	}
 }

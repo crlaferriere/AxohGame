@@ -281,7 +281,7 @@ public class Judgement extends Game {
 		if(getGameState() == State.INGAMEMENU) inMenu.update(option, sectionLoc, playerMob.health()); //In Game Menu update
 		updateData(currentMap, currentOverlay, playerX, playerY); //Update the current file data for saving later
 		camera.setLocation(playerMob.getXLoc(), playerMob.getYLoc());
-		System.out.println(playerMob.getXLoc() - camera.getX());
+		//System.out.println(playerMob.getXLoc());
 		// Get rid of this spamtastic logging...
 		// System.out.println(frameRate()); //Print the current framerate to the console
 		if(waitOn) wait--;
@@ -309,9 +309,13 @@ public class Judgement extends Game {
 		//GUI rendering for when a specific State is set, only specific groups of data is drawn at specific times
 		if(getGameState() == State.GAME) {
 			//Render the map, the player, any NPCs or Monsters and the player health or status
-			currentMap.render(this, g2d, -CENTERX + (mapX - (int) camera.getX()), mapY);
-			currentOverlay.render(this, g2d, mapX, mapY);
-			playerMob.renderMob(CENTERX + (int) (playerMob.getXLoc() - camera.getX()), CENTERY + (int) (playerMob.getYLoc() - camera.getY()));
+			int camX = CENTERX + (mapX - (int) camera.getX());
+			int camY = CENTERY + (mapY - (int) camera.getY());
+			System.out.println((int) playerMob.getXLoc() - camX); 
+			currentMap.render(this, g2d, camX, camY);
+			currentOverlay.render(this, g2d, camX, camY);
+			//playerMob.move(CENTERX + (int) (playerMob.getXLoc() - camera.getX()), CENTERY + (int) (playerMob.getYLoc() - camera.getY()));
+			playerMob.renderMob();
 			//g2d.setColor(Color.GREEN);
 			//g2d.drawString("Health: " + inMenu.getHealth(), CENTERX - 650, CENTERY - 370);
 			//g2d.setColor(Color.MAGENTA);
