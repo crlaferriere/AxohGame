@@ -86,7 +86,7 @@ public class Judgement extends Game {
 	private int startPosY;
 	private int playerSpeed;
 	private int npcSpeed;
-	private Vector2D camera;
+	public static Vector2D camera;
 	
 	//----------- Map and input --------
 	//currentMap - The currently displayed map the player can explore
@@ -309,9 +309,8 @@ public class Judgement extends Game {
 		//GUI rendering for when a specific State is set, only specific groups of data is drawn at specific times
 		if(getGameState() == State.GAME) {
 			//Render the map, the player, any NPCs or Monsters and the player health or status
-			int camX = CENTERX + (mapX - (int) camera.getX());
-			int camY = CENTERY + (mapY - (int) camera.getY());
-			System.out.println((int) playerMob.getXLoc() - camX); 
+			int camX = mapX - (int) camera.getX();
+			int camY = mapY - (int) camera.getY();
 			currentMap.render(this, g2d, camX, camY);
 			currentOverlay.render(this, g2d, camX, camY);
 			//playerMob.move(CENTERX + (int) (playerMob.getXLoc() - camera.getX()), CENTERY + (int) (playerMob.getYLoc() - camera.getY()));
@@ -616,28 +615,28 @@ public class Judgement extends Game {
 		if(getGameState() == State.GAME && inputWait < 0) { 
 			//A or left arrow(move left)
 			if(keyLeft) {
-				xa = xa - playerSpeed;
-				playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
+				xa -= playerSpeed;
+				// playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
 			//D or right arrow(move right)
 			if(keyRight) {
-				xa = xa + playerSpeed;
-				playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
+				xa += playerSpeed;
+				// playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
 			//W or up arrow(move up)
 			if(keyUp) {
-				ya = ya - playerSpeed;
-				playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
+				ya -= playerSpeed;
+				// playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
 			//S or down arrow(move down)
 			if(keyDown) {
-				ya = ya + playerSpeed;
-				playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
+				ya += playerSpeed;
+				// playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
 			
 			//No keys are pressed
 			if(!keyLeft && !keyRight && !keyUp && !keyDown) {
-				playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
+				// playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
 			movePlayer(xa, ya);
 		

@@ -21,6 +21,8 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
+import axohEngine2.Game;
+import axohEngine2.Judgement;
 import axohEngine2.project.TYPE;
 import axohEngine2.util.Vector2D;
 
@@ -74,7 +76,7 @@ public class Mob extends AnimatedSprite{
 	
 	//Graphics and Window objects the mob needs for display
 	private Graphics2D g2d;
-	private JFrame frame;
+	private Judgement game;
 	
 	private boolean _isAlive;
 	
@@ -89,10 +91,10 @@ public class Mob extends AnimatedSprite{
 	 * @param name - The character name in a String
 	 * @param hostility - Boolean, is the mob going to attack the player?
 	 *************************************************************************/
-	public Mob(JFrame frame, Graphics2D g2d, SpriteSheet sheet, int spriteNumber, TYPE ai, String name, boolean hostility) {
-		super(frame, g2d, sheet, spriteNumber, name);
+	public Mob(Judgement game, Graphics2D g2d, SpriteSheet sheet, int spriteNumber, TYPE ai, String name, boolean hostility) {
+		super(game, g2d, sheet, spriteNumber, name);
 		attacks = new LinkedList<Attack>();
-		this.frame = frame;
+		this.game = game;
 		this.g2d = g2d;
 		this.ai = ai;
 		
@@ -344,6 +346,7 @@ public class Mob extends AnimatedSprite{
 	 *********************************************************************************/
 	public void inOutItem() {
 		takenOut = !takenOut;
+		System.out.println(currentAttack.getInOutAnim(direction));
 		setFullAnim(currentAttack.getInOutAnim(direction), currentAttack.getInOutTotal(), currentAttack.getInOutDelay());
 		if(takenOut) playOnce(currentAttack.getMoveAnim(direction), currentAttack.getMoveTotal(), currentAttack.getMoveDelay(), currentAttack.getInOutAnim(direction) + currentAttack.getInOutTotal());
 		else {
@@ -436,7 +439,7 @@ public class Mob extends AnimatedSprite{
 	 * @param y - Int y position
 	 ***********************************************/
 	public void renderMob() {
-		g2d.drawImage(getImage(), (int) position.getX(), (int) position.getY(), getSpriteSize(), getSpriteSize(), frame);
+		g2d.drawImage(getImage(), (int) game.camera.getX() - (int) position.getX(), (int) game.camera.getY() - (int) position.getY(), getSpriteSize(), getSpriteSize(), game);
 		//position.setX(x);
 		//position.setY(y);
 	}
