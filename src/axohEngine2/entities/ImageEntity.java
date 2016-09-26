@@ -37,7 +37,7 @@ public class ImageEntity extends Object {
 	//scale - How many times the image needs to be stretched on the screen
 	protected Image image;
 	protected JFrame frame;
-	protected AffineTransform at;
+	// protected AffineTransform at;
 	protected Graphics2D g2d;
 	protected int width;
 	protected int height;
@@ -77,9 +77,9 @@ public class ImageEntity extends Object {
 			this.image = image;
 			width = image.getHeight(frame);
 			height = image.getWidth(frame);
-			double x = getFrame().getSize().width / 2 - getWidth() / 2;
-			double y = getFrame().getSize().height / 2 - getHeight() / 2;
-			at = AffineTransform.getTranslateInstance(x, y);
+			//double x = getFrame().getSize().width / 2 - getWidth() / 2;
+			//double y = getFrame().getSize().height / 2 - getHeight() / 2;
+			// at = AffineTransform.getTranslateInstance(x, y);
 		}
 	}
 	

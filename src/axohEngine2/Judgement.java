@@ -87,6 +87,7 @@ public class Judgement extends Game {
 	private int playerSpeed;
 	private int npcSpeed;
 	public static Vector2D camera;
+	private boolean camFollow = true;
 	
 	//----------- Map and input --------
 	//currentMap - The currently displayed map the player can explore
@@ -280,7 +281,9 @@ public class Judgement extends Game {
 		if(getGameState() == State.TITLE) title.update(option, titleLocation); //Title Menu update
 		if(getGameState() == State.INGAMEMENU) inMenu.update(option, sectionLoc, playerMob.health()); //In Game Menu update
 		updateData(currentMap, currentOverlay, playerX, playerY); //Update the current file data for saving later
-		camera.setLocation(playerMob.getXLoc(), playerMob.getYLoc());
+		if (camFollow) {
+			camera.setLocation(playerMob.getXLoc(), playerMob.getYLoc());
+		}
 		//System.out.println(playerMob.getXLoc());
 		// Get rid of this spamtastic logging...
 		// System.out.println(frameRate()); //Print the current framerate to the console
@@ -1026,6 +1029,7 @@ public class Judgement extends Game {
 	    	break;
 	    case KeyEvent.VK_F:
 	    	keyAction = false;
+	    	camFollow = !camFollow;
 	    	break;
 	    case KeyEvent.VK_ENTER:
 	    	keyEnter = false;

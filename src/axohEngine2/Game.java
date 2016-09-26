@@ -65,10 +65,10 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	//SCREENWIDTH - Game window width
 	//SCREENHEIGHT - Game window height
 	//CENTERX/CENTERY - Center of the game window's x/y
-	static int SCREENWIDTH = 1600; //Adjust the screen width 
-	static int SCREENHEIGHT = 900; //Adjust the screen width
-	static int CENTERX = SCREENWIDTH / 2;
-	static int CENTERY = SCREENHEIGHT / 2;
+	public static final int SCREENWIDTH = 1600; //Adjust the screen width 
+	public static final int SCREENHEIGHT = 900; //Adjust the screen width
+	public static final int CENTERX = SCREENWIDTH / 2;
+	public static final int CENTERY = SCREENHEIGHT / 2;
 	
 	//Game loop and Thread variable(Transient means it wont be serialized, certain data types cant be serialized)
 	private transient Thread gameloop;

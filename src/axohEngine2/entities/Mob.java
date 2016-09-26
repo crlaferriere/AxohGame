@@ -439,7 +439,8 @@ public class Mob extends AnimatedSprite{
 	 * @param y - Int y position
 	 ***********************************************/
 	public void renderMob() {
-		g2d.drawImage(getImage(), (int) game.camera.getX() - (int) position.getX(), (int) game.camera.getY() - (int) position.getY(), getSpriteSize(), getSpriteSize(), game);
+		g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX() + game.CENTERX, (int) position.getY() - (int) game.camera.getY() + game.CENTERY, getSpriteSize(), getSpriteSize(), game);
+		//g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX(), (int) position.getY() - (int) game.camera.getY(), getSpriteSize(), getSpriteSize(), game);
 		//position.setX(x);
 		//position.setY(y);
 	}
