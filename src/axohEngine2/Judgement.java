@@ -218,7 +218,7 @@ public class Judgement extends Game {
 		inMenu = new InGameMenu(inGameMenu, SCREENWIDTH, SCREENHEIGHT);
 		
 		//****Initialize and setup Mobs*********************************************************************
-		playerMob = new Mob(this, graphics(), mainCharacter, 40, TYPE.PLAYER, "mainC", true);
+		playerMob = new Mob(this, graphics(), mainCharacter, 40, TYPE.PLAYER, "mainC");
 		playerMob.setMultBounds(6, 50, 95, 37, 88, 62, 92, 62, 96);
 		playerMob.setMoveAnim(32, 48, 40, 56, 3, 8);
 		playerMob.addAttack("sword", 0, 5);
@@ -229,7 +229,7 @@ public class Judgement extends Game {
 		playerMob.setHealth(35); //If you change the starting max health, dont forget to change it in inGameMenu.java max health also
 		sprites().add(playerMob);
 		
-		randomNPC = new Mob(this, graphics(), zombie, 40, TYPE.PLAYER, "npc", true);
+		randomNPC = new Mob(this, graphics(), zombie, 40, TYPE.PLAYER, "npc");
 		randomNPC.setMultBounds(6, 50, 95, 37, 88, 62, 92, 62, 96);
 		randomNPC.setMoveAnim(32, 48, 40, 56, 3, 8);
 		randomNPC.addAttack("sword", 0, 5);
@@ -981,6 +981,7 @@ public class Judgement extends Game {
 	        	break;
 	        case KeyEvent.VK_ENTER:
 	        	keyEnter = true;
+		    	camFollow = !camFollow;
 	        	break;
 	        case KeyEvent.VK_BACK_SPACE:
 	        	keyBack = true;
@@ -1029,7 +1030,6 @@ public class Judgement extends Game {
 	    	break;
 	    case KeyEvent.VK_F:
 	    	keyAction = false;
-	    	camFollow = !camFollow;
 	    	break;
 	    case KeyEvent.VK_ENTER:
 	    	keyEnter = false;
