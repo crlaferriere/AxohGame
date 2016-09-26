@@ -44,7 +44,6 @@ public class Mob extends AnimatedSprite{
 	//currentAttack - The currently selected attack to use from the list of Mob attacks
 	private Random random = new Random();
 	private LinkedList<Attack> attacks;
-	private boolean hostile;
 	private int health;
 	private TYPE ai;
 	//private int xx;
@@ -91,14 +90,13 @@ public class Mob extends AnimatedSprite{
 	 * @param name - The character name in a String
 	 * @param hostility - Boolean, is the mob going to attack the player?
 	 *************************************************************************/
-	public Mob(Judgement game, Graphics2D g2d, SpriteSheet sheet, int spriteNumber, TYPE ai, String name, boolean hostility) {
+	public Mob(Judgement game, Graphics2D g2d, SpriteSheet sheet, int spriteNumber, TYPE ai, String name) {
 		super(game, g2d, sheet, spriteNumber, name);
 		attacks = new LinkedList<Attack>();
 		this.game = game;
 		this.g2d = g2d;
 		this.ai = ai;
 		
-		hostile = hostility;
 		setName(name);
 		health = 0;
 		setAlive(true);
@@ -108,7 +106,7 @@ public class Mob extends AnimatedSprite{
 	}
 	
 	//Getters for name and ai type
-	public String getName() { return super._name; }
+	public String getName() { return _name; }
 	public TYPE getType() { return ai; }
 	
 	//Setters for current health, ai, name and speed
@@ -242,12 +240,14 @@ public class Mob extends AnimatedSprite{
 			//xx += xa; 
 			if(moveDir != DIRECTION.LEFT) setAnimTo(leftAnim);
 			startAnim();
+			direction = DIRECTION.LEFT;
 			moveDir = DIRECTION.LEFT;
 		} else if(xa > 0) { //right
 			//xx += xa; 
 			
 			if(moveDir != DIRECTION.RIGHT) setAnimTo(rightAnim);
 			startAnim();
+			direction = DIRECTION.RIGHT;
 			moveDir = DIRECTION.RIGHT;
 		}
 			
@@ -256,12 +256,14 @@ public class Mob extends AnimatedSprite{
 
 			if(moveDir != DIRECTION.UP) setAnimTo(upAnim);
 			startAnim();
+			direction = DIRECTION.UP;
 			moveDir = DIRECTION.UP;
 		} else if(ya > 0) { //down
 			//yy += ya; 
 			
 			if(moveDir != DIRECTION.DOWN) setAnimTo(downAnim);
 			startAnim();
+			direction = DIRECTION.DOWN;
 			moveDir = DIRECTION.DOWN;
 		}
 		if(xa == 0 && ya == 0) stopAnim();
@@ -346,7 +348,6 @@ public class Mob extends AnimatedSprite{
 	 *********************************************************************************/
 	public void inOutItem() {
 		takenOut = !takenOut;
-		System.out.println(currentAttack.getInOutAnim(direction));
 		setFullAnim(currentAttack.getInOutAnim(direction), currentAttack.getInOutTotal(), currentAttack.getInOutDelay());
 		if(takenOut) playOnce(currentAttack.getMoveAnim(direction), currentAttack.getMoveTotal(), currentAttack.getMoveDelay(), currentAttack.getInOutAnim(direction) + currentAttack.getInOutTotal());
 		else {

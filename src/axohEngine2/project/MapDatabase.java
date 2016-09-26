@@ -413,7 +413,7 @@ public class MapDatabase {
 		cityO.accessTile(96).addEvent(getMpotion);
 		
 		//Set up Monsters and NPCs
-		npc = new Mob(game, g2d, zombie, 40, TYPE.RANDOMPATH, "npc", true);
+		npc = new Mob(game, g2d, zombie, 40, TYPE.RANDOMPATH, "npc");
 		npc.setMultBounds(6, 50, 92, 37, 88, 62, 92, 62, 96);
 		npc.setMoveAnim(32, 48, 40, 56, 3, 8);
 		npc.setHealth(60);
