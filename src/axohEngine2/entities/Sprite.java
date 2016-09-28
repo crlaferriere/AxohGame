@@ -81,7 +81,7 @@ public class Sprite extends Object {
     	// image = (Image) sheet.getSprite(spriteNumber);
     	entity.setImage((Image) sheet.getSprite(spriteNumber));
     	if(spriteSize == 0) spriteSize = sheet.getSpriteSize() * sheet.getScale();
-    	return entity.getImage();
+    	return getImage();
     }
     
     /***********************************************
@@ -168,7 +168,7 @@ public class Sprite extends Object {
     }
     
     //Getters for image, solid, boundSize and spriteSize
-    public Image getImage() { return entity.image; }
+    public Image getImage() { return entity.getImage(); }
     public int getBoundSize() { return boundSize; }
     public int getSpriteSize() { return spriteSize; }
     
