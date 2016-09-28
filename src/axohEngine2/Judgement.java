@@ -33,6 +33,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 
 import axohEngine2.entities.AnimatedSprite;
+import axohEngine2.entities.Hero;
 import axohEngine2.entities.ImageEntity;
 import axohEngine2.entities.Mob;
 import axohEngine2.entities.SpriteSheet;
@@ -86,7 +87,7 @@ public class Judgement extends Game {
 	private int startPosY;
 	private int playerSpeed;
 	private int npcSpeed;
-	public static Vector2D camera;
+	public Vector2D camera;
 	private boolean camFollow = true;
 	
 	//----------- Map and input --------
@@ -141,7 +142,7 @@ public class Judgement extends Game {
 	AnimatedSprite titleArrow;
 	
 	//Player and NPCs
-	Mob playerMob;
+	Mob player;
 	Mob randomNPC;
 	
 	/*********************************************************************** 
@@ -218,16 +219,16 @@ public class Judgement extends Game {
 		inMenu = new InGameMenu(inGameMenu, SCREENWIDTH, SCREENHEIGHT);
 		
 		//****Initialize and setup Mobs*********************************************************************
-		playerMob = new Mob(this, graphics(), mainCharacter, 40, TYPE.PLAYER, "mainC");
-		playerMob.setMultBounds(6, 50, 95, 37, 88, 62, 92, 62, 96);
-		playerMob.setMoveAnim(32, 48, 40, 56, 3, 8);
-		playerMob.addAttack("sword", 0, 5);
-		playerMob.getAttack("sword").addMovingAnim(17, 25, 9, 1, 3, 8);
-		playerMob.getAttack("sword").addAttackAnim(20, 28, 12, 4, 3, 6);
-		playerMob.getAttack("sword").addInOutAnim(16, 24, 8, 0, 1, 10);
-		playerMob.setCurrentAttack("sword"); //Starting attack
-		playerMob.setHealth(35); //If you change the starting max health, dont forget to change it in inGameMenu.java max health also
-		sprites().add(playerMob);
+		player = new Hero(this, graphics(), mainCharacter, 40, "mainC");
+		player.setMultBounds(6, 50, 95, 37, 88, 62, 92, 62, 96);
+		player.setMoveAnim(32, 48, 40, 56, 3, 8);
+		player.addAttack("sword", 0, 5);
+		player.getAttack("sword").addMovingAnim(17, 25, 9, 1, 3, 8);
+		player.getAttack("sword").addAttackAnim(20, 28, 12, 4, 3, 6);
+		player.getAttack("sword").addInOutAnim(16, 24, 8, 0, 1, 10);
+		player.setCurrentAttack("sword"); //Starting attack
+		player.setHealth(35); //If you change the starting max health, dont forget to change it in inGameMenu.java max health also
+		sprites().add(player);
 		
 		randomNPC = new Mob(this, graphics(), zombie, 40, TYPE.PLAYER, "npc");
 		randomNPC.setMultBounds(6, 50, 95, 37, 88, 62, 92, 62, 96);
@@ -279,12 +280,12 @@ public class Judgement extends Game {
 		
 		//Update certain specifics based on certain game States
 		if(getGameState() == State.TITLE) title.update(option, titleLocation); //Title Menu update
-		if(getGameState() == State.INGAMEMENU) inMenu.update(option, sectionLoc, playerMob.health()); //In Game Menu update
+		if(getGameState() == State.INGAMEMENU) inMenu.update(option, sectionLoc, player.health()); //In Game Menu update
 		updateData(currentMap, currentOverlay, playerX, playerY); //Update the current file data for saving later
 		if (camFollow) {
-			camera.setLocation(playerMob.getXLoc(), playerMob.getYLoc());
+			camera.setLocation(player.getXLoc(), player.getYLoc());
 		}
-		//System.out.println(playerMob.getXLoc());
+		//System.out.println(player.getXLoc());
 		// Get rid of this spamtastic logging...
 		// System.out.println(frameRate()); //Print the current framerate to the console
 		if(waitOn) wait--;
@@ -316,8 +317,8 @@ public class Judgement extends Game {
 			int camY = mapY - (int) camera.getY();
 			currentMap.render(this, g2d, camX, camY);
 			currentOverlay.render(this, g2d, camX, camY);
-			//playerMob.move(CENTERX + (int) (playerMob.getXLoc() - camera.getX()), CENTERY + (int) (playerMob.getYLoc() - camera.getY()));
-			playerMob.renderMob();
+			//player.move(CENTERX + (int) (player.getXLoc() - camera.getX()), CENTERY + (int) (player.getYLoc() - camera.getY()));
+			player.renderMob();
 			//g2d.setColor(Color.GREEN);
 			//g2d.drawString("Health: " + inMenu.getHealth(), CENTERX - 650, CENTERY - 370);
 			//g2d.setColor(Color.MAGENTA);
@@ -488,7 +489,7 @@ public class Judgement extends Game {
 				if(tile.event().getEventType() == TYPE.WARP) {
 					tiles().clear();
 					sprites().clear();
-					sprites().add(playerMob);
+					sprites().add(player);
 					//Get the new map
 					for(int i = 0; i < mapBase.maps.length; i++){
 						 if(mapBase.getMap(i) == null) continue;
@@ -546,7 +547,7 @@ public class Judgement extends Game {
 	 *Which means to move right, you subtract from the X position.
 	 ******************************************************************/
 	void movePlayer(int xa, int ya) {
-		playerMob.move(xa, ya);
+		player.move(xa, ya);
 		/*if(xa > 0) {
 			if(mapX + xa < currentMap.getMinX() && playerX < playerSpeed && playerX > -playerSpeed) mapX += xa;
 			else playerX += xa; //left +#
@@ -619,27 +620,27 @@ public class Judgement extends Game {
 			//A or left arrow(move left)
 			if(keyLeft) {
 				xa -= playerSpeed;
-				// playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
+				// player.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
 			//D or right arrow(move right)
 			if(keyRight) {
 				xa += playerSpeed;
-				// playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
+				// player.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
 			//W or up arrow(move up)
 			if(keyUp) {
 				ya -= playerSpeed;
-				// playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
+				// player.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
 			//S or down arrow(move down)
 			if(keyDown) {
 				ya += playerSpeed;
-				// playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
+				// player.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
 			
 			//No keys are pressed
 			if(!keyLeft && !keyRight && !keyUp && !keyDown) {
-				// playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
+				// player.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
 			movePlayer(xa, ya);
 		
@@ -651,7 +652,7 @@ public class Judgement extends Game {
 			
 			//SpaceBar(action button)
 			if(keySpace) {
-				playerMob.inOutItem();
+				player.inOutItem();
 				inputWait = 10;
 			}
 			
@@ -966,16 +967,16 @@ public class Judgement extends Game {
 	        	break;
 	        case KeyEvent.VK_F:
 	        	keyAction = true;
-		    	if(playerMob.isTakenOut()) {
-					playerMob.attack();
+		    	if(player.isTakenOut()) {
+					player.attack();
 			
 				}
 		   
 		    	// Comment out this uselessness...
 		    	//System.out.println("ACTION THROUGH F KEY");
 		    	//System.out.println("Entering the battle field...");
-		    	//playerMob.addAttack("Normal Attack", 0, 5);
-		    	//System.out.println("The player activated " + playerMob.getCurrentAttack() + "!");
+		    	//player.addAttack("Normal Attack", 0, 5);
+		    	//System.out.println("The player activated " + player.getCurrentAttack() + "!");
 		    	//randomNPC.takeDamage(5);
 		    	
 	        	break;
@@ -1091,7 +1092,7 @@ public class Judgement extends Game {
 			 playerY = data().getPlayerY();
 			 npcX = data().getNpcX(); //npcX
 			 npcY = data().getNpcY(); //npcY
-			 sprites().add(playerMob);
+			 sprites().add(player);
 			 for(int i = 0; i < currentMap.getWidth() * currentMap.getHeight(); i++){
 					addTile(currentMap.accessTile(i));
 					addTile(currentOverlay.accessTile(i));

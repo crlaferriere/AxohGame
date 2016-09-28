@@ -50,7 +50,7 @@ public class Mob extends AnimatedSprite{
 	//private int yy;
 	private int primaryDirection = 2;  //0 = left, 1 = right, 2 = up, 3 = down
 	private int speed = 4;
-	private Vector2D position;
+	protected Vector2D position;
 	
 	private boolean attacking;
 	private boolean takenOut = false;
@@ -74,8 +74,8 @@ public class Mob extends AnimatedSprite{
 	private int wait;
 	
 	//Graphics and Window objects the mob needs for display
-	private Graphics2D g2d;
-	private Judgement game;
+	protected Graphics2D g2d;
+	protected Judgement game;
 	
 	private boolean _isAlive;
 	
