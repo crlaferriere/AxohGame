@@ -21,6 +21,8 @@ public class Hero extends Mob {
 		g2d.drawImage(getImage(), x, y, getSpriteSize(), getSpriteSize(), game);
 		g2d.setColor(Color.red);
 		g2d.drawRect(x, y, getSpriteSize(), getSpriteSize());
+		//g2d.setColor(Color.green);
+		//g2d.drawRect(4, 40, 0, 0);
 		//g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX(), (int) position.getY() - (int) game.camera.getY(), getSpriteSize(), getSpriteSize(), game);
 		//position.setX(x);
 		//position.setY(y);
