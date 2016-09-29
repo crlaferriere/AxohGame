@@ -27,12 +27,12 @@ public class Sprite extends Object {
 	/***************
 	 * Variables
 	 ***************/
-	//entity - The class which contains location data about the sprite
+	//image - The class which contains location data about the sprite
 	//image - The actual pixel data of an image
 	//sheet - The spriteSheet the sprite image can be found on
 	//spriteNumber - The position on the spriteSheet the image is found
 	//scale - The number the sprite width and height will be multiplied with when displaying the image
-	protected ImageEntity entity;
+	protected ImageEntity image;
     protected int scale;
 	
 	//currentState - Int which defines many possible states(This could be changed to an enum in the future for better readability)
@@ -65,8 +65,8 @@ public class Sprite extends Object {
      * @param g2d - Graphics needed to display the image
      ******************************************/
     public Sprite(JFrame frame, Graphics2D g2d) {
-        entity = new ImageEntity(frame);
-        entity.setGraphics(g2d);
+        image = new ImageEntity(frame);
+        image.setGraphics(g2d);
         currentState = 0;
     }
     
@@ -79,7 +79,7 @@ public class Sprite extends Object {
      ***********************************************/
     public Image setSprite(SpriteSheet sheet, int spriteNumber) {
     	// image = (Image) sheet.getSprite(spriteNumber);
-    	entity.setImage((Image) sheet.getSprite(spriteNumber));
+    	image.setImage((Image) sheet.getSprite(spriteNumber));
     	if(spriteSize == 0) spriteSize = sheet.getSpriteSize() * sheet.getScale();
     	return getImage();
     }
@@ -151,24 +151,24 @@ public class Sprite extends Object {
      * @return - Boolean for if the intersection is happening
      ***************************************************************/
     public boolean checkLeftBound(Rectangle r) {
-    	if(left){ if(r.intersects(entity.getBounds(boundSize, _boundLeftX, _boundLeftY))) return true; }
+    	if(left){ if(r.intersects(image.getBounds(boundSize, _boundLeftX, _boundLeftY))) return true; }
     	return false;
     }
     public boolean checkRightBound(Rectangle r) {
-    	if(right){ if(r.intersects(entity.getBounds(boundSize, _boundRightX, _boundRightY))) return true; }
+    	if(right){ if(r.intersects(image.getBounds(boundSize, _boundRightX, _boundRightY))) return true; }
     	return false;
     }
     public boolean checkHeadBound(Rectangle r) {
-    	if(head){ if(r.intersects(entity.getBounds(boundSize, _boundHeadX, _boundHeadY))) return true; }
+    	if(head){ if(r.intersects(image.getBounds(boundSize, _boundHeadX, _boundHeadY))) return true; }
     	return false;
     }
     public boolean checkLegBound(Rectangle r) {
-    	if(leg){ if(r.intersects(entity.getBounds(boundSize, _boundLegX, _boundLegY))) return true; }
+    	if(leg){ if(r.intersects(image.getBounds(boundSize, _boundLegX, _boundLegY))) return true; }
     	return false;
     }
     
     //Getters for image, solid, boundSize and spriteSize
-    public Image getImage() { return entity.getImage(); }
+    public Image getImage() { return image.getImage(); }
     public int getBoundSize() { return boundSize; }
     public int getSpriteSize() { return spriteSize; }
     
@@ -212,10 +212,10 @@ public class Sprite extends Object {
     public int headBoundX() { return _boundHeadX; }
     public int headBoundY() { return _boundHeadY; }
     public boolean hasMultBounds() { return hasMultBounds; }
-    public Rectangle getLeftBound() { return entity.getBounds(boundSize, _boundLeftX, _boundLeftY); }
-    public Rectangle getRightBound() { return entity.getBounds(boundSize, _boundRightX, _boundRightY); }
-    public Rectangle getHeadBound() { return entity.getBounds(boundSize, _boundHeadX, _boundHeadY); }
-    public Rectangle getLegBound() { return entity.getBounds(boundSize, _boundLegX, _boundLegY); }
+    public Rectangle getLeftBound() { return image.getBounds(boundSize, _boundLeftX, _boundLeftY); }
+    public Rectangle getRightBound() { return image.getBounds(boundSize, _boundRightX, _boundRightY); }
+    public Rectangle getHeadBound() { return image.getBounds(boundSize, _boundHeadX, _boundHeadY); }
+    public Rectangle getLegBound() { return image.getBounds(boundSize, _boundLegX, _boundLegY); }
 
     /*******************************************************************
      * load bitmap file for individual sprites
@@ -223,7 +223,7 @@ public class Sprite extends Object {
      * @param filename - String directory location the sprite image is located in
      ********************************************************************/
     public void load(String filename) {
-        entity.load(filename);
+        image.load(filename);
     }
     
     /***********************************************************
@@ -232,13 +232,13 @@ public class Sprite extends Object {
      * @param c - Color for the box to be
      ***********************************************************/
     public void drawBounds(Color c) {
-        entity.g2d.setColor(c);
-        if(!hasMultBounds) entity.g2d.draw(getBounds());
+        image.g2d.setColor(c);
+        if(!hasMultBounds) image.g2d.draw(getBounds());
         else {
-        	if(leg) entity.g2d.draw(getEntity().getBounds(boundSize, _boundLegX, _boundLegY));
-        	if(left) entity.g2d.draw(getEntity().getBounds(boundSize, _boundLeftX, _boundLeftY));
-        	if(right) entity.g2d.draw(getEntity().getBounds(boundSize, _boundRightX, _boundRightY));
-        	if(head) entity.g2d.draw(getEntity().getBounds(boundSize, _boundHeadX, _boundHeadY));
+        	if(leg) image.g2d.draw(getEntity().getBounds(boundSize, _boundLegX, _boundLegY));
+        	if(left) image.g2d.draw(getEntity().getBounds(boundSize, _boundLeftX, _boundLeftY));
+        	if(right) image.g2d.draw(getEntity().getBounds(boundSize, _boundRightX, _boundRightY));
+        	if(head) image.g2d.draw(getEntity().getBounds(boundSize, _boundHeadX, _boundHeadY));
         }
     }
 
@@ -254,8 +254,8 @@ public class Sprite extends Object {
 
     //returns a bounding rectangle for the default bound
     public Rectangle getBounds() { 
-	    	if(nx != 0 || ny != 0) return entity.getBounds(boundSize, nx, ny); 
-	    	else return entity.getBounds(boundSize);
+	    	if(nx != 0 || ny != 0) return image.getBounds(boundSize, nx, ny); 
+	    	else return image.getBounds(boundSize);
     }
 
     /***************************************************************
@@ -263,8 +263,8 @@ public class Sprite extends Object {
      * 
      * @return - Int width or height of the image
      ***************************************************************/
-    public int imageWidth() { return entity.getWidth(); }
-    public int imageHeight() { return entity.getHeight(); }
+    public int imageWidth() { return image.getWidth(); }
+    public int imageHeight() { return image.getHeight(); }
 
     //check for collision with a rectangular shape
     public boolean collidesWith(Rectangle rect) {
@@ -277,13 +277,13 @@ public class Sprite extends Object {
     }
 
     //Getters for image and display variables
-    public JFrame frame() { return entity.frame; }
-    public Graphics2D graphics() { return entity.g2d; }
-    public Image image() { return entity.image; }
-    public ImageEntity getEntity() { return entity; }
+    public JFrame frame() { return image.frame; }
+    public Graphics2D graphics() { return image.g2d; }
+    public Image image() { return image.image; }
+    public ImageEntity getEntity() { return image; }
 
     //Set the imageEntity image variable
-    public void setImage(Image image) { entity.setImage(image); }
+    public void setImage(Image image) { this.image.setImage(image); }
     
     /****************************************************
      * Get or Set the sprite Type variable
