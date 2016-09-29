@@ -159,9 +159,11 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 ****************************************************************/
 	public Game(int frameRate, int width, int height) {
 		//Set up JFrame window
+		super();
 		Dimension size = new Dimension(width, height);
 		setPreferredSize(size);
 		setSize(size);
+		setResizable(false);
 		pack();
 		
 		//Store parameters in a variables

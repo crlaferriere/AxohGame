@@ -283,7 +283,7 @@ public class Judgement extends Game {
 		if(getGameState() == State.INGAMEMENU) inMenu.update(option, sectionLoc, player.health()); //In Game Menu update
 		updateData(currentMap, currentOverlay, playerX, playerY); //Update the current file data for saving later
 		if (camFollow) {
-			camera.setLocation(player.getXLoc()-9.0, player.getYLoc()-38.0);
+			camera.setLocation(player.getXLoc(), player.getYLoc());
 		}
 		// Get rid of this spamtastic logging...
 		// System.out.println(frameRate()); //Print the current framerate to the console
