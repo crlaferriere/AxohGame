@@ -88,7 +88,7 @@ public class Map {
 		for(int y = 0; y < mapHeight; y++) {
 			for(int x = 0; x < mapWidth; x++) {
 				mapTiles[x + y * mapWidth].renderTile(xx, yy, g2d, frame);
-				if(mapTiles[x + y * mapWidth].hasMob()) mapTiles[x + y * mapWidth].mob().renderMob(xx, yy);
+				if(mapTiles[x + y * mapWidth].hasMob()) mapTiles[x + y * mapWidth].mob().renderMob();
 				xx = xx + spriteSize;
 			}
 			xx = xt;

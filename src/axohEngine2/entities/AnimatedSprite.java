@@ -271,7 +271,8 @@ public class AnimatedSprite extends Sprite {
     //Sprite and image data getters
     public SpriteSheet getSheet() { return sheet; }
     public int getSpriteNumber() { return spriteNumber; }
-    public int getSpriteSize() { return super.spriteSize; }
+    @Override
+	public int getSpriteSize() { return super.spriteSize; }
     public int getScale() { return super.scale; }
     
     //Setters for image data and sprites
@@ -298,8 +299,6 @@ public class AnimatedSprite extends Sprite {
      * @param y - int position on the y axis in the room
      ************************************************************/
     public void render(JFrame frame, Graphics2D g2d, int x, int y) {
-    	entity.setX(x);
-    	entity.setY(y);
 		g2d.drawImage(getAnimImage(), x, y, getSpriteSize(), getSpriteSize(), frame);	
     }
     

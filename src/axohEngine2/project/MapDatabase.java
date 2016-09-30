@@ -17,8 +17,7 @@ package axohEngine2.project;
 //Imports
 import java.awt.Graphics2D;
 
-import javax.swing.JFrame;
-
+import axohEngine2.Judgement;
 import axohEngine2.entities.Mob;
 import axohEngine2.entities.SpriteSheet;
 import axohEngine2.map.Event;
@@ -90,11 +89,11 @@ public class MapDatabase {
 	 * Constructor
 	 * Instantiate all variables for the game
 	 * 
-	 * @param frame - JFrame Window for the map to be displayed on
+	 * @param game - JFrame Window for the map to be displayed on
 	 * @param g2d - Graphics2D object needed to display images
 	 * @param scale - Number to be multiplied by each image for correct on screen display
 	 *******************************************************************/
-	public MapDatabase(JFrame frame, Graphics2D g2d, int scale) {
+	public MapDatabase(Judgement game, Graphics2D g2d, int scale) {
 		//Currently a maximum of 200 maps possible(Can be changed if needed)
 		maps = new Map[200];
 		
@@ -107,21 +106,21 @@ public class MapDatabase {
 		zombie = new SpriteSheet("/textures/characters/zombie.png", 8, 8, 32, scale);
 		
 		//Set up tile blueprints and if they are animating
-		d = new Tile(frame, g2d, "door", environment32, 0);
-		f = new Tile(frame, g2d, "flower", misc, 1);
-		g = new Tile(frame, g2d, "grass", misc, 0);
-		b = new Tile(frame, g2d, "bricks", misc, 16, true);
-		r = new Tile(frame, g2d, "walkWay", misc, 6);
-		e = new Tile(frame, g2d, "empty", misc, 7);
-		ro = new Tile(frame, g2d, "rock", misc, 2);
-		h = new Tile(frame, g2d, "house", buildings, 0, true);
-		hf = new Tile(frame, g2d, "floor", misc, 8);
-		c = new Tile(frame, g2d, "chest", extras2, 0, true);
-		t = new Tile(frame, g2d, "tree", misc, 4, true);
-		t1 = new Tile(frame, g2d, "tree1", misc, 5, true);
-		t2 = new Tile(frame, g2d, "tree2", misc, 20, true);
-		t3 = new Tile (frame, g2d, "tree3", misc, 21, true);
-		//g1 = new Tile(frame, g2d, "test", misc2, 1);
+		d = new Tile(game, g2d, "door", environment32, 0);
+		f = new Tile(game, g2d, "flower", misc, 1);
+		g = new Tile(game, g2d, "grass", misc, 0);
+		b = new Tile(game, g2d, "bricks", misc, 16, true);
+		r = new Tile(game, g2d, "walkWay", misc, 6);
+		e = new Tile(game, g2d, "empty", misc, 7);
+		ro = new Tile(game, g2d, "rock", misc, 2);
+		h = new Tile(game, g2d, "house", buildings, 0, true);
+		hf = new Tile(game, g2d, "floor", misc, 8);
+		c = new Tile(game, g2d, "chest", extras2, 0, true);
+		t = new Tile(game, g2d, "tree", misc, 4, true);
+		t1 = new Tile(game, g2d, "tree1", misc, 5, true);
+		t2 = new Tile(game, g2d, "tree2", misc, 20, true);
+		t3 = new Tile (game, g2d, "tree3", misc, 21, true);
+		//g1 = new Tile(game, g2d, "test", misc2, 1);
 		
 		
 		//Set the tile blueprints in an array for the Map
@@ -343,31 +342,31 @@ public class MapDatabase {
 
 		
 		//Put the maps together and add them to the array of possible maps
-		city = new Map(frame, g2d, cityTiles, 40, 40, "city");
+		city = new Map(game, g2d, cityTiles, 40, 40, "city");
 		maps[0] = city;
-		cityO = new Map(frame, g2d, cityOTiles, 40, 40, "cityO");
+		cityO = new Map(game, g2d, cityOTiles, 40, 40, "cityO");
 		maps[1] = cityO;
-		houses = new Map(frame, g2d, houseTiles, 6, 6, "houses");
+		houses = new Map(game, g2d, houseTiles, 6, 6, "houses");
 		maps[2] = houses;
-		housesO = new Map(frame, g2d, houseOTiles, 6, 6, "housesO");
+		housesO = new Map(game, g2d, houseOTiles, 6, 6, "housesO");
 		maps[3] = housesO;
 		
 		//new map that will display the inside of the house
-		insideHouse = new Map(frame, g2d, insideHouseTiles, 15, 15, "insideHouse");
+		insideHouse = new Map(game, g2d, insideHouseTiles, 15, 15, "insideHouse");
 		maps[4] = insideHouse;
-		insideHouseO = new Map(frame, g2d, insideHouseOTiles, 15, 15, "insideHouseO");
+		insideHouseO = new Map(game, g2d, insideHouseOTiles, 15, 15, "insideHouseO");
 		maps[5] = insideHouseO;
 		
 		//Extended map
-		QU = new Map(frame, g2d, QUTiles, 40, 40, "QU");
+		QU = new Map(game, g2d, QUTiles, 40, 40, "QU");
 		maps[6] = QU;
-		QUO = new Map(frame, g2d, QUOTiles, 40, 40, "QUO");
+		QUO = new Map(game, g2d, QUOTiles, 40, 40, "QUO");
 		maps[7] = QUO;
 		
 		//Put together all items (Dont forget to add these to the count and setup methods in inGameMenu.java)
-		potion = new Item(frame, g2d, extras2, 2, "Potion", false);
+		potion = new Item(game, g2d, extras2, 2, "Potion", false);
 		potion.setHealItem(25, false, "");
-		mpotion = new Item(frame, g2d, extras2, 2, "Mega Potion", false);
+		mpotion = new Item(game, g2d, extras2, 2, "Mega Potion", false);
 		potion.setHealItem(50, false, "");
 		
 		//Put together all events
@@ -412,7 +411,7 @@ public class MapDatabase {
 		cityO.accessTile(96).addEvent(getMpotion);
 		
 		//Set up Monsters and NPCs
-		npc = new Mob(frame, g2d, zombie, 40, TYPE.RANDOMPATH, "npc", true);
+		npc = new Mob(game, g2d, zombie, 40, TYPE.RANDOMPATH, "npc");
 		npc.setMultBounds(6, 50, 92, 37, 88, 62, 92, 62, 96);
 		npc.setMoveAnim(32, 48, 40, 56, 3, 8);
 		npc.setHealth(60);

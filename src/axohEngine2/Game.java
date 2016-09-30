@@ -44,7 +44,7 @@ import axohEngine2.states.GameMenuTransition;
 import axohEngine2.states.GameTransition;
 import axohEngine2.states.StateTransition;
 import axohEngine2.states.TitleMenuTransition;
-import axohEngine2.util.Point2D;
+import axohEngine2.util.Vector2D;
 
 //Interface setup which implements needed java libraries
 public abstract class Game extends JFrame implements Runnable, KeyListener, MouseListener, MouseMotionListener {
@@ -65,10 +65,10 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	//SCREENWIDTH - Game window width
 	//SCREENHEIGHT - Game window height
 	//CENTERX/CENTERY - Center of the game window's x/y
-	static int SCREENWIDTH = 1600; //Adjust the screen width 
-	static int SCREENHEIGHT = 900; //Adjust the screen width
-	static int CENTERX = SCREENWIDTH / 2;
-	static int CENTERY = SCREENHEIGHT / 2;
+	public static final int SCREENWIDTH = 1600; //Adjust the screen width 
+	public static final int SCREENHEIGHT = 900; //Adjust the screen width
+	public static final int CENTERX = SCREENWIDTH / 2;
+	public static final int CENTERY = SCREENHEIGHT / 2;
 	
 	//Game loop and Thread variable(Transient means it wont be serialized, certain data types cant be serialized)
 	private transient Thread gameloop;
@@ -114,7 +114,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	}
 	
 	//Mouse variables
-	private transient Point2D mousePos = new Point2D(0, 0);
+	private transient Vector2D mousePos = new Vector2D(0, 0);
 	private boolean mouseButtons[] = new boolean[4];
 	protected char currentChar;
 	
@@ -147,8 +147,8 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	abstract void spriteUpdate(AnimatedSprite sprite);
 	abstract void spriteDraw(AnimatedSprite sprite);
 	abstract void spriteDying(AnimatedSprite sprite);
-	abstract void spriteCollision(AnimatedSprite spr1, AnimatedSprite spr2, int hitDir, int hitDir2);
-	abstract void tileCollision(AnimatedSprite spr, Tile tile, int hitDir, int hitDir2);
+	//abstract void spriteCollision(AnimatedSprite spr1, AnimatedSprite spr2, int hitDir, int hitDir2);
+	//abstract void tileCollision(AnimatedSprite spr, Tile tile, int hitDir, int hitDir2);
 	
 	/***************************************************************
 	 * Constructor - Initialize the frame, the backBuffer, the game lists, and any othervariables
@@ -159,9 +159,11 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 ****************************************************************/
 	public Game(int frameRate, int width, int height) {
 		//Set up JFrame window
+		super();
 		Dimension size = new Dimension(width, height);
 		setPreferredSize(size);
 		setSize(size);
+		setResizable(false);
 		pack();
 		
 		//Store parameters in a variables
@@ -173,6 +175,8 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 		backBuffer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_RGB);
         g2d = backBuffer.createGraphics();
         tk = Toolkit.getDefaultToolkit();
+                
+       // System.out.println(tk.getScreenInsets(this.getGraphicsConfiguration()));
         
         setGameState(null);
 
@@ -191,7 +195,11 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
         
         //Start the game
         gameStartUp();
+        g2d.translate(3, 32);
+
 	}
+	
+	
 	
 	/********************************************************
 	 * Get the graphics used in-game for use in child-classes
@@ -218,12 +226,13 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 * Currently may not work, using built in java methods may work better.
 	 * Unused
 	 ******************************************************/
-	public Point2D mousePosition() { return mousePos; }
+	public Vector2D mousePosition() { return mousePos; }
 	
 	/******************************************************
 	 * @param g - Graphics used to render objects
 	 * Override the JFrames update method and insert custom updating methods
 	 ******************************************************/
+	@Override
 	public void update(Graphics g) {
 		//Make sure the game renders as fast as possible but only runs the framerate amount of updates per second
 		_frameCount++;
@@ -246,6 +255,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 * The purpose of this is to solve any strange rendering glitches, doing it this way
 	 * allows for an image to be designed in the background and then brought forward all at once.
 	 ******************************************************/
+	@Override
 	public void paint(Graphics g) {
 		g.drawImage(backBuffer, 0, 0, this);
 		tk.sync();
@@ -258,6 +268,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	}
 	
 	//Using Runnable, run a loop which calls update methods for specific actions including graphics and collisions
+	@Override
 	public void run() {
 		Thread t = Thread.currentThread();
 		//Basically - While this new thread is equal to the thread we make at startup, repeat
@@ -270,8 +281,8 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 			if(!gamePaused()) {
 				gameTimedUpdate();
 				updateSprites();
-				spriteCollision();
-				tileCollision();
+				//spriteCollision();
+				//tileCollision();
 			}
 			
 			//Render the graphics
@@ -316,9 +327,12 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 * Key Listener Methods
 	 * These methods apply the java methods to my personal more flexible ones
 	 *********************************************************************/
+	@Override
 	public void keyTyped(KeyEvent k) { setKeyChar(k.getKeyChar()); }
-    public void keyPressed(KeyEvent k) { gameKeyDown(k.getKeyCode()); }
-    public void keyReleased(KeyEvent k) { gameKeyUp(k.getKeyCode()); }
+    @Override
+	public void keyPressed(KeyEvent k) { gameKeyDown(k.getKeyCode()); }
+    @Override
+	public void keyReleased(KeyEvent k) { gameKeyUp(k.getKeyCode()); }
     
     /**********************************************************************
      * Mouse Listener events
@@ -349,6 +363,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
      * @param e -A MouseEvent that updates a mouses position after being pressed
      * Inherited Method
      *********************************************************************/
+	@Override
 	public void mousePressed(MouseEvent e) {
 	    checkButtons(e);
 	    mousePos.setX(e.getX());
@@ -360,6 +375,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 * @param e - MouseEvent that updates a mouses position after being released
      * Inherited Method
 	 *********************************************************************/
+	@Override
 	public void mouseReleased(MouseEvent e) {
 	    checkButtons(e);
 	    mousePos.setX(e.getX());
@@ -371,6 +387,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 * @param e - MouseEvent that updates a mouses position after being moved
      * Inherited Method
 	 *********************************************************************/
+	@Override
 	public void mouseMoved(MouseEvent e) {
 	    checkButtons(e);
 	    mousePos.setX(e.getX());
@@ -382,6 +399,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 * @param e - MouseEvent that updates a mouses position after being Dragged
      * Inherited Method
 	 *********************************************************************/
+	@Override
 	public void mouseDragged(MouseEvent e) {
 	    checkButtons(e);
 	    mousePos.setX(e.getX());
@@ -394,6 +412,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 * @param e - MouseEvent that updates a mouses position after being Entered
      * Inherited Method
 	 *********************************************************************/
+	@Override
 	public void mouseEntered(MouseEvent e) {
 	    mousePos.setX(e.getX());
 	    mousePos.setY(e.getY());
@@ -404,6 +423,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 * @param e - MouseEvent that updates a mouses position after being Exited
      * Inherited Method
 	 *********************************************************************/
+	@Override
 	public void mouseExited(MouseEvent e) {
 	    mousePos.setX(e.getX());
 	    mousePos.setY(e.getY());
@@ -414,6 +434,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 * @param e - MouseEvent that runs after being Clicked
      * Inherited Method
 	 *********************************************************************/
+	@Override
 	public void mouseClicked(MouseEvent e) { }
 	
 	/**********************************************************************
@@ -437,17 +458,17 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 * @param angle - A Double from 0 to 360
 	 * @return - A Double defining an angle in Radians
 	 *********************************************************************/
-	protected double calcAngleMoveX(double angle) { return (double) (Math.cos(angle * Math.PI / 180)); }
-	protected double calcAngleMoveY(double angle) { return (double) (Math.sin(angle * Math.PI / 180)); }
+	protected double calcAngleMoveX(double angle) { return (Math.cos(angle * Math.PI / 180)); }
+	protected double calcAngleMoveY(double angle) { return (Math.sin(angle * Math.PI / 180)); }
 	
 	//update all the sprites in the current list if they are alive
 	protected void updateSprites() {
 		for(int i = 0; i < _sprites.size(); i++) {
-			AnimatedSprite spr = (AnimatedSprite) _sprites.get(i); //The sprite type must be cast because many kinds of sprites can be stored in the list
-			if(spr.alive()) {
+			AnimatedSprite spr = _sprites.get(i); //The sprite type must be cast because many kinds of sprites can be stored in the list
+			// if(spr.alive()) {
 				spriteUpdate(spr);
 				if(getGameState() == State.GAME) if(spr instanceof Mob) ((Mob) spr).updateMob(); //When the game is running, update Mobs
-			}
+			// }
 			spriteDying(spr);
 		}
 	}
@@ -482,7 +503,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 * hitDir - The bound which is being intersected on spr1
 	 * hitDir2 - The bound which is being intersected on spr2
 	**************************************************************************/
-	protected void spriteCollision() {
+	/*protected void spriteCollision() {
 		for(int i = 0; i < _sprites.size(); i++) {
 			AnimatedSprite spr1 = _sprites.get(i);
 			for(int j = 0; j < _sprites.size(); j++) {
@@ -527,7 +548,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 				}//end mult bounds checks
 			}//end inner for
 		}//end outer for
-	}
+	}*/
 	
 	/**********************************************************************
 	 * Same as the above spriteCollision() method but instead the collision is between
@@ -537,7 +558,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 * any bounds made for either object the method calls a handling method 
 	 * for dealing with very specific properties that are relative to each game
 	 ***********************************************************************/
-	protected void tileCollision() {
+	/*protected void tileCollision() {
 		for(int i = 0; i < _sprites.size(); i++) {
 			AnimatedSprite spr = _sprites.get(i);
 			for(int j = 0; j < _tiles.size(); j++) {
@@ -581,16 +602,16 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 				}
 			} //end _tiles for loop
 		} //end _sprites for loop
-	}
+	}*/
 	
 	//Draw animated sprites automatically, they must be in the list (Includes tiles)
 	protected void drawSprites() {
 		for(int i = 0; i < _sprites.size(); i++) {
-			AnimatedSprite spr = (AnimatedSprite) _sprites.get(i);
-			if(spr.alive()) {
+			AnimatedSprite spr = _sprites.get(i);
+			// if(spr.alive()) {
 				spr.updateFrame();
 				spriteDraw(spr);
-			}
+			// }
 		}
 		for(int i = 0; i < _tiles.size(); i++) _tiles.get(i).updateFrame();
 	}
@@ -598,8 +619,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	//Delete the sprite that has been killed from the system
 	private void purgeSprites() {
 		for(int i = 0; i < _sprites.size(); i++) {
-			AnimatedSprite spr = _sprites.get(i);
-			if(spr.alive() == false) _sprites.remove(i);
+			_sprites.get(i);
 		}
 	}
 	

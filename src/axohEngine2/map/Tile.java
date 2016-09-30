@@ -23,6 +23,7 @@ import axohEngine2.entities.AnimatedSprite;
 import axohEngine2.entities.Mob;
 import axohEngine2.entities.SpriteSheet;
 import axohEngine2.project.TYPE;
+import axohEngine2.util.Vector2D;
 
 public class Tile extends AnimatedSprite {
 	
@@ -31,6 +32,7 @@ public class Tile extends AnimatedSprite {
 	 **************************/
 	//_solid, _slippery, _breakable - Boolean properties that can be checked in a tile to perform special actions
 	//hasEvent and hasMob - vey special booleans that check for the possibility for an event or a mob from that tile
+	private Vector2D position;
 	private boolean _solid;
 	private boolean _slippery;
 	private boolean _breakable;
@@ -61,7 +63,7 @@ public class Tile extends AnimatedSprite {
 		_solid = false;
 		_slippery = false;
 		_breakable = false;
-		
+		position = new Vector2D();
 		setSprite(sheet, spriteNumber); //Set the object image to 
 	}
 	
@@ -80,11 +82,13 @@ public class Tile extends AnimatedSprite {
 		_solid = solid;
 		_slippery = false;
 		_breakable = false;
+		position = new Vector2D();
 		
 		if(solid) setSpriteType(TYPE.WALL);
 		if(solid) hasProperty = true;
-		setSolid(solid); //In Sprite super class, set solid
+		//setSolid(solid); //In Sprite super class, set solid
 		setSprite(sheet, spriteNumber);
+		
 	}
 	
 	
@@ -105,8 +109,9 @@ public class Tile extends AnimatedSprite {
 		_solid = solid;
 		_slippery = slippery;
 		_breakable = breakable;
+		position = new Vector2D();
 		
-		setSolid(solid);
+		//setSolid(solid);
 		if(solid || slippery || breakable) hasProperty = true;
 		setSprite(getSheet(), getSpriteNumber());
 	}
@@ -127,8 +132,9 @@ public class Tile extends AnimatedSprite {
 		hasEvent = tile.hasEvent();
 		hasProperty = tile.hasProperty();
 		event = tile.event();
+		position = new Vector2D();
 		
-		setSolid(_solid);
+		//setSolid(_solid);
 		setSprite(tile.getSheet(), tile.getSpriteNumber());
 	}
 	
@@ -185,6 +191,7 @@ public class Tile extends AnimatedSprite {
 	 * @param frames - The frames to use in the animation
 	 * @param delay - The delay between frame advances
 	 ********************************************************/
+	@Override
 	public void loadAnim(int frames, int delay) {
 		super.loadAnim(frames, delay);
 	}
@@ -199,8 +206,8 @@ public class Tile extends AnimatedSprite {
 	 ***************************************************************************/
 	public void renderTile(int x, int y, Graphics2D g2d, JFrame frame) {
 		g2d.drawImage(getImage(), x, y, getSpriteSize(), getSpriteSize(), frame);
-		getEntity().setX(x);
-		getEntity().setY(y);
+		position.setX(x);
+		position.setY(y);
 	}
 	
 	/***************************************************************************
@@ -221,7 +228,7 @@ public class Tile extends AnimatedSprite {
 	 ****************************************************************************/
 	public Rectangle getTileBounds() {
 		Rectangle r;
-		r = new Rectangle((int)entity.getX(), (int)entity.getY(), getSpriteSize(), getSpriteSize());
+		r = new Rectangle((int)position.getX(), (int)position.getY(), getSpriteSize(), getSpriteSize());
 		return r;
 	}
 }

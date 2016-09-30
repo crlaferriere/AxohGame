@@ -43,7 +43,7 @@ public class MidiSequence {
 	
 	//Is the sequence ready?
 	public boolean isLoaded() {
-		return (boolean)(sequencer.isOpen());
+		return (sequencer.isOpen());
 	}
 	
 	private URL getURL(String filename) {

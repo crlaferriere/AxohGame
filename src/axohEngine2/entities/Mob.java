@@ -15,12 +15,14 @@ package axohEngine2.entities;
 
 //Imports
 import java.awt.Graphics2D;
+
 import java.util.LinkedList;
 import java.util.Random;
 
-import javax.swing.JFrame;
-
+import axohEngine2.Game;
+import axohEngine2.Judgement;
 import axohEngine2.project.TYPE;
+import axohEngine2.util.Vector2D;
 
 public class Mob extends AnimatedSprite{
 	
@@ -40,38 +42,24 @@ public class Mob extends AnimatedSprite{
 	//currentAttack - The currently selected attack to use from the list of Mob attacks
 	private Random random = new Random();
 	private LinkedList<Attack> attacks;
-	private boolean hostile;
 	private int health;
 	private TYPE ai;
-	private int xx;
-	private int yy;
-	private int primaryDirection = 2;  //0 = left, 1 = right, 2 = up, 3 = down
-	private int speed = 4;
+	protected Vector2D position;
 	
 	private boolean attacking;
 	private boolean takenOut = false;
 	private Attack currentAttack;
-
-	//Four variable booleans depicting the last direction the mob was moving(This could be phased out of the system)
-	private boolean wasRight = false;
-	private boolean wasLeft = false;
-	private boolean wasUp = false;
-	private boolean wasDown = false;
 
 	//moveDir - Direction the mob was moving
 	//direction - The direction the Mob is facing
 	//randomDir - The random choice of a direction used in random movements
 	private DIRECTION moveDir;
 	private DIRECTION direction;
-	private DIRECTION randomDir;
-	
-	//Wait timers
-	private boolean waitOn = false;
-	private int wait;
-	
 	//Graphics and Window objects the mob needs for display
-	private Graphics2D g2d;
-	private JFrame frame;
+	protected Graphics2D g2d;
+	protected Judgement game;
+	
+	private boolean _isAlive;
 	
 	/************************************************************************
 	 * Constructor
@@ -84,38 +72,41 @@ public class Mob extends AnimatedSprite{
 	 * @param name - The character name in a String
 	 * @param hostility - Boolean, is the mob going to attack the player?
 	 *************************************************************************/
-	public Mob(JFrame frame, Graphics2D g2d, SpriteSheet sheet, int spriteNumber, TYPE ai, String name, boolean hostility) {
-		super(frame, g2d, sheet, spriteNumber, name);
+	public Mob(Judgement game, Graphics2D g2d, SpriteSheet sheet, int spriteNumber, TYPE ai, String name) {
+		super(game, g2d, sheet, spriteNumber, name);
 		attacks = new LinkedList<Attack>();
-		this.frame = frame;
+		this.game = game;
 		this.g2d = g2d;
 		this.ai = ai;
 		
-		hostile = hostility;
 		setName(name);
 		health = 0;
-		setSolid(true);
 		setAlive(true);
 		setSpriteType(ai);
+		position = new Vector2D();
+
 	}
 	
 	//Getters for name and ai type
-	public String getName() { return super._name; }
+	public String getName() { return _name; }
 	public TYPE getType() { return ai; }
 	
 	//Setters for current health, ai, name and speed
 	public void setHealth(int health) { this.health = health; }
 	public void setAi(TYPE ai) { this.ai = ai; }
 	public void setName(String name) { super._name = name; }
-	public void setSpeed(int speed) { this.speed = speed; }
+	public void setSpeed(int speed) { }
+	public boolean isAlive() {
+		return _isAlive;
+	}
+	public void setAlive(boolean value) {
+		_isAlive = value;
+	}
 	
 	/**************************************************
 	 * Set all of the movement related variables to whatever nothing is
 	 **************************************************/
 	public void resetMovement() {
-		randomDir = DIRECTION.NONE;
-		wait = 0;
-		waitOn = false;
 		moveDir = DIRECTION.NONE;
 	}
 	
@@ -125,9 +116,6 @@ public class Mob extends AnimatedSprite{
 	 ****************************************************************/
 	public void stop() {
 		if(ai == TYPE.RANDOMPATH){
-			randomDir = DIRECTION.NONE;
-			waitOn = true;
-			wait = 100 + random.nextInt(200);
 			stopAnim();
 		}
 	}
@@ -221,32 +209,37 @@ public class Mob extends AnimatedSprite{
 	 * @param xa - Int movement in pixels on the x axis
 	 * @param ya - Int movement in pixels on the y axis
 	 ****************************************************************/
-	public void move(int xa, int ya) { 
+	public void move(double xa, double ya) {
+		position.setX(position.getX() + xa);
+		position.setY(position.getY() + ya);
 		if(xa < 0) { //left
-			xx += xa; 
-				
+			//xx += xa; 
 			if(moveDir != DIRECTION.LEFT) setAnimTo(leftAnim);
 			startAnim();
+			direction = DIRECTION.LEFT;
 			moveDir = DIRECTION.LEFT;
 		} else if(xa > 0) { //right
-			xx += xa; 
+			//xx += xa; 
 			
 			if(moveDir != DIRECTION.RIGHT) setAnimTo(rightAnim);
 			startAnim();
+			direction = DIRECTION.RIGHT;
 			moveDir = DIRECTION.RIGHT;
 		}
 			
 		if(ya < 0) {  //up
-			yy += ya;
+			//yy += ya;
 
 			if(moveDir != DIRECTION.UP) setAnimTo(upAnim);
 			startAnim();
+			direction = DIRECTION.UP;
 			moveDir = DIRECTION.UP;
 		} else if(ya > 0) { //down
-			yy += ya; 
+			//yy += ya; 
 			
 			if(moveDir != DIRECTION.DOWN) setAnimTo(downAnim);
 			startAnim();
+			direction = DIRECTION.DOWN;
 			moveDir = DIRECTION.DOWN;
 		}
 		if(xa == 0 && ya == 0) stopAnim();
@@ -264,7 +257,6 @@ public class Mob extends AnimatedSprite{
 	public void updatePlayer(boolean left, boolean right, boolean up, boolean down) {
 		if (left) {
 			if (!right && !up && !down) {
-				primaryDirection = 0;
 				direction = DIRECTION.LEFT;
 				moveDir = DIRECTION.LEFT;
 				toggleLeg(true);
@@ -278,7 +270,6 @@ public class Mob extends AnimatedSprite{
 		}
 		if (right) {
 			if (!left && !up && !down) {
-				primaryDirection = 1;
 				direction = DIRECTION.RIGHT;
 				moveDir = DIRECTION.RIGHT;
 				toggleLeg(true);
@@ -292,7 +283,6 @@ public class Mob extends AnimatedSprite{
 		}
 		if (up) {
 			if (!left && !right && !down) {
-				primaryDirection = 2;
 				direction = DIRECTION.UP;
 				moveDir = DIRECTION.UP;
 				toggleLeg(false);
@@ -306,7 +296,6 @@ public class Mob extends AnimatedSprite{
 		}
 		if (down) {
 			if (!left && !right && !up) {
-				primaryDirection = 3;
 				direction = DIRECTION.DOWN;
 				moveDir = DIRECTION.DOWN;
 				toggleLeg(false);
@@ -408,11 +397,12 @@ public class Mob extends AnimatedSprite{
 	 * 
 	 * @return - x or y int of location
 	 ***************************************************/
-	public double getXLoc() { return entity.getX(); }
-	public double getYLoc() { return entity.getY(); }
-	public void setLoc(int x, int y) { //Relative to current position
-		xx = xx + x;
-		yy = yy + y;
+	public double getXLoc() { return position.getX(); }
+	public double getYLoc() { return position.getY(); }
+	public void setLoc(double x, double y) { //Relative to current position
+		position.setLocation(x, y);
+		//xx = xx + x;
+		//yy = yy + y;
 	}
 
 	/**********************************************
@@ -421,9 +411,10 @@ public class Mob extends AnimatedSprite{
 	 * @param x - Int x position
 	 * @param y - Int y position
 	 ***********************************************/
-	public void renderMob(int x, int y) {
-		g2d.drawImage(getImage(), x + xx, y + yy, getSpriteSize(), getSpriteSize(), frame);
-		entity.setX(x + xx);
-		entity.setY(y + yy);
+	public void renderMob() {
+		g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX() + Game.CENTERX, (int) position.getY() - (int) game.camera.getY() + Game.CENTERY, getSpriteSize(), getSpriteSize(), game);
+		//g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX(), (int) position.getY() - (int) game.camera.getY(), getSpriteSize(), getSpriteSize(), game);
+		//position.setX(x);
+		//position.setY(y);
 	}
 }

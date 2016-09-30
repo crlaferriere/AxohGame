@@ -18,13 +18,12 @@ package axohEngine2.entities;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
-public class ImageEntity extends BaseGameEntity {
+public class ImageEntity extends Object {
 	
 	/************************
 	 * Variables
@@ -37,7 +36,7 @@ public class ImageEntity extends BaseGameEntity {
 	//scale - How many times the image needs to be stretched on the screen
 	protected Image image;
 	protected JFrame frame;
-	protected AffineTransform at;
+	// protected AffineTransform at;
 	protected Graphics2D g2d;
 	protected int width;
 	protected int height;
@@ -51,7 +50,6 @@ public class ImageEntity extends BaseGameEntity {
 	public ImageEntity(JFrame frame) {
 		this.frame = frame;
 		setImage(null);
-		setAlive(true);
 	}
 	
 	/*************************************************
@@ -66,48 +64,50 @@ public class ImageEntity extends BaseGameEntity {
 	 * @param image - The image object that this new entity will contain.
 	 ********************************************************************/
 	public void setImage(Image image) {
-		this.image = image;
 		if(image != null) {
+			this.image = image;
 			width = image.getHeight(frame);
 			height = image.getWidth(frame);
-			double x = frame.getSize().width / 2 - width() / 2;
-			double y = frame.getSize().height / 2 - height() / 2;
-			at = AffineTransform.getTranslateInstance(x, y);
+			//double x = getFrame().getSize().width / 2 - getWidth() / 2;
+			//double y = getFrame().getSize().height / 2 - getHeight() / 2;
+			// at = AffineTransform.getTranslateInstance(x, y);
 		}
 	}
 	
 	/*********************************************
 	 * @return - Int width of an image in pixels
 	 *********************************************/
-	public int width() {
-		if(image != null) 
+	public int getWidth() {
+		if (image != null) {
 			return image.getWidth(frame);
-		else
+		} else {
 			return 0;
+		}
 	}
 	
 	/*********************************************
 	 * @return - Int height of an image in pixels
 	 *********************************************/
-	public int height() {
-		if(image != null) 
+	public int getHeight() {
+		if (image != null) {
 			return image.getHeight(frame);
-		else
+		} else {
 			return 0;
+		}
 	}
 	
 	/*********************************************
 	 * @return - Int center X position of an image
 	 *********************************************/
 	public double getCenterX() {
-		return getX() + width() / 2;
+		return getWidth() / 2;
 	}
 	
 	/*********************************************
 	 * @return - Int center Y position of an image
 	 *********************************************/
 	public double getCenterY() {
-		return getY() + height() / 2;
+		return getHeight() / 2;
 	}
 	
 	/*********************************************
@@ -127,7 +127,7 @@ public class ImageEntity extends BaseGameEntity {
 	 * @param filename - String filename location
 	 *****************************************************/
 	public void load(String filename) {
-		try{	
+		try {
 			System.out.print("Trying to load: " + filename + " ... ");
 			image = ImageIO.read(getClass().getResource(filename));
 			System.out.println(" succeeded!");
@@ -148,7 +148,7 @@ public class ImageEntity extends BaseGameEntity {
 	 **********************************************************************************/
 	public Rectangle getBounds(int spriteSize) {
 		Rectangle r;
-		r = new Rectangle((int)getX(), (int)getY(), spriteSize, spriteSize);
+		r = new Rectangle(0, 0, spriteSize, spriteSize);
 		return r;
 	}
 	
@@ -164,7 +164,7 @@ public class ImageEntity extends BaseGameEntity {
 	 **********************************************************************************/
 	public Rectangle getBounds(int boundSize, int x, int y) {
 		Rectangle r;
-		r = new Rectangle((int)getX() + x, (int)getY() + y, boundSize, boundSize);
+		r = new Rectangle(x, y, boundSize, boundSize);
 		return r;
 	}
 }
