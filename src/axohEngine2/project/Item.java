@@ -27,17 +27,11 @@ public class Item extends Sprite{
 	 *******************/
 	//health, damage - Ints depicting how much something might change ones health or damage modifier
 	private int health;
-	private int damage;
-	
-	//Booleans defining a type of an item
-	private boolean healStatus = false;
 	private boolean healItem = false;
 	private boolean attackItem = false;
 	private boolean keyItem = false;
 	private boolean isEquipment;
 	
-	//Strings for the names of items and status's they can cure or change
-	private String status;
 	private String _name;
 	
 	/************************************************************************
@@ -73,15 +67,11 @@ public class Item extends Sprite{
 	//Set an item to be of healing type with certain characteristics
 	public void setHealItem(int healingAmount, boolean healsStatus, String statusToHeal) {
 		health = healingAmount;
-		healStatus = healsStatus;
-		status = statusToHeal;
 		healItem = true;
 	}
 	
 	//Same as setHealItem but for the damaging type item
 	public void setAttackItem(int damageAmount, String statusAilment) {
-		damage = damageAmount;
-		status = statusAilment;
 		attackItem = true;
 	}
 	

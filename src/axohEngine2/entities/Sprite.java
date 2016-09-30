@@ -79,7 +79,7 @@ public class Sprite extends Object {
      ***********************************************/
     public Image setSprite(SpriteSheet sheet, int spriteNumber) {
     	// image = (Image) sheet.getSprite(spriteNumber);
-    	image.setImage((Image) sheet.getSprite(spriteNumber));
+    	image.setImage(sheet.getSprite(spriteNumber));
     	if(spriteSize == 0) spriteSize = sheet.getSpriteSize() * sheet.getScale();
     	return getImage();
     }

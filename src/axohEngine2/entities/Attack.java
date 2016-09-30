@@ -67,8 +67,6 @@ public class Attack {
 	
 	//Differentiate one attack from another, name it
 	private String attackName;
-	private String normalAttack;
-	
 	//Booleans for if an attack has certain animations, so redundant checks are lowered.
 	private boolean hasMoveAnim = false;
 	private boolean hasAttackAnim = false;

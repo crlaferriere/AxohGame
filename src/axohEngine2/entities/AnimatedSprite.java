@@ -271,7 +271,8 @@ public class AnimatedSprite extends Sprite {
     //Sprite and image data getters
     public SpriteSheet getSheet() { return sheet; }
     public int getSpriteNumber() { return spriteNumber; }
-    public int getSpriteSize() { return super.spriteSize; }
+    @Override
+	public int getSpriteSize() { return super.spriteSize; }
     public int getScale() { return super.scale; }
     
     //Setters for image data and sprites

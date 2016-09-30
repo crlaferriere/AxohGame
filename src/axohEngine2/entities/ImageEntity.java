@@ -18,7 +18,6 @@ package axohEngine2.entities;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -49,16 +48,8 @@ public class ImageEntity extends Object {
 	 * @param frame - The JFrame window object that the graphic will be displayed
 	 ********************************************/
 	public ImageEntity(JFrame frame) {
-		setFrame(frame);
-		setImage(null);
-	}
-	
-	private JFrame getFrame() {
-		return frame;
-	}
-	
-	private void setFrame(JFrame frame) {
 		this.frame = frame;
+		setImage(null);
 	}
 	
 	/*************************************************

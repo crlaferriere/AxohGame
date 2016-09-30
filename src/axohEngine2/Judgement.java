@@ -38,7 +38,6 @@ import axohEngine2.entities.ImageEntity;
 import axohEngine2.entities.Mob;
 import axohEngine2.entities.SpriteSheet;
 import axohEngine2.map.Map;
-import axohEngine2.map.Tile;
 import axohEngine2.project.InGameMenu;
 import axohEngine2.project.MapDatabase;
 import axohEngine2.project.OPTION;
@@ -81,12 +80,7 @@ public class Judgement extends Game {
 	private int mapY;
 	private int playerX;
 	private int playerY;
-	private int npcX;
-	private int npcY;
-	private int startPosX;
-	private int startPosY;
 	private int playerSpeed;
-	private int npcSpeed;
 	public Vector2D camera;
 	private boolean camFollow = true;
 	
@@ -154,6 +148,7 @@ public class Judgement extends Game {
 		super(130, SCREENWIDTH, SCREENHEIGHT);
 		camera = new Vector2D();
 		setVisible(true);
+        System.out.println(this.getLocationOnScreen());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//plays music file at the beginning of the game. 
@@ -171,6 +166,7 @@ public class Judgement extends Game {
 	 * This method is called only once by the 'Game.java' class, for startup
 	 * Initialize all non-int variables here
 	 *****************************************************************************/
+	@Override
 	void gameStartUp() {
 		/****************************************************************
 		 * The "camera" is the mapX and mapY variables. These variables 
@@ -182,16 +178,12 @@ public class Judgement extends Game {
 		//****Initialize Misc Variables
 		setGameState(State.TITLE);
 		option = OPTION.NONE;
-		startPosX = -400; //TODO: Make a method that takes a tile index and spits back an x or y coordinate of that tile
-		startPosY = -400;
 		//mapX = startPosX;
 		//mapY = startPosY;
 		mapX = 0;
 		mapY = 0;
 		scale = 4;
 		playerSpeed = 6;
-		npcSpeed = 6;
-		
 		//****Initialize spriteSheets*********************************************************************
 		//extras1 = new SpriteSheet("/textures/extras/extras1.png", 8, 8, 32, scale);
 		extras1fist = new SpriteSheet("/textures/extras/extras1fist.png", 8, 8, 32, scale); 
@@ -275,6 +267,7 @@ public class Judgement extends Game {
 	 * Method that updates with the default 'Game.java' loop method
 	 * Add game specific elements that need updating here
 	 *****************************************************************************/
+	@Override
 	void gameTimedUpdate() {
 		checkInput(); //Check for user input
 		
@@ -297,6 +290,7 @@ public class Judgement extends Game {
 	 * Inherited Method
 	 * Obtain the 'graphics' passed down by the super class 'Game.java' and render objects on the screen
 	 */
+	@Override
 	void gameRefreshScreen() {		
 		/*********************************************************************
 		* Rendering images uses the java class Graphics2D
@@ -352,15 +346,19 @@ public class Judgement extends Game {
 	 * been set up to go off at specific times in a game as events.
 	 * Actions that need to be done during these times can be added here.
 	 ******************************************************************/
+	@Override
 	void gameShutDown() {		
 	}
 
+	@Override
 	void spriteUpdate(AnimatedSprite sprite) {		
 	}
 
+	@Override
 	void spriteDraw(AnimatedSprite sprite) {		
 	}
 
+	@Override
 	void spriteDying(AnimatedSprite sprite) {		
 	}
 
@@ -593,14 +591,14 @@ public class Judgement extends Game {
 	public void JavaAudioPlaySoundExample (String file)throws IOException, LineUnavailableException, UnsupportedAudioFileException, InterruptedException {
 		
 		try {
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			Thread.currentThread().getContextClassLoader();
 			InputStream is = getClass().getResourceAsStream(file);
 			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(is);
 			
 			clip = AudioSystem.getClip();
 			clip.open(audioInputStream);
 			clip.start();
-			clip.loop(clip.LOOP_CONTINUOUSLY);
+			clip.loop(Clip.LOOP_CONTINUOUSLY);
 		}
 		catch(Exception ex) {
 			System.out.println("Audio Error");
@@ -936,6 +934,7 @@ public class Judgement extends Game {
 	 * Set keys for a new game action here using a switch Statement
 	 * dont forget gameKeyUp
 	 */
+	@Override
 	void gameKeyDown(int keyCode) {
 		switch(keyCode) {
 	        case KeyEvent.VK_LEFT:
@@ -1000,6 +999,7 @@ public class Judgement extends Game {
 	 * Set keys for a new game action here using a switch Statement
 	 * Dont forget gameKeyDown
 	 */
+	@Override
 	void gameKeyUp(int keyCode) {
 		switch(keyCode) {
         case KeyEvent.VK_LEFT:
@@ -1048,6 +1048,7 @@ public class Judgement extends Game {
 	 * Inherited method
 	 * Currently unused
 	 */
+	@Override
 	void gameMouseDown() {	
 	}
 
@@ -1055,6 +1056,7 @@ public class Judgement extends Game {
 	 * Inherited method
 	 * Currently if the game is running and the sword is out, the player attacks with it
 	 */
+	@Override
 	void gameMouseUp() {
 	}
 
@@ -1062,6 +1064,7 @@ public class Judgement extends Game {
 	 * Inherited Method
 	 * Currently unused
 	 */
+	@Override
 	void gameMouseMove() {
 	}
 	 
@@ -1090,8 +1093,6 @@ public class Judgement extends Game {
 			 }
 			 playerX = data().getPlayerX();
 			 playerY = data().getPlayerY();
-			 npcX = data().getNpcX(); //npcX
-			 npcY = data().getNpcY(); //npcY
 			 sprites().add(player);
 			 for(int i = 0; i < currentMap.getWidth() * currentMap.getHeight(); i++){
 					addTile(currentMap.accessTile(i));

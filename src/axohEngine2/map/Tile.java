@@ -191,6 +191,7 @@ public class Tile extends AnimatedSprite {
 	 * @param frames - The frames to use in the animation
 	 * @param delay - The delay between frame advances
 	 ********************************************************/
+	@Override
 	public void loadAnim(int frames, int delay) {
 		super.loadAnim(frames, delay);
 	}

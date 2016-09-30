@@ -69,8 +69,6 @@ public class InGameMenu {
 	private int maxHealth = 35;
 	private int currHealth = maxHealth;
 	private int magic = 5;
-	private int attack = 8;
-	private int defense = 4;
 	private int experience;
 	private int nextLevel = 20;
 	private int nextExp = 25;
@@ -308,16 +306,6 @@ public class InGameMenu {
 			if(level % 3 == 3) maxHealth += 3;
 			if(level % 2 == 2) maxHealth += 1;
 			if(level % 7 == 7) maxHealth += 5 + random.nextInt(4) - random.nextInt(3);
-			//Attack
-			if(level % 7 == 7) attack += 3;
-			if(level % 8 == 8) attack += 1;
-			if(level % 5 == 5) attack += 1;
-			if(level % 12 == 12) attack += 6 - random.nextInt(3);
-			//Defense
-			if(level % 4 == 4) defense += 2;
-			if(level % 3 == 3) defense += 1;
-			if(level % 9 == 9) defense += 4 - random.nextInt(2);
-			if(level % 6 == 6) defense += 2 + random.nextInt(3);
 		}
 	}
 	

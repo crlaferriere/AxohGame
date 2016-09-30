@@ -15,7 +15,9 @@ package axohEngine2.util;
 import java.awt.Rectangle;
 
 public class Bullet extends Vector2D {
-	
+
+	private static final long serialVersionUID = 1L;
+
 	//Bounding rectangle
 	public Rectangle getBounds() {
 		Rectangle r;

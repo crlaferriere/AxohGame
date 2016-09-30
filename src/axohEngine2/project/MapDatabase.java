@@ -17,8 +17,6 @@ package axohEngine2.project;
 //Imports
 import java.awt.Graphics2D;
 
-import javax.swing.JFrame;
-
 import axohEngine2.Judgement;
 import axohEngine2.entities.Mob;
 import axohEngine2.entities.SpriteSheet;

@@ -45,7 +45,7 @@ public class SoundClip {
 	
 	//Check for a ready sample
 	public boolean isLoaded() {
-		return (boolean)(sample != null);
+		return sample != null;
 	}
 	
 	//Constructor

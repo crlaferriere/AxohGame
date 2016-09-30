@@ -17,6 +17,10 @@ import java.awt.geom.Point2D;
 
 public class Vector2D extends Point2D.Double {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private double x;
 	private double y;
 	

@@ -19,8 +19,6 @@ import java.awt.Graphics2D;
 import java.util.LinkedList;
 import java.util.Random;
 
-import javax.swing.JFrame;
-
 import axohEngine2.Game;
 import axohEngine2.Judgement;
 import axohEngine2.project.TYPE;
@@ -46,33 +44,17 @@ public class Mob extends AnimatedSprite{
 	private LinkedList<Attack> attacks;
 	private int health;
 	private TYPE ai;
-	//private int xx;
-	//private int yy;
-	private int primaryDirection = 2;  //0 = left, 1 = right, 2 = up, 3 = down
-	private int speed = 4;
 	protected Vector2D position;
 	
 	private boolean attacking;
 	private boolean takenOut = false;
 	private Attack currentAttack;
 
-	//Four variable booleans depicting the last direction the mob was moving(This could be phased out of the system)
-	private boolean wasRight = false;
-	private boolean wasLeft = false;
-	private boolean wasUp = false;
-	private boolean wasDown = false;
-
 	//moveDir - Direction the mob was moving
 	//direction - The direction the Mob is facing
 	//randomDir - The random choice of a direction used in random movements
 	private DIRECTION moveDir;
 	private DIRECTION direction;
-	private DIRECTION randomDir;
-	
-	//Wait timers
-	private boolean waitOn = false;
-	private int wait;
-	
 	//Graphics and Window objects the mob needs for display
 	protected Graphics2D g2d;
 	protected Judgement game;
@@ -113,7 +95,7 @@ public class Mob extends AnimatedSprite{
 	public void setHealth(int health) { this.health = health; }
 	public void setAi(TYPE ai) { this.ai = ai; }
 	public void setName(String name) { super._name = name; }
-	public void setSpeed(int speed) { this.speed = speed; }
+	public void setSpeed(int speed) { }
 	public boolean isAlive() {
 		return _isAlive;
 	}
@@ -125,9 +107,6 @@ public class Mob extends AnimatedSprite{
 	 * Set all of the movement related variables to whatever nothing is
 	 **************************************************/
 	public void resetMovement() {
-		randomDir = DIRECTION.NONE;
-		wait = 0;
-		waitOn = false;
 		moveDir = DIRECTION.NONE;
 	}
 	
@@ -137,9 +116,6 @@ public class Mob extends AnimatedSprite{
 	 ****************************************************************/
 	public void stop() {
 		if(ai == TYPE.RANDOMPATH){
-			randomDir = DIRECTION.NONE;
-			waitOn = true;
-			wait = 100 + random.nextInt(200);
 			stopAnim();
 		}
 	}
@@ -281,7 +257,6 @@ public class Mob extends AnimatedSprite{
 	public void updatePlayer(boolean left, boolean right, boolean up, boolean down) {
 		if (left) {
 			if (!right && !up && !down) {
-				primaryDirection = 0;
 				direction = DIRECTION.LEFT;
 				moveDir = DIRECTION.LEFT;
 				toggleLeg(true);
@@ -295,7 +270,6 @@ public class Mob extends AnimatedSprite{
 		}
 		if (right) {
 			if (!left && !up && !down) {
-				primaryDirection = 1;
 				direction = DIRECTION.RIGHT;
 				moveDir = DIRECTION.RIGHT;
 				toggleLeg(true);
@@ -309,7 +283,6 @@ public class Mob extends AnimatedSprite{
 		}
 		if (up) {
 			if (!left && !right && !down) {
-				primaryDirection = 2;
 				direction = DIRECTION.UP;
 				moveDir = DIRECTION.UP;
 				toggleLeg(false);
@@ -323,7 +296,6 @@ public class Mob extends AnimatedSprite{
 		}
 		if (down) {
 			if (!left && !right && !up) {
-				primaryDirection = 3;
 				direction = DIRECTION.DOWN;
 				moveDir = DIRECTION.DOWN;
 				toggleLeg(false);
@@ -440,7 +412,7 @@ public class Mob extends AnimatedSprite{
 	 * @param y - Int y position
 	 ***********************************************/
 	public void renderMob() {
-		g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX() + game.CENTERX, (int) position.getY() - (int) game.camera.getY() + game.CENTERY, getSpriteSize(), getSpriteSize(), game);
+		g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX() + Game.CENTERX, (int) position.getY() - (int) game.camera.getY() + Game.CENTERY, getSpriteSize(), getSpriteSize(), game);
 		//g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX(), (int) position.getY() - (int) game.camera.getY(), getSpriteSize(), getSpriteSize(), game);
 		//position.setX(x);
 		//position.setY(y);
