@@ -175,6 +175,8 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 		backBuffer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_RGB);
         g2d = backBuffer.createGraphics();
         tk = Toolkit.getDefaultToolkit();
+        System.out.println(tk.getScreenInsets(this.getGraphicsConfiguration()));
+        System.out.println(tk.getScreenResolution());
                 
        // System.out.println(tk.getScreenInsets(this.getGraphicsConfiguration()));
         
@@ -195,6 +197,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
         
         //Start the game
         gameStartUp();
+        g2d.translate(3, 26);
         // g2d.translate(3, 32);
 
 	}
