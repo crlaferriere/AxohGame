@@ -197,8 +197,10 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
         
         //Start the game
         gameStartUp();
-        g2d.translate(3, 26);
-        // g2d.translate(3, 32);
+        int offset = (int) ((float) tk.getScreenInsets(this.getGraphicsConfiguration()).bottom * 0.6f) + 2;
+        System.out.println(offset);
+        g2d.translate(3, offset);
+        // g2d.translate(3, 26);
 
 	}
 	
