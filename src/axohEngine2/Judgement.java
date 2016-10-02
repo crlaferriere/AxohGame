@@ -565,13 +565,6 @@ public class Judgement extends Game {
 	}
 	
 	/**********************************************************
-	 * Main
-	 * 
-	 * @param args
-	 ********************************************************/
-	public static void main(String[] args) { new Judgement(); }
-	
-	/**********************************************************
 	 * The Depths of Judgement Lies Below
 	 * 
 	 *             Key events - Mouse events
