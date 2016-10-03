@@ -271,14 +271,12 @@ public class AnimatedSprite extends Sprite {
     //Sprite and image data getters
     public SpriteSheet getSheet() { return sheet; }
     public int getSpriteNumber() { return spriteNumber; }
-    @Override
-	public int getSpriteSize() { return super.spriteSize; }
-    public int getScale() { return super.scale; }
+    public int getScale() { return scale; }
     
     //Setters for image data and sprites
     public void setSheet(SpriteSheet sheet) { this.sheet = sheet; }
-    public void setSpriteSize(int spriteSize) { super.spriteSize = spriteSize; }
-    public void setScale(int scale) { super.scale = scale; }
+    public void setSpriteSize(int spriteSize) { this.spriteSize = spriteSize; }
+    public void setScale(int scale) { this.scale = scale; }
     public void setSpriteNumber(int spriteNumber) { this.spriteNumber = spriteNumber; }
     
     //Used in the constructor to set an animated sprite's data using other given data
