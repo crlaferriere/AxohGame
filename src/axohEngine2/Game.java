@@ -175,8 +175,6 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 		backBuffer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_RGB);
         g2d = backBuffer.createGraphics();
         tk = Toolkit.getDefaultToolkit();
-        System.out.println(tk.getScreenInsets(this.getGraphicsConfiguration()));
-        System.out.println(tk.getScreenResolution());
                 
        // System.out.println(tk.getScreenInsets(this.getGraphicsConfiguration()));
         
@@ -197,10 +195,10 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
         
         //Start the game
         gameStartUp();
-        int offset = (int) ((float) tk.getScreenInsets(this.getGraphicsConfiguration()).bottom * 0.6f) + (int) Math.round(1f + 72f / (float) tk.getScreenResolution());
-        System.out.println(offset);
+        // Not 100% sure about how this works.
+        // Like, why is 0.6 the magic factor?
+        int offset = (int) ((float) tk.getScreenInsets(getGraphicsConfiguration()).bottom * 0.6f) + (int) Math.round(1f + 72f / (float) tk.getScreenResolution());
         g2d.translate(3, offset);
-        // g2d.translate(3, 26);
 
 	}
 	
