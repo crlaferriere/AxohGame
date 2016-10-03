@@ -206,6 +206,12 @@ public class Tile extends AnimatedSprite {
 	 ***************************************************************************/
 	public void renderTile(int x, int y, Graphics2D g2d, JFrame frame) {
 		g2d.drawImage(getImage(), x, y, getSpriteSize(), getSpriteSize(), frame);
+		g2d.setColor(Color.black);
+		g2d.drawRect(x, y, getSpriteSize(), getSpriteSize());
+		if (isSolid()) {
+			g2d.setColor(new Color(1f, 0, 0, 0.5f));
+			g2d.fillRect(x, y, getSpriteSize(), getSpriteSize());
+		}
 		position.setX(x);
 		position.setY(y);
 	}

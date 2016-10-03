@@ -13,6 +13,7 @@
 //Package
 package axohEngine2.entities;
 
+import java.awt.Color;
 //Imports
 import java.awt.Graphics2D;
 
@@ -419,7 +420,16 @@ public class Mob extends AnimatedSprite{
 	 * @param y - Int y position
 	 ***********************************************/
 	public void renderMob() {
-		g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX(), (int) position.getY() - (int) game.camera.getY(), getSpriteSize(), getSpriteSize(), game);
+		int x = (int) position.getX() - (int) game.camera.getX();
+		int y = (int) position.getY() - (int) game.camera.getY();
+		g2d.drawImage(getImage(), x, y, getSpriteSize(), getSpriteSize(), game);
+		g2d.setColor(new Color(1f, 0, 0, 0.5f));
+		g2d.fillRect(x, y, getSpriteSize(), getSpriteSize());
+		g2d.setColor(Color.red);
+		g2d.drawRect(x, y, getSpriteSize(), getSpriteSize());
+		g2d.setColor(Color.green);
+		g2d.fillOval(x - 4, y - 4, 8, 8);
+		//g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX(), (int) position.getY() - (int) game.camera.getY(), getSpriteSize(), getSpriteSize(), game);
 		//g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX(), (int) position.getY() - (int) game.camera.getY(), getSpriteSize(), getSpriteSize(), game);
 		//position.setX(x);
 		//position.setY(y);
