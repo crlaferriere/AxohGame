@@ -284,8 +284,8 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 			if(!gamePaused()) {
 				gameTimedUpdate();
 				updateSprites();
-				//spriteCollision();
-				//tileCollision();
+				spriteCollision();
+				tileCollision();
 			}
 			
 			//Render the graphics
@@ -294,6 +294,18 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 		}
 	}
 	
+	private void spriteCollision() {
+		// TODO Auto-generated method stub
+		/*for (AnimatedSprite a : _sprites) {
+			System.out.println(a._name);
+		}*/
+	}
+
+	private void tileCollision() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	//End the game with this method call
 	public void stop() {
 		gameloop = null;
