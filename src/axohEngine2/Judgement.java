@@ -143,7 +143,6 @@ public class Judgement extends Game {
 		super(130, SCREENWIDTH, SCREENHEIGHT);
 		camera = new Camera();
 		setVisible(true);
-        System.out.println(this.getLocationOnScreen());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//plays music file at the beginning of the game. 
