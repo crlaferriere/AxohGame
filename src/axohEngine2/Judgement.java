@@ -33,6 +33,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 
 import axohEngine2.entities.AnimatedSprite;
+import axohEngine2.entities.Camera;
 import axohEngine2.entities.Hero;
 import axohEngine2.entities.ImageEntity;
 import axohEngine2.entities.Mob;
@@ -44,7 +45,6 @@ import axohEngine2.project.OPTION;
 import axohEngine2.project.State;
 import axohEngine2.project.TYPE;
 import axohEngine2.project.TitleMenu;
-import axohEngine2.util.Vector2D;
 
 //Start class by also extending the 'Game.java' engine interface
 public class Judgement extends Game {
@@ -81,7 +81,7 @@ public class Judgement extends Game {
 	private int playerX;
 	private int playerY;
 	private int playerSpeed;
-	public Vector2D camera;
+	public Camera camera;
 	private boolean camFollow = true;
 	
 	//----------- Map and input --------
@@ -146,7 +146,7 @@ public class Judgement extends Game {
 	 **********************************************************************/
 	public Judgement() {
 		super(130, SCREENWIDTH, SCREENHEIGHT);
-		camera = new Vector2D();
+		camera = new Camera();
 		setVisible(true);
         System.out.println(this.getLocationOnScreen());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -276,8 +276,9 @@ public class Judgement extends Game {
 		if(getGameState() == State.INGAMEMENU) inMenu.update(option, sectionLoc, player.health()); //In Game Menu update
 		updateData(currentMap, currentOverlay, playerX, playerY); //Update the current file data for saving later
 		if (camFollow) {
-			// camera.setLocation(player.getXLoc(), player.getYLoc());
-			camera.setLocation(player.getXLoc(), player.getYLoc());
+			camera.track(player);
+			//camera.setLocation(player.getXLoc(), player.getYLoc());
+			//camera.setLocation(player.getXLoc() + player.getSpriteSize() / 2 - CENTERX, player.getYLoc() + player.getSpriteSize() / 2 - CENTERY);
 		}
 		// Get rid of this spamtastic logging...
 		// System.out.println(frameRate()); //Print the current framerate to the console
@@ -563,13 +564,6 @@ public class Judgement extends Game {
 			else playerY += ya; //down -#
 		}*/
 	}
-	
-	/**********************************************************
-	 * Main
-	 * 
-	 * @param args
-	 ********************************************************/
-	public static void main(String[] args) { new Judgement(); }
 	
 	/**********************************************************
 	 * The Depths of Judgement Lies Below
