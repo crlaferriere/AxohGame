@@ -6,6 +6,7 @@ import axohEngine2.util.Vector2D;
 public class Camera {
 
 	private Vector2D position;
+	public boolean centerTarget = true;
 	
 	public Camera() {
 		position = new Vector2D();
@@ -16,8 +17,12 @@ public class Camera {
 	}
 	
 	public void track(Mob mob) {
-		double halfSpriteSize = (double) mob.getSpriteSize() * 0.5;
-		setLocation(mob.getXLoc() + halfSpriteSize, mob.getYLoc() + halfSpriteSize);
+		if (centerTarget) {
+			double halfSpriteSize = (double) mob.getSpriteSize() * 0.5;
+			setLocation(mob.getXLoc() + halfSpriteSize, mob.getYLoc() + halfSpriteSize);
+		} else {
+			setLocation(mob.getXLoc(), mob.getYLoc());
+		}
 	}
 	
 	public void setLocation(Vector2D position) {
@@ -25,8 +30,11 @@ public class Camera {
 	}
 	
 	public void setLocation(double x, double y) {
-		position.setLocation(x - (double) Game.CENTERX, y - (double) Game.CENTERY);
-		// position.setLocation(x, y);
+		if (centerTarget) {
+			position.setLocation(x - (double) Game.CENTERX, y - (double) Game.CENTERY);
+		} else {
+			position.setLocation(x, y);
+		}
 	}
 	
 	public double getX() {

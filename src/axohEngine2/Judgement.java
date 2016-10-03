@@ -978,6 +978,7 @@ public class Judgement extends Game {
 		    	camFollow = !camFollow;
 	        	break;
 	        case KeyEvent.VK_BACK_SPACE:
+	        	camera.centerTarget = !camera.centerTarget;
 	        	keyBack = true;
 	        	break;
 	        case KeyEvent.VK_SPACE:
