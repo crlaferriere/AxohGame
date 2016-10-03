@@ -32,7 +32,6 @@ public class Tile extends AnimatedSprite {
 	 **************************/
 	//_solid, _slippery, _breakable - Boolean properties that can be checked in a tile to perform special actions
 	//hasEvent and hasMob - vey special booleans that check for the possibility for an event or a mob from that tile
-	private Vector2D position;
 	private boolean _solid;
 	private boolean _slippery;
 	private boolean _breakable;

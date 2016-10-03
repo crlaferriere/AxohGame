@@ -292,7 +292,7 @@ public class Judgement extends Game {
 		* 'graphics' objects have parameters that can be changed which effect what it renders, two are font and color
 		**********************************************************************/
 		Graphics2D g2d = graphics();
-		g2d.clearRect(0, 0, SCREENWIDTH, SCREENHEIGHT); 
+		g2d.clearRect(0, 0, SCREENWIDTH, SCREENHEIGHT);
 		g2d.setFont(simple);
 		
 		//GUI rendering for when a specific State is set, only specific groups of data is drawn at specific times

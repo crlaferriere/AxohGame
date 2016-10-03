@@ -20,11 +20,22 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 
+import axohEngine2.util.Vector2D;
+
 public class AnimatedSprite extends Sprite {
 
 	/*************************
 	 * Variables
 	 *************************/
+	
+	protected Vector2D position;
+	
+	public double getXLoc() { return position.getX(); }
+	public double getYLoc() { return position.getY(); }
+	public void setLoc(double x, double y) { //Relative to current position
+		position.setLocation(x, y);
+	}
+	
 	//animImage - Object that holds variouse image related data like x, y and size
 	private ImageEntity animImage;
     protected SpriteSheet sheet;
@@ -97,6 +108,9 @@ public class AnimatedSprite extends Sprite {
         setSheet(sheet);
         setSpriteNumber(spriteNumber);
         setAnimSprite();
+        
+		position = new Vector2D();
+
     }
     
     /*********************************************************

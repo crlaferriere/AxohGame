@@ -20,10 +20,8 @@ import java.awt.Graphics2D;
 import java.util.LinkedList;
 import java.util.Random;
 
-import axohEngine2.Game;
 import axohEngine2.Judgement;
 import axohEngine2.project.TYPE;
-import axohEngine2.util.Vector2D;
 
 public class Mob extends AnimatedSprite{
 	
@@ -45,7 +43,6 @@ public class Mob extends AnimatedSprite{
 	private LinkedList<Attack> attacks;
 	private int health;
 	private TYPE ai;
-	protected Vector2D position;
 	
 	private boolean attacking;
 	private boolean takenOut = false;
@@ -86,7 +83,6 @@ public class Mob extends AnimatedSprite{
 		health = 0;
 		setAlive(true);
 		setSpriteType(ai);
-		position = new Vector2D();
 
 	}
 	
@@ -398,20 +394,6 @@ public class Mob extends AnimatedSprite{
 	 * @return - Getter for the current health the mob is at
 	 ***************************************************/
 	public int health() { return health; }
-	
-	/***************************************************
-	 * Get the x or y location of the mob in the room or
-	 * set a new x or y location relative to it's current position
-	 * 
-	 * @return - x or y int of location
-	 ***************************************************/
-	public double getXLoc() { return position.getX(); }
-	public double getYLoc() { return position.getY(); }
-	public void setLoc(double x, double y) { //Relative to current position
-		position.setLocation(x, y);
-		//xx = xx + x;
-		//yy = yy + y;
-	}
 
 	/**********************************************
 	 * Render the Mob in the game room at anx and y location

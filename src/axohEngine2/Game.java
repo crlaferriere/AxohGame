@@ -294,9 +294,13 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	}
 	
 	private void handleCollisions() {
-		for (AnimatedSprite x : _sprites) {
-			for (AnimatedSprite y : _tiles) {
-				
+		for (AnimatedSprite a : _sprites) {
+			for (AnimatedSprite b : _tiles) {
+				if (a.getXLoc() > b.getXLoc() && a.getXLoc() < b.getXLoc() + b.getSpriteSize()) {
+					if (a.getYLoc() > b.getYLoc() && a.getYLoc() < b.getYLoc() + b.getSpriteSize()) {
+						System.out.println(Math.random());
+					}
+				}
 			}
 		}
 	}
