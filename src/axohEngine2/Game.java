@@ -114,7 +114,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	}
 	
 	//Mouse variables
-	private transient Vector2D mousePos = new Vector2D(0, 0);
+	private transient Vector2D mousePos = new Vector2D();
 	private boolean mouseButtons[] = new boolean[4];
 	protected char currentChar;
 	
@@ -294,7 +294,11 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	}
 	
 	private void handleCollisions() {
-		
+		for (AnimatedSprite x : _sprites) {
+			for (AnimatedSprite y : _tiles) {
+				
+			}
+		}
 	}
 
 	//End the game with this method call
