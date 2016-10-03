@@ -1,6 +1,5 @@
 package axohEngine2.entities;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 
 import axohEngine2.Judgement;
