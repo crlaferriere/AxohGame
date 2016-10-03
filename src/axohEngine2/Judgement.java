@@ -76,11 +76,6 @@ public class Judgement extends Game {
 	//startPosX/startPosY - Starting position of the player in the map
 	//playerSpeed - How many pixels the player moves in a direction each update when told to
 	private int scale;
-	private int mapX;
-	private int mapY;
-	private int playerX;
-	private int playerY;
-	private int playerSpeed;
 	public Camera camera;
 	private boolean camFollow = true;
 	
@@ -178,12 +173,7 @@ public class Judgement extends Game {
 		//****Initialize Misc Variables
 		setGameState(State.TITLE);
 		option = OPTION.NONE;
-		//mapX = startPosX;
-		//mapY = startPosY;
-		mapX = 0;
-		mapY = 0;
 		scale = 4;
-		playerSpeed = 6;
 		//****Initialize spriteSheets*********************************************************************
 		//extras1 = new SpriteSheet("/textures/extras/extras1.png", 8, 8, 32, scale);
 		extras1fist = new SpriteSheet("/textures/extras/extras1fist.png", 8, 8, 32, scale); 
@@ -220,6 +210,7 @@ public class Judgement extends Game {
 		player.getAttack("sword").addInOutAnim(16, 24, 8, 0, 1, 10);
 		player.setCurrentAttack("sword"); //Starting attack
 		player.setHealth(35); //If you change the starting max health, dont forget to change it in inGameMenu.java max health also
+		player.setSpeed(6.0);
 		sprites().add(player);
 		
 		randomNPC = new Mob(this, graphics(), zombie, 40, TYPE.PLAYER, "npc");
@@ -274,7 +265,7 @@ public class Judgement extends Game {
 		//Update certain specifics based on certain game States
 		if(getGameState() == State.TITLE) title.update(option, titleLocation); //Title Menu update
 		if(getGameState() == State.INGAMEMENU) inMenu.update(option, sectionLoc, player.health()); //In Game Menu update
-		updateData(currentMap, currentOverlay, playerX, playerY); //Update the current file data for saving later
+		updateData(currentMap, currentOverlay, (int) player.getXLoc(), (int) player.getYLoc()); //Update the current file data for saving later
 		if (camFollow) {
 			camera.track(player);
 			//camera.setLocation(player.getXLoc(), player.getYLoc());
@@ -308,8 +299,8 @@ public class Judgement extends Game {
 		//GUI rendering for when a specific State is set, only specific groups of data is drawn at specific times
 		if(getGameState() == State.GAME) {
 			//Render the map, the player, any NPCs or Monsters and the player health or status
-			int camX = mapX - (int) camera.getX();
-			int camY = mapY - (int) camera.getY();
+			int camX = - (int) camera.getX();
+			int camY = - (int) camera.getY();
 			currentMap.render(this, g2d, camX, camY);
 			currentOverlay.render(this, g2d, camX, camY);
 			//player.move(CENTERX + (int) (player.getXLoc() - camera.getX()), CENTERY + (int) (player.getYLoc() - camera.getY()));
@@ -611,22 +602,22 @@ public class Judgement extends Game {
 		if(getGameState() == State.GAME && inputWait < 0) { 
 			//A or left arrow(move left)
 			if(keyLeft) {
-				xa -= playerSpeed;
+				xa -= player.getSpeed();
 				// player.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
 			//D or right arrow(move right)
 			if(keyRight) {
-				xa += playerSpeed;
+				xa += player.getSpeed();
 				// player.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
 			//W or up arrow(move up)
 			if(keyUp) {
-				ya -= playerSpeed;
+				ya -= player.getSpeed();
 				// player.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
 			//S or down arrow(move down)
 			if(keyDown) {
-				ya += playerSpeed;
+				ya += player.getSpeed();
 				// player.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
 			
@@ -1086,8 +1077,7 @@ public class Judgement extends Game {
 				 if(data().getMapName() == mapBase.getMap(i).mapName()) currentMap = mapBase.getMap(i);
 				 if(data().getOverlayName() == mapBase.getMap(i).mapName()) currentOverlay = mapBase.getMap(i);
 			 }
-			 playerX = data().getPlayerX();
-			 playerY = data().getPlayerY();
+			 player.setLoc(data().getPlayerX(), data().getPlayerY());
 			 sprites().add(player);
 			 for(int i = 0; i < currentMap.getWidth() * currentMap.getHeight(); i++){
 					addTile(currentMap.accessTile(i));

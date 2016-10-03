@@ -61,6 +61,8 @@ public class Mob extends AnimatedSprite{
 	
 	private boolean _isAlive;
 	
+	private double speed = 0;
+	
 	/************************************************************************
 	 * Constructor
 	 *  
@@ -95,7 +97,12 @@ public class Mob extends AnimatedSprite{
 	public void setHealth(int health) { this.health = health; }
 	public void setAi(TYPE ai) { this.ai = ai; }
 	public void setName(String name) { super._name = name; }
-	public void setSpeed(int speed) { }
+	public void setSpeed(double speed) {
+		this.speed = speed;
+	}
+	public double getSpeed() {
+		return speed;
+	}
 	public boolean isAlive() {
 		return _isAlive;
 	}
