@@ -1,5 +1,6 @@
 package axohEngine2.entities;
 
+import axohEngine2.Game;
 import axohEngine2.util.Vector2D;
 
 public class Camera {
@@ -14,11 +15,12 @@ public class Camera {
 		return position;
 	}
 	
-	public void setPosition(Vector2D position) {
-		setPosition(position.getX(), position.getY());
+	public void setLocation(Vector2D position) {
+		setLocation(position.getX(), position.getY());
 	}
 	
-	public void setPosition(double x, double y) {
+	public void setLocation(double x, double y) {
+		// position.setLocation(x - (double) Game.CENTERX, y - (double) Game.CENTERY);
 		position.setLocation(x, y);
 	}
 	
@@ -28,10 +30,6 @@ public class Camera {
 	
 	public double getY() {
 		return position.getY();
-	}
-	
-	public void setLocation(double x, double y) {
-		position.setLocation(x, y);
 	}
 	
 }
