@@ -276,7 +276,8 @@ public class Judgement extends Game {
 		if(getGameState() == State.INGAMEMENU) inMenu.update(option, sectionLoc, player.health()); //In Game Menu update
 		updateData(currentMap, currentOverlay, playerX, playerY); //Update the current file data for saving later
 		if (camFollow) {
-			camera.setLocation(player.getXLoc(), player.getYLoc());
+			camera.track(player);
+			//camera.setLocation(player.getXLoc(), player.getYLoc());
 			//camera.setLocation(player.getXLoc() + player.getSpriteSize() / 2 - CENTERX, player.getYLoc() + player.getSpriteSize() / 2 - CENTERY);
 		}
 		// Get rid of this spamtastic logging...

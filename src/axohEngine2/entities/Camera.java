@@ -15,13 +15,18 @@ public class Camera {
 		return position;
 	}
 	
+	public void track(Mob mob) {
+		double halfSpriteSize = (double) mob.getSpriteSize() * 0.5;
+		setLocation(mob.getXLoc() + halfSpriteSize, mob.getYLoc() + halfSpriteSize);
+	}
+	
 	public void setLocation(Vector2D position) {
 		setLocation(position.getX(), position.getY());
 	}
 	
 	public void setLocation(double x, double y) {
-		// position.setLocation(x - (double) Game.CENTERX, y - (double) Game.CENTERY);
-		position.setLocation(x, y);
+		position.setLocation(x - (double) Game.CENTERX, y - (double) Game.CENTERY);
+		// position.setLocation(x, y);
 	}
 	
 	public double getX() {
