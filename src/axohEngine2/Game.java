@@ -294,21 +294,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 		}
 	}
 	
-	private void handleCollisions() {
-		for (AnimatedSprite a : _sprites) {
-			for (AnimatedSprite b : _tiles) {
-				double maxBoundX = Math.min(a.getXLoc() + a.getSpriteSize(), b.getXLoc() + b.getSpriteSize());
-				double minBoundX = Math.max(a.getXLoc(), b.getXLoc());
-				double maxBoundY = Math.min(a.getYLoc() + a.getSpriteSize(), b.getYLoc() + b.getSpriteSize());
-				double minBoundY = Math.max(a.getYLoc(), b.getYLoc());
-				double overlapX = maxBoundX - minBoundX;
-				double overlapY = maxBoundY - minBoundY;
-				if (overlapX > 0 && overlapY > 0) {
-					System.out.println(Math.random());
-				}
-			}
-		}
-	}
+	protected abstract void handleCollisions();
 
 	//End the game with this method call
 	public void stop() {

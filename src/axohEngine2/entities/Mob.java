@@ -22,6 +22,7 @@ import java.util.Random;
 
 import axohEngine2.Judgement;
 import axohEngine2.project.TYPE;
+import axohEngine2.util.Vector2D;
 
 public class Mob extends AnimatedSprite{
 	
@@ -39,6 +40,7 @@ public class Mob extends AnimatedSprite{
 	//attacking - A possible state the mob could be in, for many kinds of checks
 	//takenOut - Boolean to see if the mob has it's weapon out
 	//currentAttack - The currently selected attack to use from the list of Mob attacks
+	public Vector2D velocity;
 	private Random random = new Random();
 	private LinkedList<Attack> attacks;
 	private int health;
@@ -61,6 +63,14 @@ public class Mob extends AnimatedSprite{
 	
 	private double speed = 0;
 	
+	public double getXVel() {
+		return velocity.getX();
+	}
+	
+	public double getYVel() {
+		return velocity.getY();
+	}
+	
 	/************************************************************************
 	 * Constructor
 	 *  
@@ -74,6 +84,7 @@ public class Mob extends AnimatedSprite{
 	 *************************************************************************/
 	public Mob(Judgement game, Graphics2D g2d, SpriteSheet sheet, int spriteNumber, TYPE ai, String name) {
 		super(game, g2d, sheet, spriteNumber, name);
+		velocity = new Vector2D();
 		attacks = new LinkedList<Attack>();
 		this.game = game;
 		this.g2d = g2d;
@@ -214,6 +225,7 @@ public class Mob extends AnimatedSprite{
 	 * @param ya - Int movement in pixels on the y axis
 	 ****************************************************************/
 	public void move(double xa, double ya) {
+		velocity.setLocation(xa, ya);
 		position.setX(position.getX() + xa);
 		position.setY(position.getY() + ya);
 		if(xa < 0) { //left

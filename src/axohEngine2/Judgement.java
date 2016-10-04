@@ -39,6 +39,7 @@ import axohEngine2.entities.ImageEntity;
 import axohEngine2.entities.Mob;
 import axohEngine2.entities.SpriteSheet;
 import axohEngine2.map.Map;
+import axohEngine2.map.Tile;
 import axohEngine2.project.InGameMenu;
 import axohEngine2.project.MapDatabase;
 import axohEngine2.project.OPTION;
@@ -423,6 +424,32 @@ public class Judgement extends Game {
 	
 	void addHitbox(int x, int y, int size) {
 		
+	}
+	
+	@Override
+	protected void handleCollisions() {
+		for (AnimatedSprite a : sprites()) {
+			for (Tile b : tiles()) {
+				double maxBoundX = Math.min(a.getXLoc() + (double) a.getSpriteSize(), b.getXLoc() + (double) b.getSpriteSize());
+				double minBoundX = Math.max(a.getXLoc(), b.getXLoc());
+				double maxBoundY = Math.min(a.getYLoc() + (double) a.getSpriteSize(), b.getYLoc() + (double) b.getSpriteSize());
+				double minBoundY = Math.max(a.getYLoc(), b.getYLoc());
+				double overlapX = maxBoundX - minBoundX;
+				double overlapY = maxBoundY - minBoundY;
+				if (overlapX > 0 && overlapY > 0) {
+					if (a instanceof Hero) {
+						Hero h = (Hero) a;
+						double aCenterX = a.getXLoc() + (double) a.getSpriteSize() * 0.5;
+						double aCenterY = a.getYLoc() + (double) a.getSpriteSize() * 0.5;
+						double bCenterX = b.getXLoc() + (double) b.getSpriteSize() * 0.5;
+						double bCenterY = b.getYLoc() + (double) b.getSpriteSize() * 0.5;
+						a.setLoc(a.getXLoc() - h.getXVel(), a.getYLoc() - h.getYVel());
+						// a.setLoc(a.getXLoc() + overlapX * Math.signum(aCenterX - bCenterX), a.getYLoc());
+						// System.out.println(aCenterX - bCenterX);
+					}
+				}
+			}
+		}
 	}
 	
 	/***********************************************************************
@@ -1087,4 +1114,6 @@ public class Judgement extends Game {
 			System.out.println("Load Successful");
 		 } //end file is not empty check
 	 } //end load method
+
+
 } //end class
