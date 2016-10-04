@@ -20,6 +20,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 
+import axohEngine2.Judgement;
 import axohEngine2.util.Vector2D;
 
 public class AnimatedSprite extends Sprite {
@@ -95,9 +96,9 @@ public class AnimatedSprite extends Sprite {
 	 * @param spriteNumber - The number pertaining to a frame on the spriteSheet
 	 * @param name - The name of the animation, not used in logic
 	 ************************************************************************/
-    public AnimatedSprite(JFrame frame, Graphics2D g2d, SpriteSheet sheet, int spriteNumber, String name) {
-        super(frame, g2d);
-        animImage = new ImageEntity(frame);
+    public AnimatedSprite(Judgement game, Graphics2D g2d, SpriteSheet sheet, int spriteNumber, String name) {
+        super(game, g2d);
+        animImage = new ImageEntity(game);
         currFrame = 0;
         totFrames = 0;
         animating = false;

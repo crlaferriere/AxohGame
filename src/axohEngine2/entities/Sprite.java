@@ -20,6 +20,7 @@ import java.awt.Rectangle;
 
 import javax.swing.JFrame;
 
+import axohEngine2.Judgement;
 import axohEngine2.project.TYPE;
 
 public class Sprite extends Object {
@@ -57,6 +58,8 @@ public class Sprite extends Object {
     
     //nx,ny - Offset x value from the x or y position of the sprite to the hit box
     protected int nx, ny;
+    
+    protected Judgement game;
 
     /*******************************************
      * Constructor - Set all default parameters
@@ -64,8 +67,9 @@ public class Sprite extends Object {
      * @param frame - JFrame Window the sprite will be displayed in
      * @param g2d - Graphics needed to display the image
      ******************************************/
-    public Sprite(JFrame frame, Graphics2D g2d) {
-        image = new ImageEntity(frame);
+    public Sprite(Judgement game, Graphics2D g2d) {
+    	this.game = game;
+        image = new ImageEntity(game);
         image.setGraphics(g2d);
         currentState = 0;
     }

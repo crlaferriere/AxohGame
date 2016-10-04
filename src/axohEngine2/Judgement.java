@@ -300,8 +300,8 @@ public class Judgement extends Game {
 			//Render the map, the player, any NPCs or Monsters and the player health or status
 			int camX = - (int) camera.getX();
 			int camY = - (int) camera.getY();
-			currentMap.render(this, g2d, camX, camY);
-			currentOverlay.render(this, g2d, camX, camY);
+			currentMap.render(this, g2d, 0, 0);
+			currentOverlay.render(this, g2d, 0, 0);
 			//player.move(CENTERX + (int) (player.getXLoc() - camera.getX()), CENTERY + (int) (player.getYLoc() - camera.getY()));
 			player.renderMob();
 			//g2d.setColor(Color.GREEN);
