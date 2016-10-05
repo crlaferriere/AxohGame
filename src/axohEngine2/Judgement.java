@@ -429,23 +429,33 @@ public class Judgement extends Game {
 	@Override
 	protected void handleCollisions() {
 		for (AnimatedSprite a : sprites()) {
-			for (Tile b : tiles()) {
-				double maxBoundX = Math.min(a.getXLoc() + (double) a.getSpriteSize(), b.getXLoc() + (double) b.getSpriteSize());
-				double minBoundX = Math.max(a.getXLoc(), b.getXLoc());
-				double maxBoundY = Math.min(a.getYLoc() + (double) a.getSpriteSize(), b.getYLoc() + (double) b.getSpriteSize());
-				double minBoundY = Math.max(a.getYLoc(), b.getYLoc());
-				double overlapX = maxBoundX - minBoundX;
-				double overlapY = maxBoundY - minBoundY;
-				if (overlapX > 0 && overlapY > 0) {
-					if (a instanceof Hero) {
-						Hero h = (Hero) a;
-						double aCenterX = a.getXLoc() + (double) a.getSpriteSize() * 0.5;
-						double aCenterY = a.getYLoc() + (double) a.getSpriteSize() * 0.5;
-						double bCenterX = b.getXLoc() + (double) b.getSpriteSize() * 0.5;
-						double bCenterY = b.getYLoc() + (double) b.getSpriteSize() * 0.5;
-						a.setLoc(a.getXLoc() - h.getXVel(), a.getYLoc() - h.getYVel());
-						// a.setLoc(a.getXLoc() + overlapX * Math.signum(aCenterX - bCenterX), a.getYLoc());
-						// System.out.println(aCenterX - bCenterX);
+			if (a instanceof Mob) {
+				Mob mob = (Mob) a;
+				for (Tile b : tiles()) {
+					if (b.isSolid()) {
+						double finalX = mob.getXLoc();
+						double finalY = mob.getYLoc();
+						double right = Math.min(finalX + (double) a.getSpriteSize(), b.getXLoc() + (double) b.getSpriteSize());
+						double left = Math.max(finalX, b.getXLoc());
+						double down = Math.min(finalY + (double) a.getSpriteSize(), b.getYLoc() + (double) b.getSpriteSize());
+						double up = Math.max(finalY, b.getYLoc());
+						double overlapX = right - left;
+						double overlapY = down - up;
+						if (overlapX > 0 && overlapY > 0) {
+							double aCenterX = finalX + (double) a.getSpriteSize() * 0.5;
+							double aCenterY = finalY + (double) a.getSpriteSize() * 0.5;
+							double bCenterX = b.getXLoc() + (double) b.getSpriteSize() * 0.5;
+							double bCenterY = b.getYLoc() + (double) b.getSpriteSize() * 0.5;
+							double dx = aCenterX - bCenterX;
+							double dy = aCenterY - bCenterY;
+							//double theta = Math.atan2(dy, dx);
+							System.out.println(Math.atan2(mob.getYVel(), mob.getYVel()));
+							//a.setLoc(finalX, finalY);
+							//a.setLoc(finalX - overlapX * Math.signum(h.getXVel()), finalY - overlapY * Math.signum(h.getYVel()));
+							// a.setLoc(a.getXLoc() - h.getXVel(), a.getYLoc() - h.getYVel());
+							// a.setLoc(a.getXLoc() + overlapX * Math.signum(aCenterX - bCenterX), a.getYLoc());
+							// System.out.println(aCenterX - bCenterX);
+						}
 					}
 				}
 			}
