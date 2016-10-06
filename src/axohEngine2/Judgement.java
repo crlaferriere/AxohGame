@@ -448,11 +448,12 @@ public class Judgement extends Game {
 							double bCenterY = b.getYLoc() + (double) b.getSpriteSize() * 0.5;
 							double dx = aCenterX - bCenterX;
 							double dy = aCenterY - bCenterY;
-							//double theta = Math.atan2(dy, dx);
-							System.out.println(Math.atan2(mob.getYVel(), mob.getYVel()));
+							double theta = Math.atan2(dy, dx);
+							//System.out.println(Math.toDegrees(theta) / 45.0);
+							// System.out.println(Math.atan2(mob.getXVel(), mob.getYVel()));
 							//a.setLoc(finalX, finalY);
-							//a.setLoc(finalX - overlapX * Math.signum(h.getXVel()), finalY - overlapY * Math.signum(h.getYVel()));
-							// a.setLoc(a.getXLoc() - h.getXVel(), a.getYLoc() - h.getYVel());
+							a.setLoc(finalX - overlapX * Math.signum(mob.getXVel()), finalY - overlapY * Math.signum(mob.getYVel()));
+							// a.setLoc(a.getXLoc() - mob.getXVel(), a.getYLoc() - mob.getYVel());
 							// a.setLoc(a.getXLoc() + overlapX * Math.signum(aCenterX - bCenterX), a.getYLoc());
 							// System.out.println(aCenterX - bCenterX);
 						}
