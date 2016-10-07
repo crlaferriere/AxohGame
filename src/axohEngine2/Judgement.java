@@ -149,7 +149,8 @@ public class Judgement extends Game {
 		//plays music file at the beginning of the game. 
 		//The music file must be .wav file
 		try {
-			JavaAudioPlaySoundExample("/over2.wav"); }
+			//JavaAudioPlaySoundExample("/over2.wav"); 
+			}
 		catch(Exception ex) {
 			
 		}
@@ -171,6 +172,7 @@ public class Judgement extends Game {
 		 * is moved around.
 		 ****************************************************************/
 		//****Initialize Misc Variables
+		
 		setGameState(State.TITLE);
 		option = OPTION.NONE;
 		scale = 4;
@@ -684,6 +686,7 @@ public class Judgement extends Game {
 		 *****************************************/
 		if(getGameState() == State.TITLE && inputWait < 0){
 			//For when no initial choice has been made
+			
 			if(option == OPTION.NONE){
 				//S or down arrow(Change selection)
 				if(keyArrowDown && titleLocation < 1) {
@@ -747,13 +750,18 @@ public class Judgement extends Game {
 					inputWait = 7;
 				}
 				//Enter key(Make a choice)
+			//	System.out.println(title.isGetName());
+				
 				if(keyEnter && !title.isGetName()) {
+					
 					if(option == OPTION.NEWGAME) {
 						if(title.files() != null){ //Make sure the location of a new game is greater than previous ones(Not overwriting)
+							
 							if(title.files().length - 1 < titleLocation) {
 								title.enter();
 								titleX2 += 40;
 								inputWait = 5;
+								
 							}
 						}
 						if(title.files() == null) { //Final check if there are no files made yet, to make the file somewhere
@@ -796,6 +804,8 @@ public class Judgement extends Game {
 						currentFile = title.getFileName();
 						option = OPTION.NONE;
 						setGameState(State.GAME);
+						title.clearFileName();
+						
 						
 					}
 				}//end get name
@@ -917,13 +927,23 @@ public class Judgement extends Game {
 					wait = 200;
 					waitOn = true;
 					wasSaving = true;
+					keyEnter = false;
 					option = OPTION.NONE;
 				}
 			}
 			if(option == OPTION.QUIT){
 				if(keyEnter){
 					option = OPTION.QUIT;
+
 					setGameState(State.TITLE);
+					keyEnter = false;
+					option = OPTION.NONE;
+					titleX = 530;
+					titleY = 610;
+					titleX2 = 340;
+					titleY2 = 310;
+					titleLocation = 0;
+					
 				}
 			}
 			
@@ -934,7 +954,6 @@ public class Judgement extends Game {
 				inMenu.setItemLoc(0);
 				sectionLoc = 0;
 				inputWait = 8;
-				keyBack = false;
 			}
 			//Backspace(if a choice has not been made, this closes the inventory)
 			if(keyBack && option == OPTION.NONE) {
