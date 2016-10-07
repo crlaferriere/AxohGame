@@ -209,6 +209,9 @@ public class TitleMenu {
 	public String[] files() { return files; }
 	public boolean isGetName() { return getName; }
 	
+	//Resets the fileName in order to start a new one
+	public void clearFileName(){ _fileName = "";}
+	
 	//Setter for the boolean getName
 	public void setGetName(boolean onOrOff) { getName = onOrOff; }
 	
