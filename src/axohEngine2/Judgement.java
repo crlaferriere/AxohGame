@@ -341,19 +341,19 @@ public class Judgement extends Game {
 	 * Actions that need to be done during these times can be added here.
 	 ******************************************************************/
 	@Override
-	void gameShutDown() {		
+	void gameShutDown() {
 	}
 
 	@Override
-	void spriteUpdate(AnimatedSprite sprite) {		
+	void spriteUpdate(AnimatedSprite sprite) {
 	}
 
 	@Override
-	void spriteDraw(AnimatedSprite sprite) {		
+	void spriteDraw(AnimatedSprite sprite) {
 	}
 
 	@Override
-	void spriteDying(AnimatedSprite sprite) {		
+	void spriteDying(AnimatedSprite sprite) {
 	}
 
 	/*************************************************************************
@@ -444,20 +444,10 @@ public class Judgement extends Game {
 						double overlapX = right - left;
 						double overlapY = down - up;
 						if (overlapX > 0 && overlapY > 0) {
-							double aCenterX = finalX + (double) a.getSpriteSize() * 0.5;
-							double aCenterY = finalY + (double) a.getSpriteSize() * 0.5;
-							double bCenterX = b.getXLoc() + (double) b.getSpriteSize() * 0.5;
-							double bCenterY = b.getYLoc() + (double) b.getSpriteSize() * 0.5;
-							double dx = aCenterX - bCenterX;
-							double dy = aCenterY - bCenterY;
-							double theta = Math.atan2(dy, dx);
-							//System.out.println(Math.toDegrees(theta) / 45.0);
-							// System.out.println(Math.atan2(mob.getXVel(), mob.getYVel()));
-							//a.setLoc(finalX, finalY);
-							a.setLoc(finalX - overlapX * Math.signum(mob.getXVel()), finalY - overlapY * Math.signum(mob.getYVel()));
-							// a.setLoc(a.getXLoc() - mob.getXVel(), a.getYLoc() - mob.getYVel());
-							// a.setLoc(a.getXLoc() + overlapX * Math.signum(aCenterX - bCenterX), a.getYLoc());
-							// System.out.println(aCenterX - bCenterX);
+							
+							//if (mob.getXVel() * mob.getYVel() == 0) {
+							//	mob.setLoc(mob.getXLoc() - overlapX * Math.signum(mob.getXVel()), mob.getYLoc() - overlapY * Math.signum(mob.getYVel()));
+							//}
 						}
 					}
 				}
@@ -575,7 +565,7 @@ public class Judgement extends Game {
 	 *of the space around the player like that, the X movement is flipped. 
 	 *Which means to move right, you subtract from the X position.
 	 ******************************************************************/
-	void movePlayer(int xa, int ya) {
+	void movePlayer(double xa, double ya) {
 		player.move(xa, ya);
 		/*if(xa > 0) {
 			if(mapX + xa < currentMap.getMinX() && playerX < playerSpeed && playerX > -playerSpeed) mapX += xa;
