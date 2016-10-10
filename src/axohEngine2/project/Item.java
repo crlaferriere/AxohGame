@@ -17,6 +17,7 @@ import java.awt.Graphics2D;
 
 import javax.swing.JFrame;
 
+import axohEngine2.Judgement;
 import axohEngine2.entities.Sprite;
 import axohEngine2.entities.SpriteSheet;
 
@@ -45,8 +46,8 @@ public class Item extends Sprite{
 	 * @param name - String name of the item
 	 * @param equipment - Boolean depicting if the item is of equipment type(Very different common modifier)
 	 *************************************************************************/
-	public Item(JFrame frame, Graphics2D g2d, SpriteSheet sheet, int spriteNumber, String name, boolean equipment) {
-		super(frame, g2d);
+	public Item(Judgement game, Graphics2D g2d, SpriteSheet sheet, int spriteNumber, String name, boolean equipment) {
+		super(game, g2d);
 		setSprite(sheet, spriteNumber);
 		isEquipment = equipment;
 		_name = name;

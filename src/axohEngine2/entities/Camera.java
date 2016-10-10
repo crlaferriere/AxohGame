@@ -1,18 +1,20 @@
 package axohEngine2.entities;
 
+import java.awt.geom.Point2D;
+
 import axohEngine2.Game;
 import axohEngine2.util.Vector2D;
 
 public class Camera {
 
-	private Vector2D position;
+	private Point2D position;
 	public boolean centerTarget = true;
 	
 	public Camera() {
 		position = new Vector2D();
 	}
 	
-	public Vector2D getPosition() {
+	public Point2D getPosition() {
 		return position;
 	}
 	
@@ -25,7 +27,7 @@ public class Camera {
 		}
 	}
 	
-	public void setLocation(Vector2D position) {
+	public void setLocation(Point2D position) {
 		setLocation(position.getX(), position.getY());
 	}
 	

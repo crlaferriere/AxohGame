@@ -20,6 +20,8 @@ package axohEngine2.map;
 import java.awt.Graphics2D;
 import javax.swing.JFrame;
 
+import axohEngine2.Judgement;
+
 public class Map {
 	
 	/*******************
@@ -51,14 +53,14 @@ public class Map {
 	 * @param mapHeight - An int identifying the height of an array in tiles
 	 * @param name - A String which identifies the map, this is strictly a user identifier, it isn't used in any logic 
 	 *************************************************************************/
-	public Map(JFrame frame, Graphics2D g2d, Tile[] tiles, int mapWidth, int mapHeight, String name) {
+	public Map(Judgement game, Graphics2D g2d, Tile[] tiles, int mapWidth, int mapHeight, String name) {
 		this.mapHeight = mapHeight;
 		this.mapWidth = mapWidth;
 		mapTiles = tiles;
 		_name = name;
 		
 		for(int i = 0; i < mapTiles.length; i++) {
-			mapTiles[i] = new Tile(mapTiles[i], frame, g2d);
+			mapTiles[i] = new Tile(mapTiles[i], game, g2d);
 		}
 		spriteSize = tiles[0].getSpriteSize();
 	}

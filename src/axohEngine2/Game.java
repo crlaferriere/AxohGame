@@ -36,6 +36,7 @@ import javax.swing.JFrame;
 import axohEngine2.data.Data;
 import axohEngine2.data.Save;
 import axohEngine2.entities.AnimatedSprite;
+import axohEngine2.entities.Hero;
 import axohEngine2.entities.Mob;
 import axohEngine2.map.Map;
 import axohEngine2.map.Tile;
@@ -114,7 +115,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	}
 
 	//Mouse variables
-	private transient Vector2D mousePos = new Vector2D(0, 0);
+	private transient Vector2D mousePos = new Vector2D();
 	private boolean mouseButtons[] = new boolean[4];
 	protected char currentChar;
 
@@ -284,8 +285,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 			if(!gamePaused()) {
 				gameTimedUpdate();
 				updateSprites();
-				//spriteCollision();
-				//tileCollision();
+				handleCollisions();
 			}
 
 			//Render the graphics
@@ -293,6 +293,11 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 			repaint();
 		}
 	}
+<<<<<<< HEAD
+=======
+	
+	protected abstract void handleCollisions();
+>>>>>>> refs/remotes/Krymtel/risky
 
 	//End the game with this method call
 	public void stop() {

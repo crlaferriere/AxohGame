@@ -39,6 +39,7 @@ import axohEngine2.entities.ImageEntity;
 import axohEngine2.entities.Mob;
 import axohEngine2.entities.SpriteSheet;
 import axohEngine2.map.Map;
+import axohEngine2.map.Tile;
 import axohEngine2.project.InGameMenu;
 import axohEngine2.project.MapDatabase;
 import axohEngine2.project.OPTION;
@@ -294,7 +295,7 @@ public class Judgement extends Game {
 		* 'graphics' objects have parameters that can be changed which effect what it renders, two are font and color
 		**********************************************************************/
 		Graphics2D g2d = graphics();
-		g2d.clearRect(0, 0, SCREENWIDTH, SCREENHEIGHT); 
+		g2d.clearRect(0, 0, SCREENWIDTH, SCREENHEIGHT);
 		g2d.setFont(simple);
 		
 		//GUI rendering for when a specific State is set, only specific groups of data is drawn at specific times
@@ -302,8 +303,8 @@ public class Judgement extends Game {
 			//Render the map, the player, any NPCs or Monsters and the player health or status
 			int camX = - (int) camera.getX();
 			int camY = - (int) camera.getY();
-			currentMap.render(this, g2d, camX, camY);
-			currentOverlay.render(this, g2d, camX, camY);
+			currentMap.render(this, g2d, 0, 0);
+			currentOverlay.render(this, g2d, 0, 0);
 			//player.move(CENTERX + (int) (player.getXLoc() - camera.getX()), CENTERY + (int) (player.getYLoc() - camera.getY()));
 			player.renderMob();
 			//g2d.setColor(Color.GREEN);
@@ -340,19 +341,19 @@ public class Judgement extends Game {
 	 * Actions that need to be done during these times can be added here.
 	 ******************************************************************/
 	@Override
-	void gameShutDown() {		
+	void gameShutDown() {
 	}
 
 	@Override
-	void spriteUpdate(AnimatedSprite sprite) {		
+	void spriteUpdate(AnimatedSprite sprite) {
 	}
 
 	@Override
-	void spriteDraw(AnimatedSprite sprite) {		
+	void spriteDraw(AnimatedSprite sprite) {
 	}
 
 	@Override
-	void spriteDying(AnimatedSprite sprite) {		
+	void spriteDying(AnimatedSprite sprite) {
 	}
 
 	/*************************************************************************
@@ -425,6 +426,33 @@ public class Judgement extends Game {
 	
 	void addHitbox(int x, int y, int size) {
 		
+	}
+	
+	@Override
+	protected void handleCollisions() {
+		for (AnimatedSprite a : sprites()) {
+			if (a instanceof Mob) {
+				Mob mob = (Mob) a;
+				for (Tile b : tiles()) {
+					if (b.isSolid()) {
+						double finalX = mob.getXLoc();
+						double finalY = mob.getYLoc();
+						double right = Math.min(finalX + (double) a.getSpriteSize(), b.getXLoc() + (double) b.getSpriteSize());
+						double left = Math.max(finalX, b.getXLoc());
+						double down = Math.min(finalY + (double) a.getSpriteSize(), b.getYLoc() + (double) b.getSpriteSize());
+						double up = Math.max(finalY, b.getYLoc());
+						double overlapX = right - left;
+						double overlapY = down - up;
+						if (overlapX > 0 && overlapY > 0) {
+							
+							//if (mob.getXVel() * mob.getYVel() == 0) {
+							//	mob.setLoc(mob.getXLoc() - overlapX * Math.signum(mob.getXVel()), mob.getYLoc() - overlapY * Math.signum(mob.getYVel()));
+							//}
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	/***********************************************************************
@@ -537,7 +565,7 @@ public class Judgement extends Game {
 	 *of the space around the player like that, the X movement is flipped. 
 	 *Which means to move right, you subtract from the X position.
 	 ******************************************************************/
-	void movePlayer(int xa, int ya) {
+	void movePlayer(double xa, double ya) {
 		player.move(xa, ya);
 		/*if(xa > 0) {
 			if(mapX + xa < currentMap.getMinX() && playerX < playerSpeed && playerX > -playerSpeed) mapX += xa;
@@ -1122,4 +1150,6 @@ public class Judgement extends Game {
 			System.out.println("Load Successful");
 		 } //end file is not empty check
 	 } //end load method
+
+
 } //end class

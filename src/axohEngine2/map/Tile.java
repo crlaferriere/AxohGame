@@ -19,6 +19,7 @@ import java.awt.Rectangle;
 
 import javax.swing.JFrame;
 
+import axohEngine2.Judgement;
 import axohEngine2.entities.AnimatedSprite;
 import axohEngine2.entities.Mob;
 import axohEngine2.entities.SpriteSheet;
@@ -32,7 +33,6 @@ public class Tile extends AnimatedSprite {
 	 **************************/
 	//_solid, _slippery, _breakable - Boolean properties that can be checked in a tile to perform special actions
 	//hasEvent and hasMob - vey special booleans that check for the possibility for an event or a mob from that tile
-	private Vector2D position;
 	private boolean _solid;
 	private boolean _slippery;
 	private boolean _breakable;
@@ -58,8 +58,8 @@ public class Tile extends AnimatedSprite {
 	 * @param sheet - The spriteSheet object which the tile graphic can be found on
 	 * @param spriteNumber - The number in the spriteSheet that the graphic can be found on
 	 ******************************************************************************************/
-	public Tile(JFrame frame, Graphics2D g2d, String name, SpriteSheet sheet, int spriteNumber) {
-		super(frame, g2d, sheet, spriteNumber, name);
+	public Tile(Judgement game, Graphics2D g2d, String name, SpriteSheet sheet, int spriteNumber) {
+		super(game, g2d, sheet, spriteNumber, name);
 		_solid = false;
 		_slippery = false;
 		_breakable = false;
@@ -77,8 +77,8 @@ public class Tile extends AnimatedSprite {
 	 * @param spriteNumber - Reference Constructor 1
 	 * @param solid - Property which the system checks to stop objects from moving on it
 	 **************************************************************************/
-	public Tile(JFrame frame, Graphics2D g2d, String name, SpriteSheet sheet, int spriteNumber, boolean solid) {
-		super(frame, g2d, sheet, spriteNumber, name);
+	public Tile(Judgement game, Graphics2D g2d, String name, SpriteSheet sheet, int spriteNumber, boolean solid) {
+		super(game, g2d, sheet, spriteNumber, name);
 		_solid = solid;
 		_slippery = false;
 		_breakable = false;
@@ -104,8 +104,8 @@ public class Tile extends AnimatedSprite {
 	 * @param slippery - Property which the system checks to run special handling methods
 	 * @param breakable - Property which the system checks to run special handling methods
 	 ******************************************************************/
-	public Tile(JFrame frame, Graphics2D g2d, String name, SpriteSheet sheet, int spriteNumber, boolean solid, boolean slippery, boolean breakable) {
-		super(frame, g2d, sheet, spriteNumber, name);
+	public Tile(Judgement game, Graphics2D g2d, String name, SpriteSheet sheet, int spriteNumber, boolean solid, boolean slippery, boolean breakable) {
+		super(game, g2d, sheet, spriteNumber, name);
 		_solid = solid;
 		_slippery = slippery;
 		_breakable = breakable;
@@ -124,8 +124,8 @@ public class Tile extends AnimatedSprite {
 	 * @param frame - Reference Constructor 1
 	 * @param g2d - Reference Constructor 1
 	 *********************************************************************/
-	public Tile(Tile tile, JFrame frame, Graphics2D g2d) {
-		super(frame, g2d, tile.getSheet(), tile.getSpriteNumber(), tile._name);
+	public Tile(Tile tile, Judgement game, Graphics2D g2d) {
+		super(game, g2d, tile.getSheet(), tile.getSpriteNumber(), tile._name);
 		_solid = tile.isSolid();
 		_slippery = tile.isSlippery();
 		_breakable = tile.isBreakable();
@@ -205,7 +205,15 @@ public class Tile extends AnimatedSprite {
 	 * @param frame - JFrame which the tile graphic will be displayed on (The window)
 	 ***************************************************************************/
 	public void renderTile(int x, int y, Graphics2D g2d, JFrame frame) {
-		g2d.drawImage(getImage(), x, y, getSpriteSize(), getSpriteSize(), frame);
+		int finalX = x - (int) game.camera.getX();
+		int finalY = y - (int) game.camera.getY();
+		g2d.drawImage(getImage(), finalX, finalY, getSpriteSize(), getSpriteSize(), frame);
+		g2d.setColor(Color.black);
+		g2d.drawRect(finalX, finalY, getSpriteSize(), getSpriteSize());
+		if (isSolid()) {
+			g2d.setColor(new Color(1f, 0, 0, 0.5f));
+			g2d.fillRect(finalX, finalY, getSpriteSize(), getSpriteSize());
+		}
 		position.setX(x);
 		position.setY(y);
 	}

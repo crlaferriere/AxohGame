@@ -13,13 +13,13 @@
 //Package
 package axohEngine2.entities;
 
+import java.awt.Color;
 //Imports
 import java.awt.Graphics2D;
 
 import java.util.LinkedList;
 import java.util.Random;
 
-import axohEngine2.Game;
 import axohEngine2.Judgement;
 import axohEngine2.project.TYPE;
 import axohEngine2.util.Vector2D;
@@ -40,11 +40,11 @@ public class Mob extends AnimatedSprite{
 	//attacking - A possible state the mob could be in, for many kinds of checks
 	//takenOut - Boolean to see if the mob has it's weapon out
 	//currentAttack - The currently selected attack to use from the list of Mob attacks
+	public Vector2D velocity;
 	private Random random = new Random();
 	private LinkedList<Attack> attacks;
 	private int health;
 	private TYPE ai;
-	protected Vector2D position;
 	
 	private boolean attacking;
 	private boolean takenOut = false;
@@ -63,6 +63,14 @@ public class Mob extends AnimatedSprite{
 	
 	private double speed = 0;
 	
+	public double getXVel() {
+		return velocity.getX();
+	}
+	
+	public double getYVel() {
+		return velocity.getY();
+	}
+	
 	/************************************************************************
 	 * Constructor
 	 *  
@@ -76,6 +84,7 @@ public class Mob extends AnimatedSprite{
 	 *************************************************************************/
 	public Mob(Judgement game, Graphics2D g2d, SpriteSheet sheet, int spriteNumber, TYPE ai, String name) {
 		super(game, g2d, sheet, spriteNumber, name);
+		velocity = new Vector2D();
 		attacks = new LinkedList<Attack>();
 		this.game = game;
 		this.g2d = g2d;
@@ -85,7 +94,6 @@ public class Mob extends AnimatedSprite{
 		health = 0;
 		setAlive(true);
 		setSpriteType(ai);
-		position = new Vector2D();
 
 	}
 	
@@ -217,6 +225,7 @@ public class Mob extends AnimatedSprite{
 	 * @param ya - Int movement in pixels on the y axis
 	 ****************************************************************/
 	public void move(double xa, double ya) {
+		velocity.setLocation(xa, ya);
 		position.setX(position.getX() + xa);
 		position.setY(position.getY() + ya);
 		if(xa < 0) { //left
@@ -397,20 +406,6 @@ public class Mob extends AnimatedSprite{
 	 * @return - Getter for the current health the mob is at
 	 ***************************************************/
 	public int health() { return health; }
-	
-	/***************************************************
-	 * Get the x or y location of the mob in the room or
-	 * set a new x or y location relative to it's current position
-	 * 
-	 * @return - x or y int of location
-	 ***************************************************/
-	public double getXLoc() { return position.getX(); }
-	public double getYLoc() { return position.getY(); }
-	public void setLoc(double x, double y) { //Relative to current position
-		position.setLocation(x, y);
-		//xx = xx + x;
-		//yy = yy + y;
-	}
 
 	/**********************************************
 	 * Render the Mob in the game room at anx and y location
@@ -419,7 +414,16 @@ public class Mob extends AnimatedSprite{
 	 * @param y - Int y position
 	 ***********************************************/
 	public void renderMob() {
-		g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX() + Game.CENTERX, (int) position.getY() - (int) game.camera.getY() + Game.CENTERY, getSpriteSize(), getSpriteSize(), game);
+		int x = (int) position.getX() - (int) game.camera.getX();
+		int y = (int) position.getY() - (int) game.camera.getY();
+		g2d.drawImage(getImage(), x, y, getSpriteSize(), getSpriteSize(), game);
+		g2d.setColor(new Color(1f, 0, 0, 0.5f));
+		g2d.fillRect(x, y, getSpriteSize(), getSpriteSize());
+		g2d.setColor(Color.red);
+		g2d.drawRect(x, y, getSpriteSize(), getSpriteSize());
+		g2d.setColor(Color.green);
+		g2d.fillOval(x - 4, y - 4, 8, 8);
+		//g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX(), (int) position.getY() - (int) game.camera.getY(), getSpriteSize(), getSpriteSize(), game);
 		//g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX(), (int) position.getY() - (int) game.camera.getY(), getSpriteSize(), getSpriteSize(), game);
 		//position.setX(x);
 		//position.setY(y);
