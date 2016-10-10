@@ -63,7 +63,6 @@ public class InGameMenu {
 	private int sectionLoc;
 	private int totalItems;
 	private int totalEquipment;
-	private boolean isSaved;
 	
 	//Starting stat variables
 	private int level = 1;
@@ -151,9 +150,8 @@ public class InGameMenu {
 	 * @param sectionLocation - current choice, an int
 	 * @param health - Player health int
 	 *******************************************************************/
-	public void update(OPTION option, boolean isSaved, int sectionLocation, int health){
+	public void update(OPTION option, int sectionLocation, int health){
 		_option = option;
-		this.isSaved = isSaved;
 		sectionLoc = sectionLocation;
 		currHealth = health;
 		levelUp();
@@ -249,17 +247,7 @@ public class InGameMenu {
 		if(_option == OPTION.QUIT){
 			g2d.setColor(Color.WHITE);
 			g2d.drawString("Quit Game", 120,710);
-			if(!isSaved){
-				g2d.drawString("Your game is not saved.", 920, 160);
-				g2d.drawString("Are you sure you want to quit?", 920, 240);
-		}
-			else
 			g2d.drawString("Are you sure? :(", 920, 200);
-			
-			g2d.drawString("Yes (Enter)", 600, 600);
-			g2d.drawString("No (Backspace)", 1400, 600);
-
-			
 		}
 		if(_option == OPTION.STATUS){
 			g2d.setColor(Color.BLACK);

@@ -266,7 +266,7 @@ public class Judgement extends Game {
 		
 		//Update certain specifics based on certain game States
 		if(getGameState() == State.TITLE) title.update(option, titleLocation); //Title Menu update
-		if(getGameState() == State.INGAMEMENU) inMenu.update(option, isSaved(), sectionLoc, player.health()); //In Game Menu update
+		if(getGameState() == State.INGAMEMENU) inMenu.update(option, sectionLoc, player.health()); //In Game Menu update
 		updateData(currentMap, currentOverlay, (int) player.getXLoc(), (int) player.getYLoc()); //Update the current file data for saving later
 		if (camFollow) {
 			camera.track(player);
@@ -889,7 +889,6 @@ public class Judgement extends Game {
 				}
 				//Back space(Go back on your last choice)
 				if(keyBack) confirmUse = false;
-				
 			}
 			
 			//Equipment
@@ -922,11 +921,7 @@ public class Judgement extends Game {
 				}
 			}
 			if(option == OPTION.QUIT){
-
 				if(keyEnter){
-				//	System.out.println((data().getMapName()));
-				//	System.out.println(save.getData().getMapName());
-					//System.out.println(isSaved());
 					option = OPTION.QUIT;
 
 					setGameState(State.TITLE);
@@ -944,23 +939,19 @@ public class Judgement extends Game {
 					sprites().add(titleArrow);
 					
 					
-					
-					
-					
 				}
 			}
 			
 			
 			//Backspace(if a choice has been made, this backs out of it)
 			if(keyBack && option != OPTION.NONE) {
-		
+				option = OPTION.NONE;
 				inMenu.setItemLoc(0);
 				sectionLoc = 0;
 				inputWait = 8;
-				option = OPTION.NONE;
 			}
-		//Backspace(if a choice has not been made, this closes the inventory)
-			else if(keyBack && option == OPTION.NONE) {
+			//Backspace(if a choice has not been made, this closes the inventory)
+			if(keyBack && option == OPTION.NONE) {
 				setGameState(State.GAME);
 				option = OPTION.NONE;
 				inLocation = 0;
@@ -968,7 +959,6 @@ public class Judgement extends Game {
 				inY = 90;
 				inputWait = 8;
 			}
-			
 		}
 		inputWait--;
 	}

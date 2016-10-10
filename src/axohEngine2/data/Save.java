@@ -28,7 +28,6 @@ public class Save {
 	private transient ObjectOutputStream obj_out;
 	private transient PrintWriter writer;
 	private File newfile; 
-	private Data data;
 	
 	/********************************************************
 	 * Save the Game state
@@ -38,7 +37,6 @@ public class Save {
 	 *********************************************************/
 	public void saveState(String fileName, Data data) {
 		try {
-			this.data = data;
 			file_out = new FileOutputStream("C:/gamedata/saves/" + fileName);
 			obj_out = new ObjectOutputStream(file_out);
 			obj_out.writeObject(data);
@@ -64,6 +62,4 @@ public class Save {
 		}
 		writer.close();
 	}
-	
-	public Data getData(){ return data;}
 }
