@@ -293,16 +293,10 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 			repaint();
 		}
 	}
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
+
 	
 	protected abstract void handleCollisions();
->>>>>>> refs/remotes/Krymtel/risky
 
-=======
-	
->>>>>>> parent of 208e45f... Save game prompt
 	//End the game with this method call
 	public void stop() {
 		gameloop = null;
@@ -500,6 +494,24 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 *******************************************************************************/
 	protected void updateData(Map currentMap, Map currentOverlay, int playerX, int playerY) {
 		data.update(currentMap.mapName(), currentOverlay.mapName(), playerX, playerY);
+	}
+	
+	/**********************************************
+	 * isSaved : Checks if the player's current data is saved to the save file
+	 * 
+	 * This method is called in the InGameMenu render method which prompts the player to save if they haven't.
+	 * 
+	 * @return A boolean indicating if the check is true or false
+	 **********************************************/
+	public boolean isSaved(){
+		if (save.getData()!=null)
+			if (data.getMapName()==save.getData().getMapName()){
+				if (data.getOverlayName()==save.getData().getOverlayName())
+					if (data.getPlayerX()==save.getData().getPlayerX())
+						if (data.getPlayerY()==save.getData().getPlayerY())
+							return true;
+			}
+		return false;
 	}
 	
 	//protected void updateData2(Map currentMap, Map currentOverlay, int npcX, int npcY) {

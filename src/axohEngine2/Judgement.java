@@ -149,7 +149,7 @@ public class Judgement extends Game {
 		//plays music file at the beginning of the game. 
 		//The music file must be .wav file
 		try {
-			JavaAudioPlaySoundExample("/over2.wav"); 
+		//	JavaAudioPlaySoundExample("/over2.wav"); 
 			}
 		catch(Exception ex) {
 			
@@ -266,7 +266,7 @@ public class Judgement extends Game {
 		
 		//Update certain specifics based on certain game States
 		if(getGameState() == State.TITLE) title.update(option, titleLocation); //Title Menu update
-		if(getGameState() == State.INGAMEMENU) inMenu.update(option, sectionLoc, player.health()); //In Game Menu update
+		if(getGameState() == State.INGAMEMENU) inMenu.update(option, isSaved(), sectionLoc, player.health()); //In Game Menu update
 		updateData(currentMap, currentOverlay, (int) player.getXLoc(), (int) player.getYLoc()); //Update the current file data for saving later
 		if (camFollow) {
 			camera.track(player);
@@ -951,7 +951,7 @@ public class Judgement extends Game {
 				inputWait = 8;
 			}
 			//Backspace(if a choice has not been made, this closes the inventory)
-			if(keyBack && option == OPTION.NONE) {
+			else if(keyBack && option == OPTION.NONE) {
 				setGameState(State.GAME);
 				option = OPTION.NONE;
 				inLocation = 0;
