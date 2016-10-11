@@ -149,7 +149,7 @@ public class Judgement extends Game {
 		//plays music file at the beginning of the game. 
 		//The music file must be .wav file
 		try {
-			//JavaAudioPlaySoundExample("/over2.wav"); 
+		//	JavaAudioPlaySoundExample("/over2.wav"); 
 			}
 		catch(Exception ex) {
 			
@@ -266,7 +266,7 @@ public class Judgement extends Game {
 		
 		//Update certain specifics based on certain game States
 		if(getGameState() == State.TITLE) title.update(option, titleLocation); //Title Menu update
-		if(getGameState() == State.INGAMEMENU) inMenu.update(option, sectionLoc, player.health()); //In Game Menu update
+		if(getGameState() == State.INGAMEMENU) inMenu.update(option, isSaved(), sectionLoc, player.health()); //In Game Menu update
 		updateData(currentMap, currentOverlay, (int) player.getXLoc(), (int) player.getYLoc()); //Update the current file data for saving later
 		if (camFollow) {
 			camera.track(player);
@@ -676,7 +676,6 @@ public class Judgement extends Game {
 		 *****************************************/
 		if(getGameState() == State.TITLE && inputWait < 0){
 			//For when no initial choice has been made
-			
 			if(option == OPTION.NONE){
 				//S or down arrow(Change selection)
 				if(keyArrowDown && titleLocation < 1) {
@@ -928,11 +927,17 @@ public class Judgement extends Game {
 					setGameState(State.TITLE);
 					keyEnter = false;
 					option = OPTION.NONE;
+					
+					//resets the title arrow's positions and animation
 					titleX = 530;
 					titleY = 610;
 					titleX2 = 340;
 					titleY2 = 310;
 					titleLocation = 0;
+			
+					titleArrow.loadAnim(4, 10);
+					sprites().add(titleArrow);
+					
 					
 				}
 			}
@@ -946,7 +951,7 @@ public class Judgement extends Game {
 				inputWait = 8;
 			}
 			//Backspace(if a choice has not been made, this closes the inventory)
-			if(keyBack && option == OPTION.NONE) {
+			else if(keyBack && option == OPTION.NONE) {
 				setGameState(State.GAME);
 				option = OPTION.NONE;
 				inLocation = 0;
@@ -1117,7 +1122,8 @@ public class Judgement extends Game {
 			 System.out.println("Loading...");
 			 loadData(currentFile);
 			 tiles().clear();
-			 sprites().clear();
+			 sprites().clear();			
+
 			 for(int i = 0; i < mapBase.maps.length; i++){
 				 if(mapBase.getMap(i) == null) continue;
 				 if(data().getMapName() == mapBase.getMap(i).mapName()) currentMap = mapBase.getMap(i);
