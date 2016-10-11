@@ -435,8 +435,8 @@ public class Judgement extends Game {
 				Mob mob = (Mob) a;
 				for (Tile b : tiles()) {
 					if (b.isSolid()) {
-						double finalX = mob.getXLoc();
-						double finalY = mob.getYLoc();
+						double finalX = mob.getXLoc() + mob.getXVel();
+						double finalY = mob.getYLoc() + mob.getYVel();
 						double right = Math.min(finalX + (double) a.getSpriteSize(), b.getXLoc() + (double) b.getSpriteSize());
 						double left = Math.max(finalX, b.getXLoc());
 						double down = Math.min(finalY + (double) a.getSpriteSize(), b.getYLoc() + (double) b.getSpriteSize());
@@ -444,7 +444,15 @@ public class Judgement extends Game {
 						double overlapX = right - left;
 						double overlapY = down - up;
 						if (overlapX > 0 && overlapY > 0) {
-							
+							double offX = overlapX * Math.signum(mob.getXVel());
+							double offY = overlapY * Math.signum(mob.getYVel());
+							double fuck;
+							if (mob.getXVel() > 0) {
+								fuck = mob.getYVel() * (overlapX / mob.getXVel());
+							} else {
+								fuck = 0;
+							}
+							mob.setLoc(mob.getXLoc() + mob.getXVel() - offX, mob.getYLoc() - fuck);
 							//if (mob.getXVel() * mob.getYVel() == 0) {
 							//	mob.setLoc(mob.getXLoc() - overlapX * Math.signum(mob.getXVel()), mob.getYLoc() - overlapY * Math.signum(mob.getYVel()));
 							//}
