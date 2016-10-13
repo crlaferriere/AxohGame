@@ -444,15 +444,39 @@ public class Judgement extends Game {
 						double overlapX = right - left;
 						double overlapY = down - up;
 						if (overlapX > 0 && overlapY > 0) {
-							double offX = overlapX * Math.signum(mob.getXVel());
-							double offY = overlapY * Math.signum(mob.getYVel());
-							double fuck;
-							if (mob.getXVel() > 0) {
-								fuck = mob.getYVel() * (overlapX / mob.getXVel());
+							double centerX = finalX + (double) a.getSpriteSize() * 0.5;
+							double centerY = finalY + (double) a.getSpriteSize() * 0.5;
+							double tileCenterX = b.getXLoc() + (double) b.getSpriteSize() * 0.5;
+							double tileCenterY = b.getYLoc() + (double) b.getSpriteSize() * 0.5;
+							double angle = Math.atan2(centerY - tileCenterY, centerX - tileCenterX);
+							double normalX = Math.cos(angle);
+							double normalY = Math.sin(angle);
+							if (Math.abs(normalX) > 1.0 / Math.sqrt(2.0)) {
+								normalX = normalX > 0.0 ? 1.0 : -1.0;
 							} else {
-								fuck = 0;
+								normalX = 0.0;
 							}
-							mob.setLoc(mob.getXLoc() + mob.getXVel() - offX, mob.getYLoc() - fuck);
+							if (Math.abs(normalY) > 1.0 / Math.sqrt(2.0)) {
+								normalY = normalY > 0.0 ? 1.0 : -1.0;
+							} else {
+								normalY = 0.0;
+							}
+							double offX = overlapX * normalX;
+							double offY = overlapY * normalY;
+							double adjX = 0;
+							double adjY = 0;
+							if (Math.abs(mob.getYVel()) > 0) {
+								adjX = mob.getXVel() * overlapY / mob.getYVel() * normalY;
+							}
+							if (Math.abs(mob.getXVel()) > 0) {
+								adjY = mob.getYVel() * overlapX / mob.getXVel() * normalX;
+							}
+							//System.out.println(normalX + ", " + normalY);
+							mob.setLoc(finalX + offX + adjX, finalY + offY + adjY);
+							//mob.setLoc(finalX - fuckX, finalY - offY);
+							
+							//mob.setLoc(mob.getXLoc() + mob.getXVel() - offX, mob.getYLoc());
+							//mob.setLoc(mob.getXLoc(), mob.getYLoc() + mob.getYVel() - offY);
 							//if (mob.getXVel() * mob.getYVel() == 0) {
 							//	mob.setLoc(mob.getXLoc() - overlapX * Math.signum(mob.getXVel()), mob.getYLoc() - overlapY * Math.signum(mob.getYVel()));
 							//}
