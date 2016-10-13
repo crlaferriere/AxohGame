@@ -45,7 +45,7 @@ public class Mob extends AnimatedSprite{
 	private int health;
 	private TYPE ai;
 	protected Vector2D position;
-	
+	 
 	private boolean attacking;
 	private boolean takenOut = false;
 	private Attack currentAttack;
@@ -61,7 +61,7 @@ public class Mob extends AnimatedSprite{
 	
 	private boolean _isAlive;
 	
-	private double speed = 0;
+	private double speed = 1;
 	
 	/************************************************************************
 	 * Constructor
@@ -344,6 +344,7 @@ public class Mob extends AnimatedSprite{
 	//Set the animations for attacks of whatever attack is selected and play them on screen
 	public void attack() {
 		attacking = true;
+		 
 		setFullAnim(currentAttack.getAttackAnim(direction), currentAttack.getAttackTotal(), currentAttack.getAttackDelay());
 		playOnce(currentAttack.getMoveAnim(direction), currentAttack.getMoveTotal(), currentAttack.getMoveDelay(), currentAttack.getAttackAnim(direction) + currentAttack.getAttackTotal());
 	}

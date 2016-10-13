@@ -143,6 +143,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
     abstract void gameKeyUp(int keyCode);
     abstract void gameMouseDown();
     abstract void gameMouseUp();
+    abstract void timer(); 
     abstract void gameMouseMove();
 	abstract void spriteUpdate(AnimatedSprite sprite);
 	abstract void spriteDraw(AnimatedSprite sprite);
@@ -656,6 +657,8 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	void drawString(Graphics2D g2d, String text, int x, int y) {
         for(String line : text.split("\n")) g2d.drawString(line, x, y += g2d.getFontMetrics().getHeight());
     }
-	
+	 void attacktimer() {
+		
+	}
 	public abstract void loadGame();
 }

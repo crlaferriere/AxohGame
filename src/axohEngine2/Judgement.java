@@ -31,6 +31,8 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
+import java.util.Timer; 
+import java.util.TimerTask; 
 
 import axohEngine2.entities.AnimatedSprite;
 import axohEngine2.entities.Camera;
@@ -45,7 +47,7 @@ import axohEngine2.project.OPTION;
 import axohEngine2.project.State;
 import axohEngine2.project.TYPE;
 import axohEngine2.project.TitleMenu;
-
+ 
 //Start class by also extending the 'Game.java' engine interface
 public class Judgement extends Game {
 	//For serializing (The saving system)
@@ -90,7 +92,8 @@ public class Judgement extends Game {
 	private MapDatabase mapBase;
 	private int inputWait = 5;
 	private boolean confirmUse = false;
-	
+	private boolean canAttack = true; 
+	 
 	//----------- Menus ----------------
 	//inX/inY - In Game Menu starting location for default choice highlight
 	//inLocation - Current choice in the in game menu represented by a number, 0 is the top
@@ -108,8 +111,9 @@ public class Judgement extends Game {
 	private String currentFile;
 	private boolean wasSaving = false;
 	private int wait;
-	private boolean waitOn = false;
-	
+	private boolean waitOn = false;  
+	private int attackCounter; 
+	private int sheathCounter; 
 	//----------- Game  -----------------
 	//SpriteSheets (To be split in to multiple smaller sprites)
 	SpriteSheet extras1;
@@ -267,6 +271,10 @@ public class Judgement extends Game {
 		updateData(currentMap, currentOverlay, (int) player.getXLoc(), (int) player.getYLoc()); //Update the current file data for saving later
 		if (camFollow) {
 			camera.track(player);
+			attackCounter++;
+			sheathCounter++; 
+			System.out.println(attackCounter + sheathCounter);
+			
 			//camera.setLocation(player.getXLoc(), player.getYLoc());
 			//camera.setLocation(player.getXLoc() + player.getSpriteSize() / 2 - CENTERX, player.getYLoc() + player.getSpriteSize() / 2 - CENTERY);
 		}
@@ -950,10 +958,11 @@ public class Judgement extends Game {
 	        	break;
 	        case KeyEvent.VK_F:
 	        	keyAction = true;
-		    	if(player.isTakenOut()) {
-					player.attack();
-			
-				}
+		    	if(player.isTakenOut() && attackCounter > 30) {
+		    		player.attack();
+					attackCounter = 0;  
+					break; 
+		    	}
 		   
 		    	// Comment out this uselessness...
 		    	//System.out.println("ACTION THROUGH F KEY");
@@ -972,9 +981,12 @@ public class Judgement extends Game {
 	        	keyBack = true;
 	        	break;
 	        case KeyEvent.VK_SPACE:
+	        	if (sheathCounter > 50) {
 	        	keySpace = true;
+	        	sheathCounter = 0; 
 	        	break;
-        }
+	        }
+		}
 	}
 
 	/**
@@ -1063,6 +1075,12 @@ public class Judgement extends Game {
 	 * 
 	 * Currently only the player x and y location and the current map is saved
 	 */
+	
+	// inherited method: timer for when the player can attack
+	void timer() {
+		
+	}
+	
 	
 	 @Override
 	 public void loadGame() {

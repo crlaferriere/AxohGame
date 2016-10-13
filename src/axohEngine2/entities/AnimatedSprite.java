@@ -25,7 +25,7 @@ public class AnimatedSprite extends Sprite {
 	/*************************
 	 * Variables
 	 *************************/
-	//animImage - Object that holds variouse image related data like x, y and size
+	//animImage - Object that holds various image related data like x, y and size
 	private ImageEntity animImage;
     protected SpriteSheet sheet;
     protected int spriteNumber;
