@@ -225,9 +225,9 @@ public class Mob extends AnimatedSprite{
 	 * @param ya - Int movement in pixels on the y axis
 	 ****************************************************************/
 	public void move(double xa, double ya) {
-		velocity.setLocation(xa, ya);
-		position.setX(position.getX() + xa);
-		position.setY(position.getY() + ya);
+		velocity.setLocation(xa + velocity.getX(), ya + velocity.getY());
+		position.setX(position.getX() + velocity.getX());
+		position.setY(position.getY() + velocity.getY());
 		if(xa < 0) { //left
 			//xx += xa; 
 			if(moveDir != DIRECTION.LEFT) setAnimTo(leftAnim);
@@ -259,6 +259,7 @@ public class Mob extends AnimatedSprite{
 			moveDir = DIRECTION.DOWN;
 		}
 		if(xa == 0 && ya == 0) stopAnim();
+		velocity.setLocation(0, 0);
 	}
 	
 	/********************************************************************************
