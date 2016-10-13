@@ -471,9 +471,8 @@ public class Judgement extends Game {
 							if (Math.abs(mob.getXVel()) > 0) {
 								adjY = mob.getYVel() * overlapX / mob.getXVel() * normalX;
 							}
-							System.out.println(normalX + ", " + normalY);
+							//System.out.println(normalX + ", " + normalY);
 							mob.setLoc(finalX + offX + adjX, finalY + offY + adjY);
-							//mob.velocity.setLocation(mob.getXVel() * normalY, mob.getYVel() * normalX);
 							//mob.setLoc(finalX - fuckX, finalY - offY);
 							
 							//mob.setLoc(mob.getXLoc() + mob.getXVel() - offX, mob.getYLoc());
@@ -654,8 +653,8 @@ public class Judgement extends Game {
 		}
 	}
 	public void checkInput() {
-		double xa = 0;
-		double ya = 0;
+		int xa = 0;
+		int ya = 0;
 		
 	
 		/********************************************
