@@ -61,7 +61,7 @@ public class Mob extends AnimatedSprite{
 	
 	private boolean _isAlive;
 	
-	private double speed = 1;
+	private double speed = 0;
 	
 	/************************************************************************
 	 * Constructor
