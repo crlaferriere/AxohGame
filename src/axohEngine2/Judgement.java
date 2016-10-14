@@ -110,7 +110,8 @@ public class Judgement extends Game {
 	private boolean wasSaving = false;
 	private int wait;
 	private boolean waitOn = false;
-	
+	private int attackCounter; 
+	private int sheathCounter; 
 	//----------- Game  -----------------
 	//SpriteSheets (To be split in to multiple smaller sprites)
 	SpriteSheet extras1;
@@ -270,6 +271,8 @@ public class Judgement extends Game {
 		updateData(currentMap, currentOverlay, (int) player.getXLoc(), (int) player.getYLoc()); //Update the current file data for saving later
 		if (camFollow) {
 			camera.track(player);
+			attackCounter++; 
+			sheathCounter++; 
 			//camera.setLocation(player.getXLoc(), player.getYLoc());
 			//camera.setLocation(player.getXLoc() + player.getSpriteSize() / 2 - CENTERX, player.getYLoc() + player.getSpriteSize() / 2 - CENTERY);
 		}
@@ -1034,9 +1037,9 @@ public class Judgement extends Game {
 	        	break;
 	        case KeyEvent.VK_F:
 	        	keyAction = true;
-		    	if(player.isTakenOut()) {
+		    	if(player.isTakenOut() && attackCounter > 30) {
 					player.attack();
-			
+					attackCounter = 0; 
 				}
 		   
 		    	// Comment out this uselessness...
@@ -1056,9 +1059,12 @@ public class Judgement extends Game {
 	        	keyBack = true;
 	        	break;
 	        case KeyEvent.VK_SPACE:
+	        if (sheathCounter > 50) {
 	        	keySpace = true;
+	        	sheathCounter = 0; 
 	        	break;
-        }
+	        }
+	    }
 	}
 
 	/**
