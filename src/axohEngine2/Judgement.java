@@ -20,6 +20,7 @@ import java.awt.Color;
 
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
@@ -214,6 +215,7 @@ public class Judgement extends Game {
 		player.setCurrentAttack("sword"); //Starting attack
 		player.setHealth(35); //If you change the starting max health, dont forget to change it in inGameMenu.java max health also
 		player.setSpeed(6.0);
+		player.collider = new Rectangle(player.getSpriteSize(), player.getSpriteSize());
 		sprites().add(player);
 		
 		randomNPC = new Mob(this, graphics(), zombie, 40, TYPE.PLAYER, "npc");
@@ -436,53 +438,55 @@ public class Judgement extends Game {
 		for (AnimatedSprite a : sprites()) {
 			if (a instanceof Mob) {
 				Mob mob = (Mob) a;
-				for (Tile b : tiles()) {
-					if (b.isSolid()) {
-						double finalX = mob.getXLoc() + mob.getXVel();
-						double finalY = mob.getYLoc() + mob.getYVel();
-						double right = Math.min(finalX + (double) a.getSpriteSize(), b.getXLoc() + (double) b.getSpriteSize());
-						double left = Math.max(finalX, b.getXLoc());
-						double down = Math.min(finalY + (double) a.getSpriteSize(), b.getYLoc() + (double) b.getSpriteSize());
-						double up = Math.max(finalY, b.getYLoc());
-						double overlapX = right - left;
-						double overlapY = down - up;
-						if (overlapX > 0 && overlapY > 0) {
-							double centerX = finalX + (double) a.getSpriteSize() * 0.5;
-							double centerY = finalY + (double) a.getSpriteSize() * 0.5;
-							double tileCenterX = b.getXLoc() + (double) b.getSpriteSize() * 0.5;
-							double tileCenterY = b.getYLoc() + (double) b.getSpriteSize() * 0.5;
-							double angle = Math.atan2(centerY - tileCenterY, centerX - tileCenterX);
-							double normalX = Math.cos(angle);
-							double normalY = Math.sin(angle);
-							if (Math.abs(normalX) > 1.0 / Math.sqrt(2.0)) {
-								normalX = normalX > 0.0 ? 1.0 : -1.0;
-							} else {
-								normalX = 0.0;
+				if (mob.collider != null) {
+					for (Tile b : tiles()) {
+						if (b.isSolid()) {
+							double finalX = mob.getXLoc() + mob.getXVel();
+							double finalY = mob.getYLoc() + mob.getYVel();
+							double right = Math.min(finalX + (double) mob.collider.getWidth(), b.getXLoc() + (double) b.getSpriteSize());
+							double left = Math.max(finalX, b.getXLoc());
+							double down = Math.min(finalY + (double) mob.collider.getHeight(), b.getYLoc() + (double) b.getSpriteSize());
+							double up = Math.max(finalY, b.getYLoc());
+							double overlapX = right - left;
+							double overlapY = down - up;
+							if (overlapX > 0 && overlapY > 0) {
+								double centerX = finalX + (double) mob.collider.getWidth() * 0.5;
+								double centerY = finalY + (double) mob.collider.getHeight() * 0.5;
+								double tileCenterX = b.getXLoc() + (double) b.getSpriteSize() * 0.5;
+								double tileCenterY = b.getYLoc() + (double) b.getSpriteSize() * 0.5;
+								double angle = Math.atan2(centerY - tileCenterY, centerX - tileCenterX);
+								double normalX = Math.cos(angle);
+								double normalY = Math.sin(angle);
+								if (Math.abs(normalX) > 1.0 / Math.sqrt(2.0)) {
+									normalX = normalX > 0.0 ? 1.0 : -1.0;
+								} else {
+									normalX = 0.0;
+								}
+								if (Math.abs(normalY) > 1.0 / Math.sqrt(2.0)) {
+									normalY = normalY > 0.0 ? 1.0 : -1.0;
+								} else {
+									normalY = 0.0;
+								}
+								double offX = overlapX * normalX;
+								double offY = overlapY * normalY;
+								double adjX = 0;
+								double adjY = 0;
+								if (Math.abs(mob.getYVel()) > 0) {
+									adjX = mob.getXVel() * overlapY / mob.getYVel() * normalY;
+								}
+								if (Math.abs(mob.getXVel()) > 0) {
+									adjY = mob.getYVel() * overlapX / mob.getXVel() * normalX;
+								}
+								//System.out.println(normalX + ", " + normalY);
+								mob.setLoc(finalX + offX + adjX, finalY + offY + adjY);
+								//mob.setLoc(finalX - fuckX, finalY - offY);
+								
+								//mob.setLoc(mob.getXLoc() + mob.getXVel() - offX, mob.getYLoc());
+								//mob.setLoc(mob.getXLoc(), mob.getYLoc() + mob.getYVel() - offY);
+								//if (mob.getXVel() * mob.getYVel() == 0) {
+								//	mob.setLoc(mob.getXLoc() - overlapX * Math.signum(mob.getXVel()), mob.getYLoc() - overlapY * Math.signum(mob.getYVel()));
+								//}
 							}
-							if (Math.abs(normalY) > 1.0 / Math.sqrt(2.0)) {
-								normalY = normalY > 0.0 ? 1.0 : -1.0;
-							} else {
-								normalY = 0.0;
-							}
-							double offX = overlapX * normalX;
-							double offY = overlapY * normalY;
-							double adjX = 0;
-							double adjY = 0;
-							if (Math.abs(mob.getYVel()) > 0) {
-								adjX = mob.getXVel() * overlapY / mob.getYVel() * normalY;
-							}
-							if (Math.abs(mob.getXVel()) > 0) {
-								adjY = mob.getYVel() * overlapX / mob.getXVel() * normalX;
-							}
-							//System.out.println(normalX + ", " + normalY);
-							mob.setLoc(finalX + offX + adjX, finalY + offY + adjY);
-							//mob.setLoc(finalX - fuckX, finalY - offY);
-							
-							//mob.setLoc(mob.getXLoc() + mob.getXVel() - offX, mob.getYLoc());
-							//mob.setLoc(mob.getXLoc(), mob.getYLoc() + mob.getYVel() - offY);
-							//if (mob.getXVel() * mob.getYVel() == 0) {
-							//	mob.setLoc(mob.getXLoc() - overlapX * Math.signum(mob.getXVel()), mob.getYLoc() - overlapY * Math.signum(mob.getYVel()));
-							//}
 						}
 					}
 				}
