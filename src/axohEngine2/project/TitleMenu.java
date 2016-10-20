@@ -150,6 +150,7 @@ public class TitleMenu {
 		_option = option;
 		files = existingFiles.list();
 		this.location = location;
+		System.out.println(location);
 	}
 	
 	/*********************************************************************************
@@ -202,6 +203,11 @@ public class TitleMenu {
 			
 		}
 		return "";
+	}
+	public void deleteSave(){
+		if(files!=null){
+			files[location] = null;
+		}
 	}
 	
 	//Getters for _fileName, files(The array), and is the syetm is in getName state
