@@ -178,7 +178,7 @@ public class Judgement extends Game {
 		scale = 4;
 		//****Initialize spriteSheets*********************************************************************
 		//extras1 = new SpriteSheet("/textures/extras/extras1.png", 8, 8, 32, scale);
-		extras1fist = new SpriteSheet("/textures/extras/extras1fist.png", 8, 8, 32, scale); 
+		extras1fist = new SpriteSheet("/textures/extras/zombiefist.png", 8, 8, 32, scale); 
 		zombie = new SpriteSheet("/textures/characters/zombie.png", 8, 8, 32, scale); //Zombie sprite!! 
 		mainCharacter = new SpriteSheet("/textures/characters/mainCharacter.png", 8, 8, 32, scale);
 
@@ -194,7 +194,7 @@ public class Judgement extends Game {
 		controls = new ImageEntity(this);
 
 		inGameMenu.load("/menus/ingamemenu02.png"); //inventory menu
-		titleMenu.load("/menus/titlemenu1new.png"); //Bro and Arrow title menu
+		titleMenu.load("/menus/zombiesurvival.png"); //Bro and Arrow title menu
 		titleMenu2.load("/menus/titlemenu2new.png"); //Bro and Arrow load menu
 		controls.load("/menus/controls1new.png"); //Bro and Arrow ccontrol menu
 
@@ -741,9 +741,10 @@ public class Judgement extends Game {
 				//Enter key(Make a choice)
 				//	System.out.println(title.isGetName());
 
-				if(keyDelete && option == OPTION.LOADGAME)
+				if(keyDelete && option == OPTION.LOADGAME){
 					title.deleteSave();
-				
+					keyDelete = false;
+				}
 				if(keyEnter && !title.isGetName()) {
 
 					if(option == OPTION.NEWGAME) {

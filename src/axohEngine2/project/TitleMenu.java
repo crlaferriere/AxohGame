@@ -19,6 +19,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 import javax.swing.JFrame;
 
@@ -26,7 +28,7 @@ import axohEngine2.entities.AnimatedSprite;
 import axohEngine2.entities.ImageEntity;
 
 public class TitleMenu {
-	
+
 	/********************
 	 * Variables
 	 ********************/
@@ -40,7 +42,7 @@ public class TitleMenu {
 	private int location;
 	private String _fileName = "";
 	private boolean getName = false;
-	
+
 	//_mainImage - The initial background image of the title screen
 	//_secondary - The image which appear after choosing load game
 	//titleArrow - The AnimatedSprite which indicates which option the user is currently hovering over
@@ -50,16 +52,16 @@ public class TitleMenu {
 	private ImageEntity _controls;
 	private AnimatedSprite _titleArrow;
 	private OPTION _option;
-	
+
 	//Fonts to be used to display text, variouse ones for various uses
 	private Font _simple;
 	private Font _bold;
 	private Font _bigBold;
-	
+
 	//SCREENWIDTH, SCREENHEIGHT - width and height of the game JFrame window in pixels
 	private int SCREENWIDTH;
 	private int SCREENHEIGHT;
-	
+
 	/*******************************************************************
 	 * Constructor
 	 * 
@@ -85,7 +87,7 @@ public class TitleMenu {
 		_bigBold = bigBold;
 		_option = OPTION.NONE;
 	}
-	
+
 	/****************************************************************************
 	 * Render the title screen and change what is being shown based on options the user chooses
 	 * 
@@ -98,16 +100,16 @@ public class TitleMenu {
 	 ****************************************************************************/
 	public void render(JFrame frame, Graphics2D g2d, int titleX, int titleY, int titleX2, int titleY2) {
 		g2d.drawImage(_mainImage.getImage(), 0, 0, SCREENWIDTH, SCREENHEIGHT, frame);
-		g2d.setColor(Color.BLACK);
+		g2d.setColor(Color.WHITE);
 		g2d.setFont(_bold);
 		g2d.drawString("New Game", 660, 700);
 		g2d.drawString("Load Game", 660, 800);
-		g2d.drawString("Controls", 660, 600);
+		g2d.drawString("How to Play", 660, 600);
 		g2d.setColor(Color.YELLOW);
 		g2d.setFont(_bigBold);
 		//drawString(g2d, "Bro and Arrow", 500, 100);
 		g2d.drawImage(_titleArrow.getImage(), titleX, titleY, _titleArrow.getSpriteSize(), _titleArrow.getSpriteSize(), frame);
-		
+
 		if(_option == OPTION.NEWGAME || _option == OPTION.LOADGAME){
 			g2d.setColor(Color.BLACK);
 			g2d.setFont(_simple);
@@ -139,7 +141,7 @@ public class TitleMenu {
 			g2d.drawString("Backspace: exit", 500, 170);
 		}
 	}
-	
+
 	/******************************************************************
 	 * Update the title screen variables from outside of this class
 	 * 
@@ -150,9 +152,8 @@ public class TitleMenu {
 		_option = option;
 		files = existingFiles.list();
 		this.location = location;
-		System.out.println(location);
 	}
-	
+
 	/*********************************************************************************
 	 * This method updates the current filename variable and sorts out
 	 * any non valid characters. This also makes sure the the file name
@@ -170,14 +171,14 @@ public class TitleMenu {
 		if(currentChar == '\n') return;
 		if(_fileName.length() < 11) _fileName += currentChar;
 	}
-	
+
 	/******************************************************************************
 	 * Method used to delete the last character when typing a file name (Backspace)
 	 ******************************************************************************/
 	public void deleteChar() {
 		if(_fileName.length() > 0) _fileName = _fileName.substring(0, _fileName.length() - 1);
 	}
-	
+
 	/*****************************************************************************
 	 * Method which decides what happens when the enter key is pressed, what
 	 * happens depends on many different variables. This method also
@@ -200,27 +201,42 @@ public class TitleMenu {
 			}
 		}
 		if(_option == OPTION.CONTROLS){
-			
+
 		}
 		return "";
 	}
 	public void deleteSave(){
 		if(files!=null){
+			try{
+				System.out.println(location);
+				File file = new File("C:/gamedata/saves/" + files[location]);
+
+				if(file.delete()){
+					System.out.println(file.getName() + " is deleted!");
+				}else{
+					System.out.println("Delete operation is failed.");
+				}
+
+			}catch(Exception e){
+
+				e.printStackTrace();
+
+			}
 			files[location] = null;
 		}
 	}
-	
+
 	//Getters for _fileName, files(The array), and is the syetm is in getName state
 	public String getFileName() { return _fileName; }
 	public String[] files() { return files; }
 	public boolean isGetName() { return getName; }
-	
+
 	//Resets the fileName in order to start a new one
 	public void clearFileName(){ _fileName = "";}
-	
+
 	//Setter for the boolean getName
 	public void setGetName(boolean onOrOff) { getName = onOrOff; }
-	
+
 	/***************************************************************************************************
 	 * A special drawString method which takes in a string to be displayed and constructs it in 
 	 * special ways based on certain characters it may encounter, like '\n' which is the equivalent 
@@ -232,7 +248,7 @@ public class TitleMenu {
 	 * @param y - y position for the text to display
 	 ****************************************************************************************************/
 	void drawString(Graphics2D g2d, String text, int x, int y) {
-       for (String line : text.split("\n"))
-           g2d.drawString(line, x, y += g2d.getFontMetrics().getHeight());
-    }
+		for (String line : text.split("\n"))
+			g2d.drawString(line, x, y += g2d.getFontMetrics().getHeight());
+	}
 }
