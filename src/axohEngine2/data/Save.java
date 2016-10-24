@@ -43,6 +43,7 @@ public class Save {
 			obj_out = new ObjectOutputStream(file_out);
 			obj_out.writeObject(data);
 			obj_out.close();
+	
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

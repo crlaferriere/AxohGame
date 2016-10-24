@@ -51,9 +51,9 @@ import axohEngine2.util.Vector2D;
 public abstract class Game extends JFrame implements Runnable, KeyListener, MouseListener, MouseMotionListener {
 	//For serializing(Saving system)
 	private static final long serialVersionUID = 1L;
-	
+
 	private final Hashtable<State, StateTransition> gameStates = getGameStates();
-	
+
 	public Game() {
 		super();
 	}
@@ -61,7 +61,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	/*********************
 	 *     Variables
 	 *********************/
-	
+
 	//--------- Screen ---------
 	//SCREENWIDTH - Game window width
 	//SCREENHEIGHT - Game window height
@@ -70,29 +70,29 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	public static final int SCREENHEIGHT = 900; //Adjust the screen width
 	public static final int CENTERX = SCREENWIDTH / 2;
 	public static final int CENTERY = SCREENHEIGHT / 2;
-	
+
 	//Game loop and Thread variable(Transient means it wont be serialized, certain data types cant be serialized)
 	private transient Thread gameloop;
-	
+
 	//Game lists to keep track of game specific data as well as their accessible method counterparts
 	private LinkedList<AnimatedSprite> _sprites;
 	public LinkedList<AnimatedSprite> sprites() { return _sprites; }
 	private LinkedList<Tile> _tiles;
 	public LinkedList<Tile> tiles() { return _tiles; }
-	
+
 	//Set up graphics, synchronizing, screenwidth and height
 	private transient BufferedImage backBuffer;
 	private transient Graphics2D g2d;
 	private transient Toolkit tk;
 	private int screenWidth, screenHeight;
-	
+
 	//Placeholder variable that is updated in your game, it is for saving later
 	public State state;
-	
+
 	public State getGameState() {
 		return state;
 	}
-	
+
 	public void setGameState(State newState) {
 		State currentState = getGameState();
 		if (currentState != newState) {
@@ -105,7 +105,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 			}
 		}
 	}
-	
+
 	private Hashtable<State, StateTransition> getGameStates() {
 		Hashtable<State, StateTransition> gameStates = new Hashtable<State, StateTransition> ();
 		gameStates.put(State.GAME, new GameTransition(this));
@@ -113,44 +113,44 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 		gameStates.put(State.INGAMEMENU, new GameMenuTransition(this));
 		return gameStates;
 	}
-	
+
 	//Mouse variables
 	private transient Vector2D mousePos = new Vector2D();
 	private boolean mouseButtons[] = new boolean[4];
 	protected char currentChar;
-	
+
 	//File variables
 	private Data data;
 	protected Save save;
-		
+
 	//Time and frame rate variables
 	private int _frameCount = 0;
 	private int _frameRate = 0;
 	private int desiredRate;
 	private long startTime = System.currentTimeMillis();
-	
+
 	//Pause game State
 	private boolean _gamePaused = false;
 	public boolean gamePaused() { return _gamePaused; }
 	public void pauseGame() { _gamePaused = true; }
 	public void resumeGame() { _gamePaused = false; }
-			
+
 	//Game event methods - All of these will be inherited by a child class
 	abstract void gameStartUp();
 	abstract void gameTimedUpdate();
 	abstract void gameRefreshScreen();
 	abstract void gameShutDown();
 	abstract void gameKeyDown(int keyCode);
-    abstract void gameKeyUp(int keyCode);
-    abstract void gameMouseDown();
-    abstract void gameMouseUp();
-    abstract void gameMouseMove();
+	abstract void gameKeyUp(int keyCode);
+	abstract void gameMouseDown();
+	abstract void gameMouseUp();
+	abstract void gameMouseMove();
 	abstract void spriteUpdate(AnimatedSprite sprite);
 	abstract void spriteDraw(AnimatedSprite sprite);
 	abstract void spriteDying(AnimatedSprite sprite);
 	//abstract void spriteCollision(AnimatedSprite spr1, AnimatedSprite spr2, int hitDir, int hitDir2);
 	//abstract void tileCollision(AnimatedSprite spr, Tile tile, int hitDir, int hitDir2);
-	
+
 	/***************************************************************
 	 * Constructor - Initialize the frame, the backBuffer, the game lists, and any othervariables
 	 * 
@@ -166,64 +166,64 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 		setSize(size);
 		setResizable(false);
 		pack();
-		
+
 		//Store parameters in a variables
 		desiredRate = frameRate;
 		screenWidth = width;
 		screenHeight = height;
-		
+
 		//Set up backbuffer and graphics and synchronization
 		backBuffer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_RGB);
-        g2d = backBuffer.createGraphics();
-        tk = Toolkit.getDefaultToolkit();
-                
-       // System.out.println(tk.getScreenInsets(this.getGraphicsConfiguration()));
-        
-        setGameState(null);
+		g2d = backBuffer.createGraphics();
+		tk = Toolkit.getDefaultToolkit();
 
-        //Create the internal lists
-        _sprites = new LinkedList<AnimatedSprite>();
-        _tiles = new LinkedList<Tile>();
-        
-        //Initialize data related variables
-        data = new Data();
+		// System.out.println(tk.getScreenInsets(this.getGraphicsConfiguration()));
+
+		setGameState(null);
+
+		//Create the internal lists
+		_sprites = new LinkedList<AnimatedSprite>();
+		_tiles = new LinkedList<Tile>();
+
+		//Initialize data related variables
+		data = new Data();
 		save = new Save();
-        
+
 		//Add the listeners to the frame
-        addKeyListener(this);
-        addMouseListener(this);
-        addMouseMotionListener(this);
-        
-        //Start the game
-        gameStartUp();
-        // Not 100% sure about how this works.
-        // Like, why is 0.6 the magic factor?
-        int offset = (int) ((float) tk.getScreenInsets(getGraphicsConfiguration()).bottom * 0.6f) + (int) Math.round(1f + 72f / (float) tk.getScreenResolution());
-        g2d.translate(3, offset);
+		addKeyListener(this);
+		addMouseListener(this);
+		addMouseMotionListener(this);
+
+		//Start the game
+		gameStartUp();
+		// Not 100% sure about how this works.
+		// Like, why is 0.6 the magic factor?
+		int offset = (int) ((float) tk.getScreenInsets(getGraphicsConfiguration()).bottom * 0.6f) + (int) Math.round(1f + 72f / (float) tk.getScreenResolution());
+		g2d.translate(3, offset);
 
 	}
-	
-	
-	
+
+
+
 	/********************************************************
 	 * Get the graphics used in-game for use in child-classes
 	 * 
 	 * @return Graphics2D - Graphics object
 	 ********************************************************/
 	public Graphics2D graphics() { return g2d; }
-	
+
 	/*******************************************************
 	 * @return framerate - An Int pertaining to your games framerate
 	 ******************************************************/
 	public int frameRate() { return _frameRate; }
-	
+
 	//Mouse events
 	/*******************************************************
 	 * @param btn - Each mouse button is labeled with an Int, this number picks that button
 	 * @return boolean - Is the mouse button specified being pressed
 	 *******************************************************/
 	public boolean mouseButton(int btn) { return mouseButtons[btn]; }
-	
+
 	/*******************************************************
 	 * @return Point2D - Retrive an x and y datatype of the mouse position
 	 * 
@@ -231,7 +231,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 * Unused
 	 ******************************************************/
 	public Vector2D mousePosition() { return mousePos; }
-	
+
 	/******************************************************
 	 * @param g - Graphics used to render objects
 	 * Override the JFrames update method and insert custom updating methods
@@ -244,14 +244,14 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 			startTime = System.currentTimeMillis();
 			_frameRate = _frameCount;
 			_frameCount = 0;
-			
+
 			purgeSprites(); 
 		}
-			drawSprites();
-			paint(g);
-			gameRefreshScreen();
+		drawSprites();
+		paint(g);
+		gameRefreshScreen();
 	}
-	
+
 	/******************************************************
 	 * @param g - The Systems Graphics object
 	 * 
@@ -264,13 +264,13 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 		g.drawImage(backBuffer, 0, 0, this);
 		tk.sync();
 	}
-	
+
 	//Start the game loop - initialize the Thread
 	public void start() {
 		gameloop = new Thread(this);
 		gameloop.start();
 	}
-	
+
 	//Using Runnable, run a loop which calls update methods for specific actions including graphics and collisions
 	@Override
 	public void run() {
@@ -280,21 +280,21 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 			try { 
 				Thread.sleep(1000 / desiredRate);
 			} catch(InterruptedException e) { e.printStackTrace(); }
-			
+
 			//If the game is not paused, run specific update methods
 			if(!gamePaused()) {
 				gameTimedUpdate();
 				updateSprites();
 				handleCollisions();
 			}
-			
+
 			//Render the graphics
 			update(graphics());
 			repaint();
 		}
 	}
 
-	
+
 	protected abstract void handleCollisions();
 
 	//End the game with this method call
@@ -302,7 +302,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 		gameloop = null;
 		gameShutDown();
 	}
-	
+
 	/***********************************************************
 	 * @param fileName - A string filename
 	 * The file given is the loaded as the current game State
@@ -321,13 +321,13 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 		} catch(IOException | ClassNotFoundException e) {}
 		if(obj instanceof Data) data = (Data) obj;
 	}
-	
+
 	/**********************************************************************
 	 * @return Data
 	 * Get the current 'Data.java' class instance
 	 *********************************************************************/
 	public Data data() { return data; }
-	
+
 	/**********************************************************************
 	 * @param k - A KeyEvent
 	 * Key Listener Methods
@@ -335,120 +335,120 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 *********************************************************************/
 	@Override
 	public void keyTyped(KeyEvent k) { setKeyChar(k.getKeyChar()); }
-    @Override
+	@Override
 	public void keyPressed(KeyEvent k) { gameKeyDown(k.getKeyCode()); }
-    @Override
+	@Override
 	public void keyReleased(KeyEvent k) { gameKeyUp(k.getKeyCode()); }
-    
-    /**********************************************************************
-     * Mouse Listener events
-     * Inherited Method
-     * @param e - A MouseEvent action which will change a number that coordinates with having pressed that button
-     *********************************************************************/
-    private void checkButtons(MouseEvent e) {
-        switch(e.getButton()) {
-        case MouseEvent.BUTTON1:
-            mouseButtons[1] = true;
-            mouseButtons[2] = false;
-            mouseButtons[3] = false;
-            break;
-        case MouseEvent.BUTTON2:
-            mouseButtons[1] = false;
-            mouseButtons[2] = true;
-            mouseButtons[3] = false;
-            break;
-        case MouseEvent.BUTTON3:
-            mouseButtons[1] = false;
-            mouseButtons[2] = false;
-            mouseButtons[3] = true;
-            break;
-        }
+
+	/**********************************************************************
+	 * Mouse Listener events
+	 * Inherited Method
+	 * @param e - A MouseEvent action which will change a number that coordinates with having pressed that button
+	 *********************************************************************/
+	private void checkButtons(MouseEvent e) {
+		switch(e.getButton()) {
+		case MouseEvent.BUTTON1:
+			mouseButtons[1] = true;
+			mouseButtons[2] = false;
+			mouseButtons[3] = false;
+			break;
+		case MouseEvent.BUTTON2:
+			mouseButtons[1] = false;
+			mouseButtons[2] = true;
+			mouseButtons[3] = false;
+			break;
+		case MouseEvent.BUTTON3:
+			mouseButtons[1] = false;
+			mouseButtons[2] = false;
+			mouseButtons[3] = true;
+			break;
+		}
 	}
-	
-    /**********************************************************************
-     * @param e -A MouseEvent that updates a mouses position after being pressed
-     * Inherited Method
-     *********************************************************************/
+
+	/**********************************************************************
+	 * @param e -A MouseEvent that updates a mouses position after being pressed
+	 * Inherited Method
+	 *********************************************************************/
 	@Override
 	public void mousePressed(MouseEvent e) {
-	    checkButtons(e);
-	    mousePos.setX(e.getX());
-	    mousePos.setY(e.getY());
-	    gameMouseDown();
+		checkButtons(e);
+		mousePos.setX(e.getX());
+		mousePos.setY(e.getY());
+		gameMouseDown();
 	}
-	
+
 	/**********************************************************************
 	 * @param e - MouseEvent that updates a mouses position after being released
-     * Inherited Method
+	 * Inherited Method
 	 *********************************************************************/
 	@Override
 	public void mouseReleased(MouseEvent e) {
-	    checkButtons(e);
-	    mousePos.setX(e.getX());
-	    mousePos.setY(e.getY());
-	    gameMouseUp();
+		checkButtons(e);
+		mousePos.setX(e.getX());
+		mousePos.setY(e.getY());
+		gameMouseUp();
 	}
-	
+
 	/**********************************************************************
 	 * @param e - MouseEvent that updates a mouses position after being moved
-     * Inherited Method
+	 * Inherited Method
 	 *********************************************************************/
 	@Override
 	public void mouseMoved(MouseEvent e) {
-	    checkButtons(e);
-	    mousePos.setX(e.getX());
-	    mousePos.setY(e.getY());
-	    gameMouseMove();
+		checkButtons(e);
+		mousePos.setX(e.getX());
+		mousePos.setY(e.getY());
+		gameMouseMove();
 	}
-	
+
 	/**********************************************************************
 	 * @param e - MouseEvent that updates a mouses position after being Dragged
-     * Inherited Method
+	 * Inherited Method
 	 *********************************************************************/
 	@Override
 	public void mouseDragged(MouseEvent e) {
-	    checkButtons(e);
-	    mousePos.setX(e.getX());
-	    mousePos.setY(e.getY());
-	    gameMouseDown();
-	    gameMouseMove();
+		checkButtons(e);
+		mousePos.setX(e.getX());
+		mousePos.setY(e.getY());
+		gameMouseDown();
+		gameMouseMove();
 	}
-	
+
 	/**********************************************************************
 	 * @param e - MouseEvent that updates a mouses position after being Entered
-     * Inherited Method
+	 * Inherited Method
 	 *********************************************************************/
 	@Override
 	public void mouseEntered(MouseEvent e) {
-	    mousePos.setX(e.getX());
-	    mousePos.setY(e.getY());
-	    gameMouseMove();
+		mousePos.setX(e.getX());
+		mousePos.setY(e.getY());
+		gameMouseMove();
 	}
-	
+
 	/**********************************************************************
 	 * @param e - MouseEvent that updates a mouses position after being Exited
-     * Inherited Method
+	 * Inherited Method
 	 *********************************************************************/
 	@Override
 	public void mouseExited(MouseEvent e) {
-	    mousePos.setX(e.getX());
-	    mousePos.setY(e.getY());
-	    gameMouseMove();
+		mousePos.setX(e.getX());
+		mousePos.setY(e.getY());
+		gameMouseMove();
 	}
-	
+
 	/**********************************************************************
 	 * @param e - MouseEvent that runs after being Clicked
-     * Inherited Method
+	 * Inherited Method
 	 *********************************************************************/
 	@Override
 	public void mouseClicked(MouseEvent e) { }
-	
+
 	/**********************************************************************
 	 * @param index - An int 1, 2, or 3
 	 * @return boolean - If that mouse button is being pressed, return true
 	 *********************************************************************/
 	public boolean getMouseButtons(int index) { return mouseButtons[index]; }
-	
+
 	/**********************************************************************
 	 * Set the current key being pressed to the currentChar variable
 	 * The purpose of this if for typeing on screen. Once the keycode's
@@ -466,19 +466,19 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 *********************************************************************/
 	protected double calcAngleMoveX(double angle) { return (Math.cos(angle * Math.PI / 180)); }
 	protected double calcAngleMoveY(double angle) { return (Math.sin(angle * Math.PI / 180)); }
-	
+
 	//update all the sprites in the current list if they are alive
 	protected void updateSprites() {
 		for(int i = 0; i < _sprites.size(); i++) {
 			AnimatedSprite spr = _sprites.get(i); //The sprite type must be cast because many kinds of sprites can be stored in the list
 			// if(spr.alive()) {
-				spriteUpdate(spr);
-				if(getGameState() == State.GAME) if(spr instanceof Mob) ((Mob) spr).updateMob(); //When the game is running, update Mobs
+			spriteUpdate(spr);
+			if(getGameState() == State.GAME) if(spr instanceof Mob) ((Mob) spr).updateMob(); //When the game is running, update Mobs
 			// }
 			spriteDying(spr);
 		}
 	}
-	
+
 	/*****************************************************************************
 	 * Update the data object with all of the currently needed variables.
 	 * This can be updated in the future after the 'Data.java' class has been
@@ -495,7 +495,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	protected void updateData(Map currentMap, Map currentOverlay, int playerX, int playerY) {
 		data.update(currentMap.mapName(), currentOverlay.mapName(), playerX, playerY);
 	}
-	
+
 	/**********************************************
 	 * isSaved : Checks if the player's current data is saved to the save file
 	 * 
@@ -513,11 +513,11 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 			}
 		return false;
 	}
-	
-	//protected void updateData2(Map currentMap, Map currentOverlay, int npcX, int npcY) {
-		//data.update2(currentMap.mapName(), currentOverlay.mapName(), npcX, npcY);
 
-		
+	//protected void updateData2(Map currentMap, Map currentOverlay, int npcX, int npcY) {
+	//data.update2(currentMap.mapName(), currentOverlay.mapName(), npcX, npcY);
+
+
 	/***********************************************************************
 	 * Detect when a sprite intersects a sprite and call a handling method
 	 * currently only rectangles are used for detection.
@@ -526,7 +526,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 * spr2 - The second sprite (Most of the time a random npc or enemy)
 	 * hitDir - The bound which is being intersected on spr1
 	 * hitDir2 - The bound which is being intersected on spr2
-	**************************************************************************/
+	 **************************************************************************/
 	/*protected void spriteCollision() {
 		for(int i = 0; i < _sprites.size(); i++) {
 			AnimatedSprite spr1 = _sprites.get(i);
@@ -558,12 +558,12 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 						if(spr1.checkRightBound(spr2.getRightBound())) spriteCollision(spr1, spr2, 1, 1);
 						if(spr1.checkRightBound(spr2.getHeadBound())) spriteCollision(spr1, spr2, 1, 2);
 						if(spr1.checkRightBound(spr2.getLegBound())) spriteCollision(spr1, spr2, 1, 3);
-						
+
 						if(spr1.checkHeadBound(spr2.getLeftBound())) spriteCollision(spr1, spr2, 2, 0);
 						if(spr1.checkHeadBound(spr2.getRightBound())) spriteCollision(spr1, spr2, 2, 1);
 						if(spr1.checkHeadBound(spr2.getHeadBound())) spriteCollision(spr1, spr2, 2, 2);
 						if(spr1.checkHeadBound(spr2.getLegBound())) spriteCollision(spr1, spr2, 2, 3);
-						
+
 						if(spr1.checkLegBound(spr2.getLeftBound())) spriteCollision(spr1, spr2, 3, 0);
 						if(spr1.checkLegBound(spr2.getRightBound())) spriteCollision(spr1, spr2, 3, 1);
 						if(spr1.checkLegBound(spr2.getHeadBound())) spriteCollision(spr1, spr2, 3, 2);
@@ -573,7 +573,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 			}//end inner for
 		}//end outer for
 	}*/
-	
+
 	/**********************************************************************
 	 * Same as the above spriteCollision() method but instead the collision is between
 	 * a sprite and a Tile. Also, currently only with rectangles. 
@@ -612,12 +612,12 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 						if(spr.checkRightBound(tile.getRightBound())) tileCollision(spr, tile, 1, 1);
 						if(spr.checkRightBound(tile.getHeadBound())) tileCollision(spr, tile, 1, 2);
 						if(spr.checkRightBound(tile.getLegBound())) tileCollision(spr, tile, 1, 3);
-						
+
 						if(spr.checkHeadBound(tile.getLeftBound())) tileCollision(spr, tile, 2, 0);
 						if(spr.checkHeadBound(tile.getRightBound())) tileCollision(spr, tile, 2, 1);
 						if(spr.checkHeadBound(tile.getHeadBound())) tileCollision(spr, tile, 2, 2);
 						if(spr.checkHeadBound(tile.getLegBound())) tileCollision(spr, tile, 2, 3);
-						
+
 						if(spr.checkLegBound(tile.getLeftBound())) tileCollision(spr, tile, 3, 0);
 						if(spr.checkLegBound(tile.getRightBound())) tileCollision(spr, tile, 3, 1);
 						if(spr.checkLegBound(tile.getHeadBound())) tileCollision(spr, tile, 3, 2);
@@ -627,26 +627,26 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 			} //end _tiles for loop
 		} //end _sprites for loop
 	}*/
-	
+
 	//Draw animated sprites automatically, they must be in the list (Includes tiles)
 	protected void drawSprites() {
 		for(int i = 0; i < _sprites.size(); i++) {
 			AnimatedSprite spr = _sprites.get(i);
 			// if(spr.alive()) {
-				spr.updateFrame();
-				spriteDraw(spr);
+			spr.updateFrame();
+			spriteDraw(spr);
 			// }
 		}
 		for(int i = 0; i < _tiles.size(); i++) _tiles.get(i).updateFrame();
 	}
-	
+
 	//Delete the sprite that has been killed from the system
 	private void purgeSprites() {
 		for(int i = 0; i < _sprites.size(); i++) {
 			_sprites.get(i);
 		}
 	}
-	
+
 	/*********************************************************************
 	 * @param tile - A Tile to be added in to the system
 	 * 
@@ -661,7 +661,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	void addTile(Tile tile) {
 		if(tile.hasProperty()) tiles().add(tile);
 	}
-	
+
 	/**********************************************************************
 	 * @param g2d - Gaphics used to display to the JFrame
 	 * @param text - The String of text to alter
@@ -675,8 +675,8 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 * '\n' makes a new line
 	 **********************************************************************/
 	void drawString(Graphics2D g2d, String text, int x, int y) {
-        for(String line : text.split("\n")) g2d.drawString(line, x, y += g2d.getFontMetrics().getHeight());
-    }
-	
+		for(String line : text.split("\n")) g2d.drawString(line, x, y += g2d.getFontMetrics().getHeight());
+	}
+
 	public abstract void loadGame();
 }
