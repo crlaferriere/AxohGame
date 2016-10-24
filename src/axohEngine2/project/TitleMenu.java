@@ -100,7 +100,7 @@ public class TitleMenu {
 	 ****************************************************************************/
 	public void render(JFrame frame, Graphics2D g2d, int titleX, int titleY, int titleX2, int titleY2) {
 		g2d.drawImage(_mainImage.getImage(), 0, 0, SCREENWIDTH, SCREENHEIGHT, frame);
-		g2d.setColor(Color.WHITE);
+		g2d.setColor(Color.BLACK);
 		g2d.setFont(_bold);
 		g2d.drawString("New Game", 660, 700);
 		g2d.drawString("Load Game", 660, 800);
