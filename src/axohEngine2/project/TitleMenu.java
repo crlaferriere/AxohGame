@@ -100,7 +100,7 @@ public class TitleMenu {
 	 ****************************************************************************/
 	public void render(JFrame frame, Graphics2D g2d, int titleX, int titleY, int titleX2, int titleY2) {
 		g2d.drawImage(_mainImage.getImage(), 0, 0, SCREENWIDTH, SCREENHEIGHT, frame);
-		g2d.setColor(Color.BLACK);
+		g2d.setColor(Color.WHITE);
 		g2d.setFont(_bold);
 		g2d.drawString("New Game", 660, 700);
 		g2d.drawString("Load Game", 660, 800);
@@ -130,15 +130,26 @@ public class TitleMenu {
 		}
 		else if (_option == OPTION.CONTROLS){
 			g2d.setColor(Color.BLACK);
-			g2d.setFont(_simple);
+			g2d.setFont(_bold);
 			g2d.drawImage(_controls.getImage(), 0, 0, SCREENWIDTH, SCREENHEIGHT, frame);
-			g2d.drawString("Controls:", 350, 250);
+			
+			
+			  g2d.drawString("How to Play", 70, 100);
+			  g2d.setFont(new Font("Arial", Font.PLAIN, 40));
+			  g2d.drawString("You are a professor who is known for their phenomenal elephant jokes that can just make a student's day. Little did you know, the more you told these jokes,", 120, 160);
+			  g2d.drawString("the more this angered the elephants of the world. They have come to seek revenge. You must fight the angry elephants in order to survive. Try to stay alive", 120, 210);
+			  g2d.drawString("for as long as you can!", 120, 260);
+
+			  
+			  
+			 /**
 			g2d.drawString("W,A,S,D: Move charcter", 350, 600);
 			g2d.drawString("F: Open Chest/Swing Sword", 350, 700);
 			g2d.drawString("Spacebar: Unsheathe Sword", 350, 800);
 			g2d.drawString("Arrow Keys: Navigate menus", 350, 400);
 			g2d.drawString("Enter: Select option", 350, 500);
 			g2d.drawString("Backspace: exit", 500, 170);
+			*/
 		}
 	}
 
