@@ -16,8 +16,8 @@ public class Hero extends Mob {
 	public void renderMob() {
 		// int x = (int) position.getX() - (int) game.camera.getX() + game.CENTERX;
 		// int y = (int) position.getY() - (int) game.camera.getY() + game.CENTERY;
-		int x = (int) position.getX() - (int) game.camera.getX();
-		int y = (int) position.getY() - (int) game.camera.getY();
+		int x = (int) getPosition().getX() - (int) game.camera.getX();
+		int y = (int) getPosition().getY() - (int) game.camera.getY();
 		g2d.drawImage(getImage(), x, y, getSpriteSize(), getSpriteSize(), game);
 		g2d.setColor(Color.red);
 		g2d.drawRect(x, y, getSpriteSize(), getSpriteSize());

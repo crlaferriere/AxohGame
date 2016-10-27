@@ -19,6 +19,8 @@ import java.awt.Graphics2D;
 import java.util.LinkedList;
 import java.util.Random;
 
+import java.awt.Point; 
+import java.awt.Rectangle;
 import axohEngine2.Game;
 import axohEngine2.Judgement;
 import axohEngine2.project.TYPE;
@@ -44,7 +46,7 @@ public class Mob extends AnimatedSprite{
 	private LinkedList<Attack> attacks;
 	private int health;
 	private TYPE ai;
-	protected Vector2D position;
+	private Vector2D position;
 	 
 	private boolean attacking;
 	private boolean takenOut = false;
@@ -55,13 +57,15 @@ public class Mob extends AnimatedSprite{
 	//randomDir - The random choice of a direction used in random movements
 	private DIRECTION moveDir;
 	private DIRECTION direction;
+	private DIRECTION randomDir; 
 	//Graphics and Window objects the mob needs for display
 	protected Graphics2D g2d;
 	protected Judgement game;
-	
+	private int wait;
+	private boolean waitOn; 
 	private boolean _isAlive;
 	
-	private double speed = 0;
+	private double speed = .5;
 	
 	/************************************************************************
 	 * Constructor
@@ -85,9 +89,24 @@ public class Mob extends AnimatedSprite{
 		health = 0;
 		setAlive(true);
 		setSpriteType(ai);
-		position = new Vector2D();
+		setPosition(new Vector2D());
 
 	}
+	
+	public Rectangle bounds;
+	public Point boundsOffset; 
+	public Rectangle currentBounds() { return new Rectangle(bounds.x + (int) getPosition().getX(), 
+			bounds.y + (int) getPosition().getY(), 
+			bounds.width, bounds.height); }
+			
+	public Point getCurrentTile() { return new Point
+			(
+					(bounds.x + (int) getPosition().getX()) /64, 
+					(bounds.y + (int) getPosition().getY()) /64
+					); }
+					
+	
+	
 	
 	//Getters for name and ai type
 	public String getName() { return _name; }
@@ -95,7 +114,7 @@ public class Mob extends AnimatedSprite{
 	
 	//Setters for current health, ai, name and speed
 	public void setHealth(int health) { this.health = health; }
-	public void setAi(TYPE ai) { this.ai = ai; }
+	public void setAi(TYPE ai) { this.ai = TYPE.RANDOMPATH; }
 	public void setName(String name) { super._name = name; }
 	public void setSpeed(double speed) {
 		this.speed = speed;
@@ -123,7 +142,7 @@ public class Mob extends AnimatedSprite{
 	 ****************************************************************/
 	public void stop() {
 		if(ai == TYPE.RANDOMPATH){
-			stopAnim();
+			//stopAnim();
 		}
 	}
 	
@@ -132,24 +151,16 @@ public class Mob extends AnimatedSprite{
 	 * different ai types. Update this for future ai types.
 	 ****************************************************************/
 	public void updateMob() {
-		if(ai == TYPE.RANDOMPATH) {
-	//		randomPath();
-		}
-		if(ai == TYPE.SEARCH) {
-			search();
-		}
-		if(ai == TYPE.CHASE) {
-			chase();
-		}
-		if(health < 0) {
-			setAlive(false);
-		}
+		
+//		if(health < 0) {
+//			setAlive(false);
+//		}
 	}
 	
 	/***************************************************************
 	 * AI logic used for the randomly moving ai type
 	 ****************************************************************/
-	/* private void randomPath() {
+	 private void randomPath() {
 		int xa = 0;
 		int ya = 0;
 		int r = random.nextInt(7);
@@ -186,15 +197,15 @@ public class Mob extends AnimatedSprite{
 			stopAnim();
 		}
 		
-		if(randomDir == DIRECTION.RIGHT) xa = speed; startAnim();
-		if(randomDir == DIRECTION.LEFT) xa = -speed; startAnim();
-		if(randomDir == DIRECTION.UP) ya = speed; startAnim();
-		if(randomDir == DIRECTION.DOWN) ya = -speed; startAnim();
+		if(randomDir == DIRECTION.RIGHT) xa = (int) speed;  startAnim();
+		if(randomDir == DIRECTION.LEFT) xa = (int) -speed; startAnim();
+		if(randomDir == DIRECTION.UP) ya = (int) speed; startAnim();
+		if(randomDir == DIRECTION.DOWN) ya = (int) -speed; startAnim();
 		
 		move(xa, ya);
 		if(waitOn) wait--;
 	}
-	*/
+	
 	/***************************************************************
 	 * AI logic used for the search for something ai type
 	 ****************************************************************/
@@ -217,8 +228,8 @@ public class Mob extends AnimatedSprite{
 	 * @param ya - Int movement in pixels on the y axis
 	 ****************************************************************/
 	public void move(double xa, double ya) {
-		position.setX(position.getX() + xa);
-		position.setY(position.getY() + ya);
+		getPosition().setX(getPosition().getX() + xa);
+		getPosition().setY(getPosition().getY() + ya);
 		if(xa < 0) { //left
 			//xx += xa; 
 			if(moveDir != DIRECTION.LEFT) setAnimTo(leftAnim);
@@ -262,6 +273,8 @@ public class Mob extends AnimatedSprite{
 	 * @param down - keyCode
 	 ********************************************************************************/
 	public void updatePlayer(boolean left, boolean right, boolean up, boolean down) {
+		if (ai == TYPE.PLAYER)
+		{
 		if (left) {
 			if (!right && !up && !down) {
 				direction = DIRECTION.LEFT;
@@ -318,6 +331,7 @@ public class Mob extends AnimatedSprite{
 		if(!left && !right && !up && !down) stopAnim();
 		else if (up && down) stopAnim();
 		else if (right && left) stopAnim();
+		}
 	}
 	
 	/*********************************************************************************
@@ -405,10 +419,13 @@ public class Mob extends AnimatedSprite{
 	 * 
 	 * @return - x or y int of location
 	 ***************************************************/
-	public double getXLoc() { return position.getX(); }
-	public double getYLoc() { return position.getY(); }
+	public double getXLoc() { return getPosition().getX(); }
+	public double getYLoc() { return getPosition().getY(); }
 	public void setLoc(double x, double y) { //Relative to current position
-		position.setLocation(x, y);
+		getPosition().setLocation(x, y);
+		if (!(this instanceof Hero)) {
+			System.out.println(getPosition().getX() + ", " + getPosition().getY());
+		}
 		//xx = xx + x;
 		//yy = yy + y;
 	}
@@ -420,9 +437,20 @@ public class Mob extends AnimatedSprite{
 	 * @param y - Int y position
 	 ***********************************************/
 	public void renderMob() {
-		g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX() + Game.CENTERX, (int) position.getY() - (int) game.camera.getY() + Game.CENTERY, getSpriteSize(), getSpriteSize(), game);
+		int x = (int) getPosition().getX() - (int) game.camera.getX();
+		int y = (int) getPosition().getY() - (int) game.camera.getY();
+		g2d.drawImage (getImage(), x, y, getSpriteSize(), getSpriteSize(), game);
+		//g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX() + Game.CENTERX, (int) position.getY() - (int) game.camera.getY() + Game.CENTERY, getSpriteSize(), getSpriteSize(), game);
 		//g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX(), (int) position.getY() - (int) game.camera.getY(), getSpriteSize(), getSpriteSize(), game);
 		//position.setX(x);
 		//position.setY(y);
+	}
+
+	public Vector2D getPosition() {
+		return position;
+	}
+
+	public void setPosition(Vector2D position) {
+		this.position = position;
 	}
 }

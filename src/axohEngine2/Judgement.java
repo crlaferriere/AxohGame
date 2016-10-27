@@ -19,6 +19,7 @@ package axohEngine2;
 import java.awt.Color;
 
 import java.awt.Font;
+import java.awt.Point; 
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -114,6 +115,10 @@ public class Judgement extends Game {
 	private boolean waitOn = false;  
 	private int attackCounter; 
 	private int sheathCounter; 
+	private double dx; 
+	private double distance; 
+	double multiplier; 
+	double velocityx; 
 	//----------- Game  -----------------
 	//SpriteSheets (To be split in to multiple smaller sprites)
 	SpriteSheet extras1;
@@ -213,10 +218,11 @@ public class Judgement extends Game {
 		player.getAttack("sword").addInOutAnim(16, 24, 8, 0, 1, 10);
 		player.setCurrentAttack("sword"); //Starting attack
 		player.setHealth(35); //If you change the starting max health, dont forget to change it in inGameMenu.java max health also
-		player.setSpeed(6.0);
+		player.setSpeed(5.0);
 		sprites().add(player);
+		player.boundsOffset = new Point(20,20); 
 		
-		randomNPC = new Mob(this, graphics(), zombie, 40, TYPE.PLAYER, "npc");
+		randomNPC = new Mob(this, graphics(), zombie, 40, TYPE.NPC, "npc");
 		randomNPC.setMultBounds(6, 50, 95, 37, 88, 62, 92, 62, 96);
 		randomNPC.setMoveAnim(32, 48, 40, 56, 3, 8);
 		randomNPC.addAttack("sword", 0, 5);
@@ -225,8 +231,9 @@ public class Judgement extends Game {
 		randomNPC.getAttack("sword").addInOutAnim(16, 24, 8, 0, 1, 10);
 		randomNPC.setCurrentAttack("sword"); //Starting attack
 		randomNPC.setHealth(35); //If you change the starting max health, dont forget to change it in inGameMenu.java max health also
+		randomNPC.setSpeed(.9);
 		sprites().add(randomNPC);
-		
+		randomNPC.setLoc(200, 200); 
 		//*****Initialize and setup first Map******************************************************************
 		mapBase = new MapDatabase(this, graphics(), scale);
 		//Get Map from the database
@@ -264,7 +271,24 @@ public class Judgement extends Game {
 	@Override
 	void gameTimedUpdate() {
 		checkInput(); //Check for user input
-		
+		//double dx = player.getXLoc() - randomNPC.getXLoc(); 
+		//double dy = player.getYLoc() - randomNPC.getYLoc(); 
+		//double distance = Math.sqrt(dx*dx + dy*dy); 
+		//double multiplier = randomNPC.getSpeed()/ distance; 
+		//double velocityX = dx * multiplier, velocityY = dy * multiplier;
+		double dx = player.getXLoc() - randomNPC.getXLoc();
+		double dy = player.getYLoc() - randomNPC.getYLoc();
+		dx = Math.min(Math.abs(dx), player.getSpeed() * 0.5) * Math.signum(dx);
+		dy = Math.min(Math.abs(dy), player.getSpeed() * 0.5) * Math.signum(dy);
+		randomNPC.move(dx, dy);
+		//randomNPC.setLoc(randomNPC.getXLoc() + dx * randomNPC.getSpeed() * 0.025, randomNPC.getYLoc() + dy * randomNPC.getSpeed() * 0.25); 
+		//randomNPC.setLoc(velocityX, velocityY);
+		//randomNPC.setLoc(randomNPC.getXLoc() + 1, randomNPC.getYLoc());
+		//if (randomNPC.getXLoc() <= 300) {
+			//randomNPC.setLoc(randomNPC.getXLoc() - 1 * randomNPC.getSpeed(), randomNPC.getYLoc());
+		//} else if (randomNPC.getXLoc() > 300) {
+			//randomNPC.setLoc(randomNPC.getXLoc() + 1, randomNPC.getYLoc());
+		//}
 		//Update certain specifics based on certain game States
 		if(getGameState() == State.TITLE) title.update(option, titleLocation); //Title Menu update
 		if(getGameState() == State.INGAMEMENU) inMenu.update(option, sectionLoc, player.health()); //In Game Menu update
@@ -273,7 +297,7 @@ public class Judgement extends Game {
 			camera.track(player);
 			attackCounter++;
 			sheathCounter++; 
-			System.out.println(attackCounter + sheathCounter);
+			
 			
 			//camera.setLocation(player.getXLoc(), player.getYLoc());
 			//camera.setLocation(player.getXLoc() + player.getSpriteSize() / 2 - CENTERX, player.getYLoc() + player.getSpriteSize() / 2 - CENTERY);
@@ -312,6 +336,7 @@ public class Judgement extends Game {
 			currentOverlay.render(this, g2d, camX, camY);
 			//player.move(CENTERX + (int) (player.getXLoc() - camera.getX()), CENTERY + (int) (player.getYLoc() - camera.getY()));
 			player.renderMob();
+			randomNPC.renderMob(); 
 			//g2d.setColor(Color.GREEN);
 			//g2d.drawString("Health: " + inMenu.getHealth(), CENTERX - 650, CENTERY - 370);
 			//g2d.setColor(Color.MAGENTA);
