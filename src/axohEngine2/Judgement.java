@@ -20,6 +20,7 @@ import java.awt.Color;
 
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,9 +52,9 @@ import axohEngine2.project.TitleMenu;
 public class Judgement extends Game {
 	//For serializing (The saving system)
 	private static final long serialVersionUID = 1L;
-
+	
 	/****************** Variables **********************/
-
+	
 	//--------- Miscelaneous ---------
 	//booleans - A way of detecting a pushed key in game
 	//random - Use this to generate a random number
@@ -61,14 +62,14 @@ public class Judgement extends Game {
 	//option - In game common choices at given times
 	//Fonts - Variouse font sizes in the Arial style for different in game text
 	boolean keyLeft, keyRight, keyUp, keyDown, keyInventory, keyAction, 
-	keyBack, keyEnter, keySpace, keyArrowLeft, keyArrowRight, keyArrowUp, keyArrowDown, keyDelete;
+		keyBack, keyEnter, keySpace, keyArrowLeft, keyArrowRight, keyArrowUp, keyArrowDown;
 	Random random = new Random();
 	OPTION option;
 	private Font simple = new Font("Arial", Font.PLAIN, 72);
 	//private Font simple2 = new Font("TrueType", Font.TRUETYPE_FONT,50);
 	private Font bold = new Font("Arial", Font.BOLD, 72);
 	private Font bigBold = new Font("Arial", Font.BOLD, 96);
-
+		
 	//--------- Player and scale ---------
 	//scale - All in game art is 16 x 16 pixels, the scale is the multiplier to enlarge the art and give it the pixelated look
 	//mapX/mapY - Location of the camera on the map
@@ -79,7 +80,7 @@ public class Judgement extends Game {
 	private int scale;
 	public Camera camera;
 	private boolean camFollow = true;
-
+	
 	//----------- Map and input --------
 	//currentMap - The currently displayed map the player can explore
 	//currentOverlay - The current overlay which usually contains houses, trees, pots, etc.
@@ -91,7 +92,7 @@ public class Judgement extends Game {
 	private MapDatabase mapBase;
 	private int inputWait = 5;
 	private boolean confirmUse = false;
-
+	
 	//----------- Menus ----------------
 	//inX/inY - In Game Menu starting location for default choice highlight
 	//inLocation - Current choice in the in game menu represented by a number, 0 is the top
@@ -110,31 +111,32 @@ public class Judgement extends Game {
 	private boolean wasSaving = false;
 	private int wait;
 	private boolean waitOn = false;
-
+	private int attackCounter; 
+	private int sheathCounter; 
 	//----------- Game  -----------------
 	//SpriteSheets (To be split in to multiple smaller sprites)
 	SpriteSheet extras1;
 	SpriteSheet extras1fist;
 	SpriteSheet zombie;//	SpriteSheet zombie;
 	SpriteSheet mainCharacter;
-
+	
 	//ImageEntitys (Basic pictures)
 	ImageEntity inGameMenu;
 	ImageEntity titleMenu;
 	ImageEntity titleMenu2;
-	ImageEntity controls;
-
+    ImageEntity controls;
+    
 	//Menu classes
 	TitleMenu title;
 	InGameMenu inMenu;
-
+	
 	//Animated sprites
 	AnimatedSprite titleArrow;
-
+	
 	//Player and NPCs
 	Mob player;
 	Mob randomNPC;
-
+	
 	/*********************************************************************** 
 	 * Constructor
 	 * 
@@ -145,18 +147,18 @@ public class Judgement extends Game {
 		camera = new Camera();
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		
 		//plays music file at the beginning of the game. 
 		//The music file must be .wav file
 		try {
-			//	JavaAudioPlaySoundExample("/over2.wav"); 
-		}
+		//	JavaAudioPlaySoundExample("/over2.wav"); 
+			}
 		catch(Exception ex) {
-
+			
 		}
-
+			
 	}
-
+	
 	/****************************************************************************
 	 * Inherited Method
 	 * This method is called only once by the 'Game.java' class, for startup
@@ -172,12 +174,13 @@ public class Judgement extends Game {
 		 * is moved around.
 		 ****************************************************************/
 		//****Initialize Misc Variables
-
+		
 		setGameState(State.TITLE);
 		option = OPTION.NONE;
 		scale = 4;
 		//****Initialize spriteSheets*********************************************************************
-		extras1fist = new SpriteSheet("/textures/extras/extras1fist.png", 8, 8, 32, scale);
+		//extras1 = new SpriteSheet("/textures/extras/extras1.png", 8, 8, 32, scale);
+		extras1fist = new SpriteSheet("/textures/extras/extras1fist.png", 8, 8, 32, scale); 
 		zombie = new SpriteSheet("/textures/characters/zombie.png", 8, 8, 32, scale); //Zombie sprite!! 
 		mainCharacter = new SpriteSheet("/textures/characters/mainCharacter.png", 8, 8, 32, scale);
 
@@ -185,22 +188,22 @@ public class Judgement extends Game {
 		titleArrow = new AnimatedSprite(this, graphics(), extras1fist, 0, "arrow");
 		titleArrow.loadAnim(4, 10);
 		sprites().add(titleArrow);
-
+		
 		//****Initialize and setup image entities**********************************************************
 		inGameMenu = new ImageEntity(this);
 		titleMenu = new ImageEntity(this);
 		titleMenu2 = new ImageEntity(this);
-		controls = new ImageEntity(this);
-
-		inGameMenu.load("/menus/ingamemenu02.png"); //inventory menu
+        controls = new ImageEntity(this);
+        
+        inGameMenu.load("/menus/ingamemenu02.png"); //inventory menu
 		titleMenu.load("/menus/titlemenu1new.png"); //Bro and Arrow title menu
 		titleMenu2.load("/menus/titlemenu2new.png"); //Bro and Arrow load menu
 		controls.load("/menus/controls1new.png"); //Bro and Arrow ccontrol menu
-
-		//*****Initialize Menus***************************************************************************
+        
+        //*****Initialize Menus***************************************************************************
 		title = new TitleMenu(titleMenu, titleMenu2, controls, titleArrow, SCREENWIDTH, SCREENHEIGHT, simple, bold, bigBold);
 		inMenu = new InGameMenu(inGameMenu, SCREENWIDTH, SCREENHEIGHT);
-
+		
 		//****Initialize and setup Mobs*********************************************************************
 		player = new Hero(this, graphics(), mainCharacter, 40, "mainC");
 		player.setMultBounds(6, 50, 95, 37, 88, 62, 92, 62, 96);
@@ -212,8 +215,9 @@ public class Judgement extends Game {
 		player.setCurrentAttack("sword"); //Starting attack
 		player.setHealth(35); //If you change the starting max health, dont forget to change it in inGameMenu.java max health also
 		player.setSpeed(6.0);
+		player.collider = new Rectangle(player.getSpriteSize(), player.getSpriteSize());
 		sprites().add(player);
-
+		
 		randomNPC = new Mob(this, graphics(), zombie, 40, TYPE.PLAYER, "npc");
 		randomNPC.setMultBounds(6, 50, 95, 37, 88, 62, 92, 62, 96);
 		randomNPC.setMoveAnim(32, 48, 40, 56, 3, 8);
@@ -224,7 +228,7 @@ public class Judgement extends Game {
 		randomNPC.setCurrentAttack("sword"); //Starting attack
 		randomNPC.setHealth(35); //If you change the starting max health, dont forget to change it in inGameMenu.java max health also
 		sprites().add(randomNPC);
-
+		
 		//*****Initialize and setup first Map******************************************************************
 		mapBase = new MapDatabase(this, graphics(), scale);
 		//Get Map from the database
@@ -249,11 +253,11 @@ public class Judgement extends Game {
 			//currentMap.accessTile(i).getEntity().setX(-300);
 			//currentOverlay.accessTile(i).getEntity().setX(-300);
 		}
-
+		
 		requestFocus(); //Make sure the game is focused on
 		start(); //Start the game loop
 	}
-
+	
 	/**************************************************************************** 
 	 * Inherited Method
 	 * Method that updates with the default 'Game.java' loop method
@@ -262,13 +266,15 @@ public class Judgement extends Game {
 	@Override
 	void gameTimedUpdate() {
 		checkInput(); //Check for user input
-
+		
 		//Update certain specifics based on certain game States
 		if(getGameState() == State.TITLE) title.update(option, titleLocation); //Title Menu update
 		if(getGameState() == State.INGAMEMENU) inMenu.update(option, isSaved(), sectionLoc, player.health()); //In Game Menu update
 		updateData(currentMap, currentOverlay, (int) player.getXLoc(), (int) player.getYLoc()); //Update the current file data for saving later
 		if (camFollow) {
 			camera.track(player);
+			attackCounter++; 
+			sheathCounter++; 
 			//camera.setLocation(player.getXLoc(), player.getYLoc());
 			//camera.setLocation(player.getXLoc() + player.getSpriteSize() / 2 - CENTERX, player.getYLoc() + player.getSpriteSize() / 2 - CENTERY);
 		}
@@ -278,7 +284,7 @@ public class Judgement extends Game {
 		//System.out.println(playerX + " " + playerY + " " + mapX + " " + mapY); //print out player coordinates
 		// System.out.println(npcX + " " + npcY); //print out NPC coordinates
 	}
-
+	
 	/**
 	 * Inherited Method
 	 * Obtain the 'graphics' passed down by the super class 'Game.java' and render objects on the screen
@@ -286,17 +292,17 @@ public class Judgement extends Game {
 	@Override
 	void gameRefreshScreen() {		
 		/*********************************************************************
-		 * Rendering images uses the java class Graphics2D
-		 * Each frame the screen needs to be cleared and an image is setup as a back buffer which is brought 
-		 * to the front as a full image at the time it is needed. This way the screen is NOT rendered pixel by 
-		 * pixel in front of the user, which would have made a strange lag effect.
-		 * 
-		 * 'graphics' objects have parameters that can be changed which effect what it renders, two are font and color
-		 **********************************************************************/
+		* Rendering images uses the java class Graphics2D
+		* Each frame the screen needs to be cleared and an image is setup as a back buffer which is brought 
+		* to the front as a full image at the time it is needed. This way the screen is NOT rendered pixel by 
+		* pixel in front of the user, which would have made a strange lag effect.
+		* 
+		* 'graphics' objects have parameters that can be changed which effect what it renders, two are font and color
+		**********************************************************************/
 		Graphics2D g2d = graphics();
 		g2d.clearRect(0, 0, SCREENWIDTH, SCREENHEIGHT);
 		g2d.setFont(simple);
-
+		
 		//GUI rendering for when a specific State is set, only specific groups of data is drawn at specific times
 		if(getGameState() == State.GAME) {
 			//Render the map, the player, any NPCs or Monsters and the player health or status
@@ -323,7 +329,7 @@ public class Judgement extends Game {
 			//Render the title screen
 			title.render(this, g2d, titleX, titleY, titleX2, titleY2);
 		}
-
+		
 		//Render save time specific writing
 		if(option == OPTION.SAVE){
 			drawString(g2d, "Are you sure you\n  would like to save?", 660, 400);
@@ -332,7 +338,7 @@ public class Judgement extends Game {
 			g2d.drawString("Game Saved!", 700, 500);
 		}
 	}
-
+	
 	/*******************************************************************
 	 * The next four methods are inherited
 	 * Currently these methods are not being used, but they have
@@ -404,13 +410,13 @@ public class Judgement extends Game {
 		//Handling very specific collisions
 		if(spr1.spriteType() == TYPE.PLAYER && getGameState() == State.GAME){
 			if(spr2 instanceof Mob) ((Mob) spr2).stop();
-
+			
 			//This piece of code is commented out because I still need the capability of getting a tile from an xand y position
 			//if(((Mob) spr1).attacking() && currentOverlay.getFrontTile((Mob) spr1, playerX, playerY, CENTERX, CENTERY).getBounds().intersects(spr2.getBounds())){
 				//((Mob) spr2).takeDamage(25);
 				//TODO: inside of take damage should be a number dependant on the current weapon equipped, change later
 			//}
-
+			
 			//Handle simple push back collision
 			if(playerX != 0) playerX -= shiftX;
 			if(playerY != 0) playerY -= shiftY;
@@ -418,58 +424,92 @@ public class Judgement extends Game {
 			if(playerY == 0) mapY -= shiftY;
 		}
 	}*/
-
+	
 	void attack(String normalAttack, int MagicDam, int StrengthDeam) {
-
+		
 	}
-
+	
 	void addHitbox(int x, int y, int size) {
-
+		
 	}
-
+	
 	@Override
 	protected void handleCollisions() {
 		for (AnimatedSprite a : sprites()) {
 			if (a instanceof Mob) {
 				Mob mob = (Mob) a;
-				for (Tile b : tiles()) {
-					if (b.isSolid()) {
-						double finalX = mob.getXLoc();
-						double finalY = mob.getYLoc();
-						double right = Math.min(finalX + (double) a.getSpriteSize(), b.getXLoc() + (double) b.getSpriteSize());
-						double left = Math.max(finalX, b.getXLoc());
-						double down = Math.min(finalY + (double) a.getSpriteSize(), b.getYLoc() + (double) b.getSpriteSize());
-						double up = Math.max(finalY, b.getYLoc());
-						double overlapX = right - left;
-						double overlapY = down - up;
-						if (overlapX > 0 && overlapY > 0) {
-
-							//if (mob.getXVel() * mob.getYVel() == 0) {
-							//	mob.setLoc(mob.getXLoc() - overlapX * Math.signum(mob.getXVel()), mob.getYLoc() - overlapY * Math.signum(mob.getYVel()));
-							//}
+				if (mob.collider != null) {
+					for (Tile b : tiles()) {
+						if (b.isSolid()) {
+							double finalX = mob.getXLoc() + mob.getXVel();
+							double finalY = mob.getYLoc() + mob.getYVel();
+							double right = Math.min(finalX + (double) mob.collider.getWidth(), b.getXLoc() + (double) b.getSpriteSize());
+							double left = Math.max(finalX, b.getXLoc());
+							double down = Math.min(finalY + (double) mob.collider.getHeight(), b.getYLoc() + (double) b.getSpriteSize());
+							double up = Math.max(finalY, b.getYLoc());
+							double overlapX = right - left;
+							double overlapY = down - up;
+							if (overlapX > 0 && overlapY > 0) {
+								double centerX = finalX + (double) mob.collider.getWidth() * 0.5;
+								double centerY = finalY + (double) mob.collider.getHeight() * 0.5;
+								double tileCenterX = b.getXLoc() + (double) b.getSpriteSize() * 0.5;
+								double tileCenterY = b.getYLoc() + (double) b.getSpriteSize() * 0.5;
+								double angle = Math.atan2(centerY - tileCenterY, centerX - tileCenterX);
+								double normalX = Math.cos(angle);
+								double normalY = Math.sin(angle);
+								if (Math.abs(normalX) > 1.0 / Math.sqrt(2.0)) {
+									normalX = normalX > 0.0 ? 1.0 : -1.0;
+								} else {
+									normalX = 0.0;
+								}
+								if (Math.abs(normalY) > 1.0 / Math.sqrt(2.0)) {
+									normalY = normalY > 0.0 ? 1.0 : -1.0;
+								} else {
+									normalY = 0.0;
+								}
+								double offX = overlapX * normalX;
+								double offY = overlapY * normalY;
+								double adjX = 0;
+								double adjY = 0;
+								if (Math.abs(mob.getYVel()) > 0) {
+									adjX = mob.getXVel() * overlapY / mob.getYVel() * normalY;
+								}
+								if (Math.abs(mob.getXVel()) > 0) {
+									adjY = mob.getYVel() * overlapX / mob.getXVel() * normalX;
+								}
+								//System.out.println(normalX + ", " + normalY);
+								mob.setLoc(finalX + offX + adjX, finalY + offY + adjY);
+								//mob.setLoc(finalX - fuckX, finalY - offY);
+								
+								//mob.setLoc(mob.getXLoc() + mob.getXVel() - offX, mob.getYLoc());
+								//mob.setLoc(mob.getXLoc(), mob.getYLoc() + mob.getYVel() - offY);
+								//if (mob.getXVel() * mob.getYVel() == 0) {
+								//	mob.setLoc(mob.getXLoc() - overlapX * Math.signum(mob.getXVel()), mob.getYLoc() - overlapY * Math.signum(mob.getYVel()));
+								//}
+							}
 						}
 					}
 				}
 			}
 		}
 	}
-
+	
 	/***********************************************************************
-	 * @param AnimatedSprite
-	 * @param Tile
-	 * @param int
-	 * @param int
-	 * 
-	 * Inherited Method
-	 * Set handling for when a SPRITE contacts a TILE, this is handy for
-	 * dealing with Tiles which contain Events. When specifying a new
-	 * collision method, check for the type of sprite and whether a tile is
-	 * solid or breakable, both, or even if it contains an event. This is
-	 * mandatory because the AxohEngine finds details on collision and then 
-	 * returns it for specific handling by the user.
-	 * 
-	 * For more details on this method, refer to the spriteCollision method above
-	 *************************************************************************/
+	* @param AnimatedSprite
+	* @param Tile
+	* @param int
+	* @param int
+	* 
+	* Inherited Method
+	* Set handling for when a SPRITE contacts a TILE, this is handy for
+	* dealing with Tiles which contain Events. When specifying a new
+	* collision method, check for the type of sprite and whether a tile is
+	* solid or breakable, both, or even if it contains an event. This is
+	* mandatory because the AxohEngine finds details on collision and then 
+	* returns it for specific handling by the user.
+	* 
+	* For more details on this method, refer to the spriteCollision method above
+	*************************************************************************/
 	/*void tileCollision(AnimatedSprite spr, Tile tile, int hitDir, int hitDir2) {
 		double leftOverlap = (spr.getBoundX(hitDir) + spr.getBoundSize() - tile.getBoundX(hitDir2));
 		double rightOverlap = (tile.getBoundX(hitDir2) + tile.getBoundSize() - spr.getBoundX(hitDir));
@@ -499,7 +539,7 @@ public class Judgement extends Game {
 			shiftX = 0;
 			shiftY = -botOverlap;
 		}
-
+		
 		//Deal with a tiles possible event property
 		if(tile.hasEvent()){
 			if(spr.spriteType() == TYPE.PLAYER) {
@@ -535,7 +575,7 @@ public class Judgement extends Game {
 				tile.endEvent();
 			}
 		}//end check events
-
+		
 		//If the tile is solid, move the player off of it and exit method immediately
 		if(spr.spriteType() == TYPE.PLAYER && tile.solid() && getGameState() == State.GAME) {
 			playerX += shiftX;
@@ -554,7 +594,7 @@ public class Judgement extends Game {
 			}
 		}
 	}//end tileCollision method*/
-
+	
 	/*****************************************************************
 	 * @param int
 	 * @param int
@@ -583,14 +623,14 @@ public class Judgement extends Game {
 			else playerY += ya; //down -#
 		}*/
 	}
-
+	
 	/**********************************************************
 	 * The Depths of Judgement Lies Below
 	 * 
 	 *             Key events - Mouse events
 	 *                            
 	 ***********************************************************/
-
+	
 	/****************************************************************
 	 * Check specifically defined key presses which do various things
 	 ****************************************************************/
@@ -599,15 +639,15 @@ public class Judgement extends Game {
 	 *If you want to change when the music starts/stop refer to line 159.
 	 *Make sure to import the exceptions, as well as declaring variables
 	 */
-
+	
 	Clip clip;
 	public void JavaAudioPlaySoundExample (String file)throws IOException, LineUnavailableException, UnsupportedAudioFileException, InterruptedException {
-
+		
 		try {
 			Thread.currentThread().getContextClassLoader();
 			InputStream is = getClass().getResourceAsStream(file);
 			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(is);
-
+			
 			clip = AudioSystem.getClip();
 			clip.open(audioInputStream);
 			clip.start();
@@ -616,14 +656,14 @@ public class Judgement extends Game {
 		catch(Exception ex) {
 			System.out.println("Audio Error");
 			ex.printStackTrace();
-
+			
 		}
 	}
 	public void checkInput() {
 		int xa = 0;
 		int ya = 0;
-
-
+		
+	
 		/********************************************
 		 * Special actions for In Game
 		 *******************************************/
@@ -648,28 +688,28 @@ public class Judgement extends Game {
 				ya += player.getSpeed();
 				// player.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
-
+			
 			//No keys are pressed
 			if(!keyLeft && !keyRight && !keyUp && !keyDown) {
 				// player.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
 			movePlayer(xa, ya);
-
+		
 			//I(Inventory)
 			if(keyInventory) {
 				setGameState(State.INGAMEMENU);
 				inputWait = 10;
 			}
-
+			
 			//SpaceBar(action button)
 			if(keySpace) {
 				player.inOutItem();
 				inputWait = 10;
 			}
-
-
+			
+			
 		}//end in game choices
-
+		
 		/*****************************************
 		 * Special actions for the Title Menu
 		 *****************************************/
@@ -704,23 +744,23 @@ public class Judgement extends Game {
 						inputWait = 5;
 						keyEnter = false;
 					}
-					if(titleLocation == -1){
-						option = OPTION.CONTROLS;
-						titleLocation = 0;
-						inputWait = 5;
-						keyEnter = false;
-					}
+                    if(titleLocation == -1){
+                        option = OPTION.CONTROLS;
+                        titleLocation = 0;
+                        inputWait = 5;
+                        keyEnter = false;
+                    }
 				}
 			}//end option none
-
+			
 			//After choosing an option
 			if(option == OPTION.NEWGAME || option == OPTION.LOADGAME || option == OPTION.CONTROLS){
 				//Backspace(Exit choice)
 				if(keyBack && !title.isGetName()){
 					if(option == OPTION.NEWGAME) titleLocation = 0;
 					if(option == OPTION.LOADGAME) titleLocation = 1;
-					if(option == OPTION.CONTROLS) titleLocation = -1;
-					inputWait = 5;
+                    if(option == OPTION.CONTROLS) titleLocation = -1;
+                    inputWait = 5;
 					titleX2 = 340;
 					titleY2 = 310;
 					option = OPTION.NONE;
@@ -738,22 +778,18 @@ public class Judgement extends Game {
 					inputWait = 7;
 				}
 				//Enter key(Make a choice)
-				//	System.out.println(title.isGetName());
-
-				if(keyDelete && option == OPTION.LOADGAME){
-					title.deleteSave();
-					keyDelete = false;
-				}
+			//	System.out.println(title.isGetName());
+				
 				if(keyEnter && !title.isGetName()) {
-
+					
 					if(option == OPTION.NEWGAME) {
 						if(title.files() != null){ //Make sure the location of a new game is greater than previous ones(Not overwriting)
-
+							
 							if(title.files().length - 1 < titleLocation) {
 								title.enter();
 								titleX2 += 40;
 								inputWait = 5;
-
+								
 							}
 						}
 						if(title.files() == null) { //Final check if there are no files made yet, to make the file somewhere
@@ -773,7 +809,7 @@ public class Judgement extends Game {
 						}
 					}
 				}//end enter key
-
+				
 				//The following is for when a new file needs to be created - Typesetting
 				if(title.isGetName() == true) {
 					title.setFileName(currentChar);
@@ -797,14 +833,14 @@ public class Judgement extends Game {
 						option = OPTION.NONE;
 						setGameState(State.GAME);
 						title.clearFileName();
-
-
+						
+						
 					}
 				}//end get name
 			}//end new/load option
 		}//end title State
-
-
+		
+		
 		/******************************************
 		 * Special actions for In Game Menu
 		 ******************************************/
@@ -864,7 +900,7 @@ public class Judgement extends Game {
 					keyEnter = false;
 				}
 			}
-
+			
 			//Set actions for specific choices in the menu
 			//Items
 			if(option == OPTION.ITEMS) {
@@ -893,7 +929,7 @@ public class Judgement extends Game {
 				//Back space(Go back on your last choice)
 				if(keyBack) confirmUse = false;
 			}
-
+			
 			//Equipment
 			if(option == OPTION.EQUIPMENT) {
 				//W or up arrow(move selection)
@@ -909,7 +945,7 @@ public class Judgement extends Game {
 					inputWait = 8;
 				}
 			}
-
+			
 			//Saving
 			if(option == OPTION.SAVE){
 				//Key enter(Save the file)
@@ -930,22 +966,22 @@ public class Judgement extends Game {
 					setGameState(State.TITLE);
 					keyEnter = false;
 					option = OPTION.NONE;
-
+					
 					//resets the title arrow's positions and animation
 					titleX = 530;
 					titleY = 610;
 					titleX2 = 340;
 					titleY2 = 310;
 					titleLocation = 0;
-
+			
 					titleArrow.loadAnim(4, 10);
 					sprites().add(titleArrow);
-
-
+					
+					
 				}
 			}
-
-
+			
+			
 			//Backspace(if a choice has been made, this backs out of it)
 			if(keyBack && option != OPTION.NONE) {
 				option = OPTION.NONE;
@@ -965,7 +1001,7 @@ public class Judgement extends Game {
 		}
 		inputWait--;
 	}
-
+	
 	/**
 	 * Inherited method
 	 * @param keyCode
@@ -976,64 +1012,63 @@ public class Judgement extends Game {
 	@Override
 	void gameKeyDown(int keyCode) {
 		switch(keyCode) {
-		case KeyEvent.VK_LEFT:
-			keyArrowLeft = true;
-			break;
-		case KeyEvent.VK_A:
-			keyLeft = true;
-			break;
-		case KeyEvent.VK_RIGHT:
-			keyArrowRight = true;
-			break;
-		case KeyEvent.VK_D:
-			keyRight = true;
-			break;
-		case KeyEvent.VK_UP:
-			keyArrowUp = true;
-			break;
-		case KeyEvent.VK_W:
-			keyUp = true;
-			break;
-		case KeyEvent.VK_DOWN:
-			keyArrowDown = true;
-			break;
-		case KeyEvent.VK_S:
-			keyDown = true;
-			break;
-		case KeyEvent.VK_I:
-			keyInventory = true;
-			break;
-		case KeyEvent.VK_F:
-			keyAction = true;
-			if(player.isTakenOut()) {
-				player.attack();
-
-			}
-
-			// Comment out this uselessness...
-			//System.out.println("ACTION THROUGH F KEY");
-			//System.out.println("Entering the battle field...");
-			//player.addAttack("Normal Attack", 0, 5);
-			//System.out.println("The player activated " + player.getCurrentAttack() + "!");
-			//randomNPC.takeDamage(5);
-
-			break;
-		case KeyEvent.VK_ENTER:
-			keyEnter = true;
-			camFollow = !camFollow;
-			break;
-		case KeyEvent.VK_BACK_SPACE:
-			camera.centerTarget = !camera.centerTarget;
-			keyBack = true;
-			break;
-		case KeyEvent.VK_SPACE:
-			keySpace = true;
-			break;
-			
-		case KeyEvent.VK_DELETE:
-			keyDelete = true;
-			break;
-		}
+	        case KeyEvent.VK_LEFT:
+	            keyArrowLeft = true;
+	            break;
+	        case KeyEvent.VK_A:
+	        	keyLeft = true;
+	        	break;
+	        case KeyEvent.VK_RIGHT:
+	            keyArrowRight = true;
+	            break;
+	        case KeyEvent.VK_D:
+	        	keyRight = true;
+	        	break;
+	        case KeyEvent.VK_UP:
+	            keyArrowUp = true;
+	            break;
+	        case KeyEvent.VK_W:
+	        	keyUp = true;
+	        	break;
+	        case KeyEvent.VK_DOWN:
+	            keyArrowDown = true;
+	            break;
+	        case KeyEvent.VK_S:
+	        	keyDown = true;
+	        	break;
+	        case KeyEvent.VK_I:
+	        	keyInventory = true;
+	        	break;
+	        case KeyEvent.VK_F:
+	        	keyAction = true;
+		    	if(player.isTakenOut() && attackCounter > 30) {
+					player.attack();
+					attackCounter = 0; 
+				}
+		   
+		    	// Comment out this uselessness...
+		    	//System.out.println("ACTION THROUGH F KEY");
+		    	//System.out.println("Entering the battle field...");
+		    	//player.addAttack("Normal Attack", 0, 5);
+		    	//System.out.println("The player activated " + player.getCurrentAttack() + "!");
+		    	//randomNPC.takeDamage(5);
+		    	
+	        	break;
+	        case KeyEvent.VK_ENTER:
+	        	keyEnter = true;
+		    	camFollow = !camFollow;
+	        	break;
+	        case KeyEvent.VK_BACK_SPACE:
+	        	camera.centerTarget = !camera.centerTarget;
+	        	keyBack = true;
+	        	break;
+	        case KeyEvent.VK_SPACE:
+	        if (sheathCounter > 50) {
+	        	keySpace = true;
+	        	sheathCounter = 0; 
+	        	break;
+	        }
+	    }
 	}
 
 	/**
@@ -1046,49 +1081,45 @@ public class Judgement extends Game {
 	@Override
 	void gameKeyUp(int keyCode) {
 		switch(keyCode) {
-		case KeyEvent.VK_LEFT:
-			keyArrowLeft = false;
-			break;
-		case KeyEvent.VK_A:
-			keyLeft = false;
-			break;
-		case KeyEvent.VK_RIGHT:
-			keyArrowRight = false;
-			break;
-		case KeyEvent.VK_D:
-			keyRight = false;
-			break;
-		case KeyEvent.VK_UP:
-			keyArrowUp = false;
-			break;
-		case KeyEvent.VK_W:
-			keyUp = false;
-			break;
-		case KeyEvent.VK_DOWN:
-			keyArrowDown = false;
-			break;
-		case KeyEvent.VK_S:
-			keyDown = false;
-			break;
-		case KeyEvent.VK_I:
-			keyInventory = false;
-			break;
-		case KeyEvent.VK_F:
-			keyAction = false;
-			break;
-		case KeyEvent.VK_ENTER:
-			keyEnter = false;
-			break;
-		case KeyEvent.VK_BACK_SPACE:
-			keyBack = false;
-			break;
-		case KeyEvent.VK_SPACE:
-			keySpace = false;
-			break;
-			
-		case KeyEvent.VK_DELETE:
-			keyDelete = false;
-			break;
+        case KeyEvent.VK_LEFT:
+            keyArrowLeft = false;
+            break;
+        case KeyEvent.VK_A:
+        	keyLeft = false;
+        	break;
+        case KeyEvent.VK_RIGHT:
+            keyArrowRight = false;
+            break;
+        case KeyEvent.VK_D:
+        	keyRight = false;
+        	break;
+        case KeyEvent.VK_UP:
+            keyArrowUp = false;
+            break;
+        case KeyEvent.VK_W:
+        	keyUp = false;
+        	break;
+        case KeyEvent.VK_DOWN:
+            keyArrowDown = false;
+            break;
+        case KeyEvent.VK_S:
+        	keyDown = false;
+        	break;
+        case KeyEvent.VK_I:
+	    	keyInventory = false;
+	    	break;
+	    case KeyEvent.VK_F:
+	    	keyAction = false;
+	    	break;
+	    case KeyEvent.VK_ENTER:
+	    	keyEnter = false;
+	    	break;
+	    case KeyEvent.VK_BACK_SPACE:
+	    	keyBack = false;
+	    	break;
+	    case KeyEvent.VK_SPACE:
+	    	keySpace = false;
+	    	break;
 		}
 	}
 
@@ -1115,9 +1146,9 @@ public class Judgement extends Game {
 	@Override
 	void gameMouseMove() {
 	}
-
-	//From the title screen, load a game file by having the super class get the data,
-	// then handling where the pieces of the data will be assigned here.
+	 
+	 //From the title screen, load a game file by having the super class get the data,
+	 // then handling where the pieces of the data will be assigned here.
 	/**
 	 * Inherited Method
 	 * 
@@ -1126,31 +1157,31 @@ public class Judgement extends Game {
 	 * 
 	 * Currently only the player x and y location and the current map is saved
 	 */
+	
+	 @Override
+	 public void loadGame() {
+		 if(currentFile != "") {
+			 System.out.println("Loading...");
+			 loadData(currentFile);
+			 tiles().clear();
+			 sprites().clear();			
 
-	@Override
-	public void loadGame() {
-		if(currentFile != "") {
-			System.out.println("Loading...");
-			loadData(currentFile);
-			tiles().clear();
-			sprites().clear();			
-
-			for(int i = 0; i < mapBase.maps.length; i++){
-				if(mapBase.getMap(i) == null) continue;
-				if(data().getMapName() == mapBase.getMap(i).mapName()) currentMap = mapBase.getMap(i);
-				if(data().getOverlayName() == mapBase.getMap(i).mapName()) currentOverlay = mapBase.getMap(i);
-			}
-			player.setLoc(data().getPlayerX(), data().getPlayerY());
-			sprites().add(player);
-			for(int i = 0; i < currentMap.getWidth() * currentMap.getHeight(); i++){
-				addTile(currentMap.accessTile(i));
-				addTile(currentOverlay.accessTile(i));
-				if(currentMap.accessTile(i).hasMob()) sprites().add(currentMap.accessTile(i).mob());
-				if(currentOverlay.accessTile(i).hasMob()) sprites().add(currentOverlay.accessTile(i).mob());
+			 for(int i = 0; i < mapBase.maps.length; i++){
+				 if(mapBase.getMap(i) == null) continue;
+				 if(data().getMapName() == mapBase.getMap(i).mapName()) currentMap = mapBase.getMap(i);
+				 if(data().getOverlayName() == mapBase.getMap(i).mapName()) currentOverlay = mapBase.getMap(i);
+			 }
+			 player.setLoc(data().getPlayerX(), data().getPlayerY());
+			 sprites().add(player);
+			 for(int i = 0; i < currentMap.getWidth() * currentMap.getHeight(); i++){
+					addTile(currentMap.accessTile(i));
+					addTile(currentOverlay.accessTile(i));
+					if(currentMap.accessTile(i).hasMob()) sprites().add(currentMap.accessTile(i).mob());
+					if(currentOverlay.accessTile(i).hasMob()) sprites().add(currentOverlay.accessTile(i).mob());
 			}//end for
 			System.out.println("Load Successful");
-		} //end file is not empty check
-	} //end load method
+		 } //end file is not empty check
+	 } //end load method
 
 
 } //end class
