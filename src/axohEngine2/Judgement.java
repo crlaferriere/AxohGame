@@ -220,7 +220,8 @@ public class Judgement extends Game {
 		player.setLoc(200,200);
 		player.boundsOffset = new Point(200,200);
 		
-		randomNPC = new Mob(this, graphics(), zombie, 40, TYPE.PLAYER, "npc");
+		
+		randomNPC = new Mob(this, graphics(), zombie, 40, TYPE.NPC, "npc");
 		randomNPC.setMultBounds(6, 50, 95, 37, 88, 62, 92, 62, 96);
 		randomNPC.setMoveAnim(32, 48, 40, 56, 3, 8);
 		randomNPC.addAttack("sword", 0, 5);
@@ -230,6 +231,7 @@ public class Judgement extends Game {
 		randomNPC.setCurrentAttack("sword"); //Starting attack
 		randomNPC.setHealth(35); //If you change the starting max health, dont forget to change it in inGameMenu.java max health also
 		sprites().add(randomNPC);
+		randomNPC.setLoc(201, 201);
 		
 		//*****Initialize and setup first Map******************************************************************
 		mapBase = new MapDatabase(this, graphics(), scale);
@@ -270,6 +272,11 @@ public class Judgement extends Game {
 	@Override
 	void gameTimedUpdate() {
 		checkInput(); //Check for user input
+		double dx = player.getXLoc() - randomNPC.getXLoc(); 
+		double dy = player.getYLoc() - randomNPC.getYLoc(); 
+		dx = Math.min(Math.abs(dx),  player.getSpeed() * 0.5) *Math.signum(dx); 
+		dy = Math.min(Math.abs(dy),  player.getSpeed() * 0.5) *Math.signum(dy); 
+		randomNPC.move(dx, dy);
 		
 		//Update certain specifics based on certain game States
 		if(getGameState() == State.TITLE) title.update(option, titleLocation); //Title Menu update
@@ -316,6 +323,7 @@ public class Judgement extends Game {
 			currentOverlay.render(this, g2d, 0, 0);
 			//player.move(CENTERX + (int) (player.getXLoc() - camera.getX()), CENTERY + (int) (player.getYLoc() - camera.getY()));
 			player.renderMob();
+			randomNPC.renderMob();
 			//g2d.setColor(Color.GREEN);
 			//g2d.drawString("Health: " + inMenu.getHealth(), CENTERX - 650, CENTERY - 370);
 			//g2d.setColor(Color.MAGENTA);
