@@ -52,7 +52,7 @@ public class Attack {
 	
 	//Item specific damage modifiers
 	private int strengthDamage;
-	private int magicDamage; //We don't really need it right now
+	
 	
 	//Four different hitboxes for possible attacks, 1 is the normal amount used
 	//hitBoxX - left/rigth Related to player
@@ -85,7 +85,6 @@ public class Attack {
 	 **************************************************/
 	public Attack(String name, int magicDam, int strengthDam){
 		attackName = name;
-		magicDamage = magicDam;
 		strengthDamage = strengthDam;
 	}
 	
@@ -179,7 +178,6 @@ public class Attack {
 	 *****************************************************************/
 	public int getDamage() {
 		if(strengthDamage != 0) return strengthDamage;
-		if(magicDamage != 0) return magicDamage;
 		return 0;
 	}
 	
