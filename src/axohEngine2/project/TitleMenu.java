@@ -138,10 +138,10 @@ public class TitleMenu {
 			  g2d.setFont(new Font("Arial", Font.PLAIN, 30));
 			  
 			  //story
-			  g2d.drawString("You are a professor who is known for their phenomenal elephant jokes that can just make a student's day.", 120, 160);
-			  g2d.drawString("Little did you know, the more you told these jokes, the more this angered the elephants of the world.", 120, 200);
-			  g2d.drawString("They have come to seek revenge. You must fight the angry elephants in order to survive. Try to stay alive", 120, 240);
-			  g2d.drawString("for as long as you can!", 120, 280);
+			  g2d.drawString("You are a professor who is known for their phenomenal elephant jokes that can just", 120, 160);
+			  g2d.drawString("make a student's day. Little did you know, the more you told these jokes, the more", 120, 200);
+			  g2d.drawString("this angered the elephants of the world. They have come to seek revenge. You must", 120, 240);
+			  g2d.drawString("fight the angry elephants in order to survive. Try to stay alive for as long as you can!", 120, 280);
 
 			  
 			  
