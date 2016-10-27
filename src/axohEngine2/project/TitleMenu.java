@@ -136,6 +136,8 @@ public class TitleMenu {
 			
 			  g2d.drawString("How to Play", 70, 100);
 			  g2d.setFont(new Font("Arial", Font.PLAIN, 40));
+			  
+			  //story
 			  g2d.drawString("You are a professor who is known for their phenomenal elephant jokes that can just make a student's day. Little did you know, the more you told these jokes,", 120, 160);
 			  g2d.drawString("the more this angered the elephants of the world. They have come to seek revenge. You must fight the angry elephants in order to survive. Try to stay alive", 120, 210);
 			  g2d.drawString("for as long as you can!", 120, 260);
