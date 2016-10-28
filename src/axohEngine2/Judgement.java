@@ -488,14 +488,7 @@ public class Judgement extends Game {
 							if (Math.abs(mob.getXVel()) > 0) {
 								adjY = mob.getYVel() * overlapX / mob.getXVel() * normalX;
 							}
-							//System.out.println(normalX + ", " + normalY);
 							mob.setLoc(finalX + offX + adjX, finalY + offY + adjY);
-								
-								//mob.setLoc(mob.getXLoc() + mob.getXVel() - offX, mob.getYLoc());
-								//mob.setLoc(mob.getXLoc(), mob.getYLoc() + mob.getYVel() - offY);
-								//if (mob.getXVel() * mob.getYVel() == 0) {
-								//	mob.setLoc(mob.getXLoc() - overlapX * Math.signum(mob.getXVel()), mob.getYLoc() - overlapY * Math.signum(mob.getYVel()));
-								//}
 							}
 						}
 					}
