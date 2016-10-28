@@ -489,12 +489,15 @@ public class Judgement extends Game {
 								adjY = mob.getYVel() * overlapX / mob.getXVel() * normalX;
 							}
 							mob.setLoc(finalX + offX + adjX, finalY + offY + adjY);
-							}
+							//mob.velocity.setX(mob.getXVel() * Math.abs(normalY) * 0.1);
+							//mob.velocity.setY(mob.getYVel() * Math.abs(normalX) * 0.1);
+							mob.setLoc(mob.getXLoc() + mob.getXVel() * Math.abs(normalY) * 0.1, mob.getYLoc() + mob.getYVel() * Math.abs(normalX) * 0.1);
 						}
 					}
 				}
 			}
 		}
+	}
 
 	
 	/***********************************************************************
