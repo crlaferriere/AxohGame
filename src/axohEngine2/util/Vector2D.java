@@ -54,4 +54,13 @@ public class Vector2D extends Point2D.Double {
 		setY(y);
 	}
 	
+	public void add(Vector2D otherVector) {
+		add(otherVector.getX(), otherVector.getY());
+	}
+	
+	
+	public void add(double x, double y) {
+		setLocation(getX() + x, getY() + y);
+	}
+	
 }
