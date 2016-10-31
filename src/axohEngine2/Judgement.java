@@ -48,6 +48,7 @@ import axohEngine2.project.OPTION;
 import axohEngine2.project.State;
 import axohEngine2.project.TYPE;
 import axohEngine2.project.TitleMenu;
+import axohEngine2.util.Vector2D;
 
 //Start class by also extending the 'Game.java' engine interface
 public class Judgement extends Game {
@@ -450,6 +451,7 @@ public class Judgement extends Game {
 		for (AnimatedSprite a : sprites()) {
 			if (a instanceof Mob) {
 				Mob mob = (Mob) a;
+				// Vector2D v = new Vector2D();
 				for (Tile b : tiles()) {
 					if (b.isSolid()) {
 						double finalX = mob.getXLoc() + mob.getXVel();
@@ -489,12 +491,16 @@ public class Judgement extends Game {
 								adjY = mob.getYVel() * overlapX / mob.getXVel() * normalX;
 							}
 							mob.setLoc(finalX + offX + adjX, finalY + offY + adjY);
+							mob.move(mob.getXVel() * Math.abs(normalY), mob.getYVel() * Math.abs(normalX));
 							//mob.velocity.setX(mob.getXVel() * Math.abs(normalY) * 0.1);
 							//mob.velocity.setY(mob.getYVel() * Math.abs(normalX) * 0.1);
-							mob.setLoc(mob.getXLoc() + mob.getXVel() * Math.abs(normalY) * 0.1, mob.getYLoc() + mob.getYVel() * Math.abs(normalX) * 0.1);
+							//mob.setLoc(mob.getXLoc() + mob.getXVel() * Math.abs(normalY) * 0.1, mob.getYLoc() + mob.getYVel() * Math.abs(normalX) * 0.1);
+							//v.add(overlapX * Math.abs(normalY), overlapY * Math.abs(normalX));
+							//mob.setLoc(mob.getXLoc() + offX, mob.getYLoc() + offY);
 						}
 					}
 				}
+				//mob.setLoc(mob.getXLoc() + v.getX(), mob.getYLoc() + v.getY());
 			}
 		}
 	}
