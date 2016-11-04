@@ -152,7 +152,7 @@ public class Judgement extends Game {
 		//plays music file at the beginning of the game. 
 		//The music file must be .wav file
 		try {
-			JavaAudioPlaySoundExample("/background.wav"); 
+			//JavaAudioPlaySoundExample("/background.wav"); 
 			}
 		catch(Exception ex) {
 			
@@ -182,7 +182,7 @@ public class Judgement extends Game {
 		//****Initialize spriteSheets*********************************************************************
 		//extras1 = new SpriteSheet("/textures/extras/extras1.png", 8, 8, 32, scale);
 		extras1fist = new SpriteSheet("/textures/extras/extras1fist.png", 8, 8, 32, scale); 
-		zombie = new SpriteSheet("/textures/characters/zombie.png", 8, 8, 32, scale); //Zombie sprite!! 
+		zombie = new SpriteSheet("/textures/characters/elephant.png", 8, 8, 32, 6); //Zombie sprite!! 
 		mainCharacter = new SpriteSheet("/textures/characters/mainCharacter.png", 8, 8, 32, scale);
 
 		//****Initialize and setup AnimatedSprites*********************************************************
@@ -217,8 +217,8 @@ public class Judgement extends Game {
 		player.setHealth(35); //If you change the starting max health, dont forget to change it in inGameMenu.java max health also
 		player.setSpeed(6.0);
 		sprites().add(player);
-		player.setLoc(200,200);
-		player.boundsOffset = new Point(200,200);
+		player.setLoc(1250,500);
+		//player.boundsOffset = new Point(200,200);
 		
 		
 		randomNPC = new Mob(this, graphics(), zombie, 40, TYPE.NPC, "npc");
@@ -231,7 +231,7 @@ public class Judgement extends Game {
 		randomNPC.setCurrentAttack("sword"); //Starting attack
 		randomNPC.setHealth(35); //If you change the starting max health, dont forget to change it in inGameMenu.java max health also
 		sprites().add(randomNPC);
-		randomNPC.setLoc(201, 201);
+		randomNPC.setLoc(2300, 100);
 		
 		//*****Initialize and setup first Map******************************************************************
 		mapBase = new MapDatabase(this, graphics(), scale);
@@ -1179,6 +1179,7 @@ public class Judgement extends Game {
 			 }
 			 player.setLoc(data().getPlayerX(), data().getPlayerY());
 			 sprites().add(player);
+			 sprites().add(randomNPC);
 			 for(int i = 0; i < currentMap.getWidth() * currentMap.getHeight(); i++){
 					addTile(currentMap.accessTile(i));
 					addTile(currentOverlay.accessTile(i));
