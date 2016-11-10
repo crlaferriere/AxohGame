@@ -48,6 +48,7 @@ import axohEngine2.project.OPTION;
 import axohEngine2.project.State;
 import axohEngine2.project.TYPE;
 import axohEngine2.project.TitleMenu;
+import axohEngine2.util.RectangleCollider2D;
 import axohEngine2.util.Vector2D;
 
 //Start class by also extending the 'Game.java' engine interface
@@ -454,21 +455,24 @@ public class Judgement extends Game {
 				// Vector2D v = new Vector2D();
 				for (Tile b : tiles()) {
 					if (b.isSolid()) {
-						double finalX = mob.getXLoc() + mob.getXVel();
-						double finalY = mob.getYLoc() + mob.getYVel();
-						double right = Math.min(finalX + (double) a.getSpriteSize(), b.getXLoc() + (double) b.getSpriteSize());
+						double finalX = mob.getXLoc();
+						double finalY = mob.getYLoc();
+						double right = Math.min(finalX + mob.collider.getWidth(), b.getXLoc() + (double) b.getSpriteSize());
 						double left = Math.max(finalX, b.getXLoc());
-						double down = Math.min(finalY + (double) a.getSpriteSize(), b.getYLoc() + (double) b.getSpriteSize());
+						double down = Math.min(finalY + mob.collider.getHeight(), b.getYLoc() + (double) b.getSpriteSize());
 						double up = Math.max(finalY, b.getYLoc());
 						double overlapX = right - left;
 						double overlapY = down - up;
 						if (overlapX > 0 && overlapY > 0) {
-							double centerX = finalX + (double) a.getSpriteSize() * 0.5;
-							double centerY = finalY + (double) a.getSpriteSize() * 0.5;
+							double centerX = finalX + mob.collider.getCenterX() * 0.5;
+							double centerY = finalY + mob.collider.getCenterY() * 0.5;
 							double tileCenterX = b.getXLoc() + (double) b.getSpriteSize() * 0.5;
 							double tileCenterY = b.getYLoc() + (double) b.getSpriteSize() * 0.5;
 							double angle = Math.atan2(centerY - tileCenterY, centerX - tileCenterX);
-							double normalX = Math.cos(angle);
+							Vector2D normal = new RectangleCollider2D(b.getXLoc() - mob.getXLoc(), b.getYLoc() - mob.getYLoc(), (double) b.getSpriteSize(), (double) b.getSpriteSize()).rectCast(mob.collider, mob.getXVel(), mob.getYVel()).getNormal();
+							double normalX = normal.getX();
+							double normalY = normal.getY();
+							/*double normalX = Math.cos(angle);
 							double normalY = Math.sin(angle);
 							if (Math.abs(normalX) > 1.0 / Math.sqrt(2.0)) {
 								normalX = normalX > 0.0 ? 1.0 : -1.0;
@@ -479,7 +483,7 @@ public class Judgement extends Game {
 								normalY = normalY > 0.0 ? 1.0 : -1.0;
 							} else {
 								normalY = 0.0;
-							}
+							}*/
 							double offX = overlapX * normalX;
 							double offY = overlapY * normalY;
 							double adjX = 0;

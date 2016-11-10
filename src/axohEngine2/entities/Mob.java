@@ -23,6 +23,7 @@ import java.util.Random;
 
 import axohEngine2.Judgement;
 import axohEngine2.project.TYPE;
+import axohEngine2.util.RectangleCollider2D;
 import axohEngine2.util.Vector2D;
 
 public class Mob extends AnimatedSprite{
@@ -83,6 +84,8 @@ public class Mob extends AnimatedSprite{
 				(bounds.y + (int) position.getY()) / 64	
 					); }
 	
+	public RectangleCollider2D collider;
+	
 	
 
 	
@@ -114,6 +117,8 @@ public class Mob extends AnimatedSprite{
 		setSpriteType(ai);
 		boundsOffset = new Point(0, 0);
 		bounds = new Rectangle(0, 0, spriteSize, spriteSize);
+		
+		collider = new RectangleCollider2D(0, 0, (double) getSpriteSize() * 0.05, (double) getSpriteSize() * 0.05);
 
 	}
 	
