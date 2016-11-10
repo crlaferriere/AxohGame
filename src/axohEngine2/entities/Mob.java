@@ -454,4 +454,12 @@ public class Mob extends AnimatedSprite{
 		//position.setX(x);
 		//position.setY(y);
 	}
+	
+	public Vector2D getPosition(){
+		return position;
+	}
+	
+	public void setPosition(Vector2D position){
+		this.position = position;
+	}
 }

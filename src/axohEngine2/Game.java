@@ -86,6 +86,8 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	private transient Toolkit tk;
 	private int screenWidth, screenHeight;
 
+	private boolean isSpawning = true;
+
 	//Placeholder variable that is updated in your game, it is for saving later
 	public State state;
 
@@ -285,7 +287,8 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 			if(!gamePaused()) {
 				gameTimedUpdate();
 				updateSprites();
-				handleCollisions();
+				if (!isSpawning)
+					handleCollisions();
 			}
 
 			//Render the graphics
@@ -512,6 +515,10 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 							return true;
 			}
 		return false;
+	}
+
+	public void setIsSpawning(boolean b){
+		isSpawning = b;
 	}
 
 	//protected void updateData2(Map currentMap, Map currentOverlay, int npcX, int npcY) {

@@ -25,7 +25,10 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -36,6 +39,7 @@ import javax.swing.JFrame;
 
 import axohEngine2.entities.AnimatedSprite;
 import axohEngine2.entities.Camera;
+import axohEngine2.entities.Enemy;
 import axohEngine2.entities.Hero;
 import axohEngine2.entities.ImageEntity;
 import axohEngine2.entities.Mob;
@@ -114,6 +118,9 @@ public class Judgement extends Game {
 	private boolean waitOn = false;
 	private int attackCounter; 
 	private int sheathCounter; 
+	private int spawnRate = 10;
+	private int scoreCounter = 0;
+	private LinkedList<Enemy> enemies;
 	//----------- Game  -----------------
 	//SpriteSheets (To be split in to multiple smaller sprites)
 	SpriteSheet extras1;
@@ -138,6 +145,7 @@ public class Judgement extends Game {
 	Mob player;
 	Mob randomNPC;
 	
+	
 	/*********************************************************************** 
 	 * Constructor
 	 * 
@@ -152,7 +160,7 @@ public class Judgement extends Game {
 		//plays music file at the beginning of the game. 
 		//The music file must be .wav file
 		try {
-			//JavaAudioPlaySoundExample("/background.wav"); 
+			JavaAudioPlaySoundExample("/background.wav"); 
 			}
 		catch(Exception ex) {
 			
@@ -179,6 +187,7 @@ public class Judgement extends Game {
 		setGameState(State.TITLE);
 		option = OPTION.NONE;
 		scale = 4;
+		enemies = new LinkedList<Enemy>();
 		//****Initialize spriteSheets*********************************************************************
 		//extras1 = new SpriteSheet("/textures/extras/extras1.png", 8, 8, 32, scale);
 		extras1fist = new SpriteSheet("/textures/extras/extras1fist.png", 8, 8, 32, scale); 
@@ -221,17 +230,7 @@ public class Judgement extends Game {
 		//player.boundsOffset = new Point(200,200);
 		
 		
-		randomNPC = new Mob(this, graphics(), zombie, 40, TYPE.NPC, "npc");
-		randomNPC.setMultBounds(6, 50, 95, 37, 88, 62, 92, 62, 96);
-		randomNPC.setMoveAnim(32, 48, 40, 56, 3, 8);
-		randomNPC.addAttack("sword", 0, 5);
-		randomNPC.getAttack("sword").addMovingAnim(17, 25, 9, 1, 3, 8);
-		randomNPC.getAttack("sword").addAttackAnim(20, 28, 12, 4, 3, 6);
-		randomNPC.getAttack("sword").addInOutAnim(16, 24, 8, 0, 1, 10);
-		randomNPC.setCurrentAttack("sword"); //Starting attack
-		randomNPC.setHealth(35); //If you change the starting max health, dont forget to change it in inGameMenu.java max health also
-		sprites().add(randomNPC);
-		randomNPC.setLoc(2300, 100);
+		
 		
 		//*****Initialize and setup first Map******************************************************************
 		mapBase = new MapDatabase(this, graphics(), scale);
@@ -272,11 +271,15 @@ public class Judgement extends Game {
 	@Override
 	void gameTimedUpdate() {
 		checkInput(); //Check for user input
-		double dx = player.getXLoc() - randomNPC.getXLoc(); 
-		double dy = player.getYLoc() - randomNPC.getYLoc(); 
+		
+		// Makes the enemies follow the player based on their location
+		for (int i = 0; i < enemies.size(); i++ ){
+		double dx = player.getXLoc() - enemies.get(i).getXLoc(); 
+		double dy = player.getYLoc() - enemies.get(i).getYLoc(); 
 		dx = Math.min(Math.abs(dx),  player.getSpeed() * 0.5) *Math.signum(dx); 
 		dy = Math.min(Math.abs(dy),  player.getSpeed() * 0.5) *Math.signum(dy); 
-		randomNPC.move(dx, dy);
+		enemies.get(i).move(dx, dy);
+		}
 		
 		//Update certain specifics based on certain game States
 		if(getGameState() == State.TITLE) title.update(option, titleLocation); //Title Menu update
@@ -294,6 +297,7 @@ public class Judgement extends Game {
 		if(waitOn) wait--;
 		//System.out.println(playerX + " " + playerY + " " + mapX + " " + mapY); //print out player coordinates
 		// System.out.println(npcX + " " + npcY); //print out NPC coordinates
+	
 	}
 	
 	/**
@@ -323,7 +327,9 @@ public class Judgement extends Game {
 			currentOverlay.render(this, g2d, 0, 0);
 			//player.move(CENTERX + (int) (player.getXLoc() - camera.getX()), CENTERY + (int) (player.getYLoc() - camera.getY()));
 			player.renderMob();
-			randomNPC.renderMob();
+			for (int i = 0; i < enemies.size(); i++)
+				enemies.get(i).renderMob();
+			
 			//g2d.setColor(Color.GREEN);
 			//g2d.drawString("Health: " + inMenu.getHealth(), CENTERX - 650, CENTERY - 370);
 			//g2d.setColor(Color.MAGENTA);
@@ -1179,16 +1185,62 @@ public class Judgement extends Game {
 			 }
 			 player.setLoc(data().getPlayerX(), data().getPlayerY());
 			 sprites().add(player);
-			 sprites().add(randomNPC);
+			// sprites().add(randomNPC);
 			 for(int i = 0; i < currentMap.getWidth() * currentMap.getHeight(); i++){
 					addTile(currentMap.accessTile(i));
 					addTile(currentOverlay.accessTile(i));
 					if(currentMap.accessTile(i).hasMob()) sprites().add(currentMap.accessTile(i).mob());
 					if(currentOverlay.accessTile(i).hasMob()) sprites().add(currentOverlay.accessTile(i).mob());
 			}//end for
+			 
+			 //Spawns the enemy every X seconds depending on the score
+			Timer timer = new Timer();
+			 timer.scheduleAtFixedRate(new TimerTask() {
+				  @Override
+				  public void run() {
+					setIsSpawning(true);
+				    spawnEnemy();
+				    setIsSpawning(false);
+				  }
+				}, 0, spawnRate*1000);
+			 
 			System.out.println("Load Successful");
 		 } //end file is not empty check
 	 } //end load method
 
+	public void checkScore(){
+		/**
+		if (score-scoreCounter == 100){
+			spawnRate-= 3;
+			scoreCounter = score;
+	}
+	*/
+	}
+	
+	/************
+	 * spawnEnemy:
+	 * 	Initializes an enemy at a random corner on the map
+	 * 
+	 ************/
+	 public void spawnEnemy(){
+		 Enemy enemy = new Enemy(this, graphics(), zombie, 40, TYPE.NPC, "npc");
+			enemy.setMultBounds(6, 50, 95, 37, 88, 62, 92, 62, 96);
+			enemy.setMoveAnim(32, 48, 40, 56, 3, 8);
+			enemy.addAttack("sword", 0, 5);
+			enemy.getAttack("sword").addMovingAnim(17, 25, 9, 1, 3, 8);
+			enemy.getAttack("sword").addAttackAnim(20, 28, 12, 4, 3, 6);
+			enemy.getAttack("sword").addInOutAnim(16, 24, 8, 0, 1, 10);
+			enemy.setCurrentAttack("sword"); //Starting attack
+			enemy.setHealth(35); //If you change the starting max health, dont forget to change it in inGameMenu.java max health also
+			
+			int[] enemyX = {200, 2100}; // left or right corner
+			int[] enemyY = {200, 800}; //top or bottom corner
+			int randomX = (int)(Math.random()*2);
+			int randomY = (int)(Math.random()*2);
+			enemy.setLoc(enemyX[randomX], enemyY[randomY]); //sets the location of the enemy at a random corner
+			
+			enemies.add(enemy);
+			sprites().add(enemy);
+			}
 
 } //end class
