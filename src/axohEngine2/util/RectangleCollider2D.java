@@ -63,13 +63,32 @@ public class RectangleCollider2D extends Rectangle2D {
 						closestLine = line;
 						closestPoint = p;
 						smallestDistance = potentialSmallestDistance;
-						System.out.println(line);
+					}
+				}
+			}
+		}
+		if (closestPoint == null) {
+			topLeft 	= new Line2D(getX(), getY(), getX() - dx, getY() - dy);
+			topRight 	= new Line2D(getX() + getWidth(), getY(), getX() + getWidth() - dx, getY() - dy);
+			bottomLeft 	= new Line2D(getX(), getY() + getHeight(), getX() - dx, getY() + getHeight() - dy);
+			bottomRight	= new Line2D(getX() + getWidth(), getY() + getHeight(), getX() + getWidth() - dx, getY() + getHeight() - dy);
+			lazy = new Line2D[] { topLeft, topRight, bottomLeft, bottomRight };
+			smallestDistance = 0;
+			for (Line2D line : lazy) {
+				if (intersectsLine(line)) {
+					Point2D[] points = getIntersectedPoints(line);
+					for (Point2D p : points) {
+						double potentialLargestDistance = p.distance(line.getP1());
+						if (potentialLargestDistance > smallestDistance) {
+							closestLine = line;
+							closestPoint = p;
+							smallestDistance = potentialLargestDistance;
+						}
 					}
 				}
 			}
 		}
 		//return new Line2D(closestLine.getP1(), closestPoint);
-		//System.out.println(getIntersectedLines(new Line2D(closestLine.getP1(), closestPoint)).length);
 		return (Surface2D) getIntersectedLines(new Line2D(closestLine.getP1(), closestPoint))[0];
 	}
 	
