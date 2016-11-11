@@ -121,7 +121,7 @@ public class Judgement extends Game {
 	private int attackCounter; 
 	private int sheathCounter; 
 	private int spawnRate = 10;
-	private int scoreCounter = 0;
+	public int score = 0;
 	private LinkedList<Enemy> enemies;
 	//----------- Game  -----------------
 	//SpriteSheets (To be split in to multiple smaller sprites)
@@ -290,7 +290,8 @@ public class Judgement extends Game {
 		if (camFollow) {
 			camera.track(player);
 			attackCounter++; 
-			sheathCounter++; 
+			sheathCounter++;
+			score++;
 			//camera.setLocation(player.getXLoc(), player.getYLoc());
 			//camera.setLocation(player.getXLoc() + player.getSpriteSize() / 2 - CENTERX, player.getYLoc() + player.getSpriteSize() / 2 - CENTERY);
 		}
@@ -332,10 +333,10 @@ public class Judgement extends Game {
 			for (int i = 0; i < enemies.size(); i++)
 				enemies.get(i).renderMob();
 			
-			//g2d.setColor(Color.GREEN);
-			//g2d.drawString("Health: " + inMenu.getHealth(), CENTERX - 650, CENTERY - 370);
-			//g2d.setColor(Color.MAGENTA);
-			//g2d.drawString("Magic: " + inMenu.getMagic(), CENTERX - 650, CENTERY - 310);
+			g2d.setColor(Color.GREEN);
+			g2d.drawString("Health: " + inMenu.getHealth(), CENTERX - 650, CENTERY - 370);
+			g2d.setColor(Color.WHITE);
+			g2d.drawString("Score: " + score/60, CENTERX - 650, CENTERY - 310);
 			//g2d.setColor(Color.RED);
 			//g2d.drawString("NPC health: " + currentOverlay.accessTile(98).mob().health(), CENTERX - 650, CENTERY - 250);
 		}
