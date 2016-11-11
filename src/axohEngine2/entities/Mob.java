@@ -118,7 +118,7 @@ public class Mob extends AnimatedSprite{
 		boundsOffset = new Point(0, 0);
 		bounds = new Rectangle(0, 0, spriteSize, spriteSize);
 		
-		collider = new RectangleCollider2D(0, 0, (double) getSpriteSize() * 0.05, (double) getSpriteSize() * 0.05);
+		collider = new RectangleCollider2D(0, 0, (double) getSpriteSize(), (double) getSpriteSize());
 
 	}
 	

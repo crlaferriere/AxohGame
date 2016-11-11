@@ -459,6 +459,8 @@ public class Judgement extends Game {
 		for (AnimatedSprite a : sprites()) {
 			if (a instanceof Mob) {
 				Mob mob = (Mob) a;
+				//System.out.println(mob.getPosition());
+
 				// Vector2D v = new Vector2D();
 				for (Tile b : tiles()) {
 					if (b.isSolid()) {
@@ -471,15 +473,21 @@ public class Judgement extends Game {
 						double overlapX = right - left;
 						double overlapY = down - up;
 						if (overlapX > 0 && overlapY > 0) {
+							/*Vector2D normal = null;
+							double normalX = 0;
+							double normalY = 0;
+							try {
+								normal = new RectangleCollider2D(b.getXLoc() - finalX, b.getYLoc() - finalY, (double) b.getSpriteSize(), (double) b.getSpriteSize()).rectCast(mob.collider, mob.getXVel(), mob.getYVel()).getNormal();
+								normalX = normal.getX();
+								normalY = normal.getY();
+							} catch(Exception e) {continue;}
+							System.out.println(normal);
 							double centerX = finalX + mob.collider.getCenterX() * 0.5;
 							double centerY = finalY + mob.collider.getCenterY() * 0.5;
 							double tileCenterX = b.getXLoc() + (double) b.getSpriteSize() * 0.5;
 							double tileCenterY = b.getYLoc() + (double) b.getSpriteSize() * 0.5;
 							double angle = Math.atan2(centerY - tileCenterY, centerX - tileCenterX);
-							Vector2D normal = new RectangleCollider2D(b.getXLoc() - mob.getXLoc(), b.getYLoc() - mob.getYLoc(), (double) b.getSpriteSize(), (double) b.getSpriteSize()).rectCast(mob.collider, mob.getXVel(), mob.getYVel()).getNormal();
-							double normalX = normal.getX();
-							double normalY = normal.getY();
-							/*double normalX = Math.cos(angle);
+							double normalX = Math.cos(angle);
 							double normalY = Math.sin(angle);
 							if (Math.abs(normalX) > 1.0 / Math.sqrt(2.0)) {
 								normalX = normalX > 0.0 ? 1.0 : -1.0;
@@ -491,6 +499,14 @@ public class Judgement extends Game {
 							} else {
 								normalY = 0.0;
 							}*/
+							double normalX = 0;
+							double normalY = 0;
+							if (mob.getXLoc() <= mob.collider.getWidth() || mob.getXLoc() >= 2432 - mob.collider.getWidth()) {
+								normalX = mob.getXLoc() <= mob.collider.getWidth() ? 1 : -1;
+							}
+							if (mob.getYLoc() <= mob.collider.getHeight() || mob.getYLoc() >= 1024 - mob.collider.getHeight()) {
+								normalY = mob.getYLoc() <= mob.collider.getHeight() ? 1 : -1;
+							}
 							double offX = overlapX * normalX;
 							double offY = overlapY * normalY;
 							double adjX = 0;
@@ -683,8 +699,8 @@ public class Judgement extends Game {
 		}
 	}
 	public void checkInput() {
-		int xa = 0;
-		int ya = 0;
+		double xa = 0;
+		double ya = 0;
 		
 	
 		/********************************************

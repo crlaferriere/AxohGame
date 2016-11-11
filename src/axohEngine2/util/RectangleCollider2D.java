@@ -75,8 +75,8 @@ public class RectangleCollider2D extends Rectangle2D {
 			lazy = new Line2D[] { topLeft, topRight, bottomLeft, bottomRight };
 			smallestDistance = 0;
 			for (Line2D line : lazy) {
-				if (intersectsLine(line)) {
-					Point2D[] points = getIntersectedPoints(line);
+				if (r.intersectsLine(line)) {
+					Point2D[] points = r.getIntersectedPoints(line);
 					for (Point2D p : points) {
 						double potentialLargestDistance = p.distance(line.getP1());
 						if (potentialLargestDistance > smallestDistance) {
@@ -87,8 +87,11 @@ public class RectangleCollider2D extends Rectangle2D {
 					}
 				}
 			}
+			if (closestPoint == null) {
+				return null;
+			}
+			return ((Surface2D) r.getIntersectedLines(new Line2D(closestLine.getP1(), closestPoint))[0]).inverted();
 		}
-		//return new Line2D(closestLine.getP1(), closestPoint);
 		return (Surface2D) getIntersectedLines(new Line2D(closestLine.getP1(), closestPoint))[0];
 	}
 	

@@ -13,4 +13,8 @@ public class Surface2D extends Line2D {
 		return new Vector2D(normal);
 	}
 	
+	public Surface2D inverted() {
+		return new Surface2D(getX1(), getY1(), getX2(), getY2(), -normal.getX(), -normal.getY());
+	}
+	
 }
