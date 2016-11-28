@@ -13,45 +13,28 @@
 
 package axohEngine2.util;
 
-import java.awt.geom.Point2D;
-
-public class Vector2D extends Point2D.Double {
+public class Vector2D extends Point2D {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private double x;
-	private double y;
-	
 	public Vector2D() {
 		this(0, 0);
+	}
+	
+	public Vector2D(Vector2D normal) {
+		this(normal.getX(), normal.getY());
 	}
 	
 	public Vector2D(double x, double y) {
 		super(x, y);
 	}
 
-	@Override
-	public double getX() {
-		return x;
+	public void add(Vector2D otherVector) {
+		add(otherVector.getX(), otherVector.getY());
 	}
 	
-	public void setX(double x) {
-		this.x = x;
-	}
-
-	@Override
-	public double getY() {
-		return y;
-	}
-	
-	public void setY(double y) {
-		this.y = y;
-	}
-
-	@Override
-	public void setLocation(double x, double y) {
-		setX(x);
-		setY(y);
+	public void add(double x, double y) {
+		setLocation(getX() + x, getY() + y);
 	}
 	
 }

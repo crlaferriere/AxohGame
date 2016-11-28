@@ -16,12 +16,14 @@ package axohEngine2.entities;
 import java.awt.Color;
 //Imports
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.LinkedList;
 import java.util.Random;
 
 import axohEngine2.Judgement;
 import axohEngine2.project.TYPE;
+import axohEngine2.util.RectangleCollider2D;
 import axohEngine2.util.Vector2D;
 
 public class Mob extends AnimatedSprite{
@@ -62,9 +64,6 @@ public class Mob extends AnimatedSprite{
 	private boolean _isAlive;
 	
 	private double speed = 0;
-	
-	public Rectangle collider;
-	
 	public double getXVel() {
 		return velocity.getX();
 	}
@@ -72,6 +71,23 @@ public class Mob extends AnimatedSprite{
 	public double getYVel() {
 		return velocity.getY();
 	}
+	
+	public Rectangle bounds;
+	public Point boundsOffset;
+	public Rectangle currentBounds() { return new Rectangle(bounds.x +   (int) position.getX(), 
+			bounds.y +  (int) position.getY(),
+			bounds.width, bounds.height); }
+	
+	public Point getCurrentTile() { return new Point
+			(
+				(bounds.x  + (int) position.getX()) / 64, 
+				(bounds.y + (int) position.getY()) / 64	
+					); }
+	
+	public RectangleCollider2D collider;
+	
+	
+
 	
 	/************************************************************************
 	 * Constructor
@@ -92,10 +108,17 @@ public class Mob extends AnimatedSprite{
 		this.g2d = g2d;
 		this.ai = ai;
 		
+		boundsOffset = new Point(0, 0);
+		bounds = new Rectangle(0, 0, spriteSize, spriteSize);
+		
 		setName(name);
 		health = 0;
 		setAlive(true);
 		setSpriteType(ai);
+		boundsOffset = new Point(0, 0);
+		bounds = new Rectangle(0, 0, spriteSize, spriteSize);
+		
+		collider = new RectangleCollider2D(0, 0, (double) getSpriteSize(), (double) getSpriteSize());
 
 	}
 	
@@ -419,6 +442,10 @@ public class Mob extends AnimatedSprite{
 		int x = (int) position.getX() - (int) game.camera.getX();
 		int y = (int) position.getY() - (int) game.camera.getY();
 		g2d.drawImage(getImage(), x, y, getSpriteSize(), getSpriteSize(), game);
+		
+		/*int x = (int) position.getX() - (int) game.camera.getX();
+		int y = (int) position.getY() - (int) game.camera.getY();
+		g2d.drawImage(getImage(), x, y, getSpriteSize(), getSpriteSize(), game);
 		if (collider != null) {
 			g2d.setColor(new Color(1f, 0, 0, 0.5f));
 			g2d.fillRect(x, y, (int) collider.getWidth(), (int) collider.getHeight());
@@ -426,10 +453,18 @@ public class Mob extends AnimatedSprite{
 			g2d.drawRect(x, y, getSpriteSize(), getSpriteSize());
 		}
 		g2d.setColor(Color.green);
-		g2d.fillOval(x - 4, y - 4, 8, 8);
+		g2d.fillOval(x - 4, y - 4, 8, 8);*/
 		//g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX(), (int) position.getY() - (int) game.camera.getY(), getSpriteSize(), getSpriteSize(), game);
 		//g2d.drawImage(getImage(), (int) position.getX() - (int) game.camera.getX(), (int) position.getY() - (int) game.camera.getY(), getSpriteSize(), getSpriteSize(), game);
 		//position.setX(x);
 		//position.setY(y);
+	}
+	
+	public Vector2D getPosition(){
+		return position;
+	}
+	
+	public void setPosition(Vector2D position){
+		this.position = position;
 	}
 }

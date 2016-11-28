@@ -20,11 +20,15 @@ import java.awt.Color;
 
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -35,6 +39,7 @@ import javax.swing.JFrame;
 
 import axohEngine2.entities.AnimatedSprite;
 import axohEngine2.entities.Camera;
+import axohEngine2.entities.Enemy;
 import axohEngine2.entities.Hero;
 import axohEngine2.entities.ImageEntity;
 import axohEngine2.entities.Mob;
@@ -47,6 +52,8 @@ import axohEngine2.project.OPTION;
 import axohEngine2.project.State;
 import axohEngine2.project.TYPE;
 import axohEngine2.project.TitleMenu;
+import axohEngine2.util.RectangleCollider2D;
+import axohEngine2.util.Vector2D;
 
 //Start class by also extending the 'Game.java' engine interface
 public class Judgement extends Game {
@@ -113,6 +120,9 @@ public class Judgement extends Game {
 	private boolean waitOn = false;
 	private int attackCounter; 
 	private int sheathCounter; 
+	private int spawnRate = 10;
+	public int score = 0;
+	private LinkedList<Enemy> enemies;
 	//----------- Game  -----------------
 	//SpriteSheets (To be split in to multiple smaller sprites)
 	SpriteSheet extras1;
@@ -137,6 +147,7 @@ public class Judgement extends Game {
 	Mob player;
 	Mob randomNPC;
 	
+	
 	/*********************************************************************** 
 	 * Constructor
 	 * 
@@ -151,7 +162,7 @@ public class Judgement extends Game {
 		//plays music file at the beginning of the game. 
 		//The music file must be .wav file
 		try {
-		//	JavaAudioPlaySoundExample("/over2.wav"); 
+			JavaAudioPlaySoundExample("/background.wav"); 
 			}
 		catch(Exception ex) {
 			
@@ -178,10 +189,11 @@ public class Judgement extends Game {
 		setGameState(State.TITLE);
 		option = OPTION.NONE;
 		scale = 4;
+		enemies = new LinkedList<Enemy>();
 		//****Initialize spriteSheets*********************************************************************
 		//extras1 = new SpriteSheet("/textures/extras/extras1.png", 8, 8, 32, scale);
 		extras1fist = new SpriteSheet("/textures/extras/extras1fist.png", 8, 8, 32, scale); 
-		zombie = new SpriteSheet("/textures/characters/zombie.png", 8, 8, 32, scale); //Zombie sprite!! 
+		zombie = new SpriteSheet("/textures/characters/elephant.png", 8, 8, 32, 6); //Zombie sprite!! 
 		mainCharacter = new SpriteSheet("/textures/characters/mainCharacter.png", 8, 8, 32, scale);
 
 		//****Initialize and setup AnimatedSprites*********************************************************
@@ -215,37 +227,32 @@ public class Judgement extends Game {
 		player.setCurrentAttack("sword"); //Starting attack
 		player.setHealth(35); //If you change the starting max health, dont forget to change it in inGameMenu.java max health also
 		player.setSpeed(6.0);
-		player.collider = new Rectangle(player.getSpriteSize(), player.getSpriteSize());
 		sprites().add(player);
+		player.setLoc(1250,500);
+		//player.boundsOffset = new Point(200,200);
 		
-		randomNPC = new Mob(this, graphics(), zombie, 40, TYPE.PLAYER, "npc");
-		randomNPC.setMultBounds(6, 50, 95, 37, 88, 62, 92, 62, 96);
-		randomNPC.setMoveAnim(32, 48, 40, 56, 3, 8);
-		randomNPC.addAttack("sword", 0, 5);
-		randomNPC.getAttack("sword").addMovingAnim(17, 25, 9, 1, 3, 8);
-		randomNPC.getAttack("sword").addAttackAnim(20, 28, 12, 4, 3, 6);
-		randomNPC.getAttack("sword").addInOutAnim(16, 24, 8, 0, 1, 10);
-		randomNPC.setCurrentAttack("sword"); //Starting attack
-		randomNPC.setHealth(35); //If you change the starting max health, dont forget to change it in inGameMenu.java max health also
-		sprites().add(randomNPC);
+		
+		
 		
 		//*****Initialize and setup first Map******************************************************************
 		mapBase = new MapDatabase(this, graphics(), scale);
 		//Get Map from the database
 		for(int i = 0; i < mapBase.maps.length; i++){
 			if(mapBase.getMap(i) == null) continue;
+			if(mapBase.getMap(i).mapName() == "arena") currentMap = mapBase.getMap(i);
+			if(mapBase.getMap(i).mapName() == "arenaO") currentOverlay = mapBase.getMap(i);
 			//remember to edit these lines of code as well as the map sprites in the MapDatabase.java class
-			if(mapBase.getMap(i).mapName() == "city") currentMap = mapBase.getMap(i); 
+			/*if(mapBase.getMap(i).mapName() == "city") currentMap = mapBase.getMap(i); 
 			if(mapBase.getMap(i).mapName() == "cityO") currentOverlay = mapBase.getMap(i);	
 			if(mapBase.getMap(i).mapName() == "houses") currentMap = mapBase.getMap(i);
 			if(mapBase.getMap(i).mapName() == "housesO") currentOverlay = mapBase.getMap(i);
 			if(mapBase.getMap(i).mapName() == "insideHouse") currentMap = mapBase.getMap(i);
 			if(mapBase.getMap(i).mapName() == "insideHouseO") currentOverlay = mapBase.getMap(i);
 			if(mapBase.getMap(i).mapName() == "QU") currentMap = mapBase.getMap(i);
-			if(mapBase.getMap(i).mapName() == "QUO") currentOverlay = mapBase.getMap(i);
+			if(mapBase.getMap(i).mapName() == "QUO") currentOverlay = mapBase.getMap(i);*/
 		}
 		//Add the tiles from the map to be updated each system cycle
-		for(int i = 0; i < currentMap.getHeight() * currentMap.getHeight(); i++){
+		for(int i = 0; i < currentMap.getWidth() * currentMap.getHeight(); i++){
 			addTile(currentMap.accessTile(i));
 			addTile(currentOverlay.accessTile(i));
 			if(currentMap.accessTile(i).hasMob()) sprites().add(currentMap.accessTile(i).mob());
@@ -267,6 +274,15 @@ public class Judgement extends Game {
 	void gameTimedUpdate() {
 		checkInput(); //Check for user input
 		
+		// Makes the enemies follow the player based on their location
+		for (int i = 0; i < enemies.size(); i++ ){
+		double dx = player.getXLoc() - enemies.get(i).getXLoc(); 
+		double dy = player.getYLoc() - enemies.get(i).getYLoc(); 
+		dx = Math.min(Math.abs(dx),  player.getSpeed() * 0.5) *Math.signum(dx); 
+		dy = Math.min(Math.abs(dy),  player.getSpeed() * 0.5) *Math.signum(dy); 
+		enemies.get(i).move(dx, dy);
+		}
+		
 		//Update certain specifics based on certain game States
 		if(getGameState() == State.TITLE) title.update(option, titleLocation); //Title Menu update
 		if(getGameState() == State.INGAMEMENU) inMenu.update(option, isSaved(), sectionLoc, player.health()); //In Game Menu update
@@ -274,7 +290,8 @@ public class Judgement extends Game {
 		if (camFollow) {
 			camera.track(player);
 			attackCounter++; 
-			sheathCounter++; 
+			sheathCounter++;
+			score++;
 			//camera.setLocation(player.getXLoc(), player.getYLoc());
 			//camera.setLocation(player.getXLoc() + player.getSpriteSize() / 2 - CENTERX, player.getYLoc() + player.getSpriteSize() / 2 - CENTERY);
 		}
@@ -283,6 +300,7 @@ public class Judgement extends Game {
 		if(waitOn) wait--;
 		//System.out.println(playerX + " " + playerY + " " + mapX + " " + mapY); //print out player coordinates
 		// System.out.println(npcX + " " + npcY); //print out NPC coordinates
+	
 	}
 	
 	/**
@@ -312,10 +330,13 @@ public class Judgement extends Game {
 			currentOverlay.render(this, g2d, 0, 0);
 			//player.move(CENTERX + (int) (player.getXLoc() - camera.getX()), CENTERY + (int) (player.getYLoc() - camera.getY()));
 			player.renderMob();
-			//g2d.setColor(Color.GREEN);
-			//g2d.drawString("Health: " + inMenu.getHealth(), CENTERX - 650, CENTERY - 370);
-			//g2d.setColor(Color.MAGENTA);
-			//g2d.drawString("Magic: " + inMenu.getMagic(), CENTERX - 650, CENTERY - 310);
+			for (int i = 0; i < enemies.size(); i++)
+				enemies.get(i).renderMob();
+			
+			g2d.setColor(Color.GREEN);
+			g2d.drawString("Health: " + inMenu.getHealth(), CENTERX - 650, CENTERY - 370);
+			g2d.setColor(Color.WHITE);
+			g2d.drawString("Score: " + score/60, CENTERX - 650, CENTERY - 310);
 			//g2d.setColor(Color.RED);
 			//g2d.drawString("NPC health: " + currentOverlay.accessTile(98).mob().health(), CENTERX - 650, CENTERY - 250);
 		}
@@ -438,61 +459,79 @@ public class Judgement extends Game {
 		for (AnimatedSprite a : sprites()) {
 			if (a instanceof Mob) {
 				Mob mob = (Mob) a;
-				if (mob.collider != null) {
-					for (Tile b : tiles()) {
-						if (b.isSolid()) {
-							double finalX = mob.getXLoc() + mob.getXVel();
-							double finalY = mob.getYLoc() + mob.getYVel();
-							double right = Math.min(finalX + (double) mob.collider.getWidth(), b.getXLoc() + (double) b.getSpriteSize());
-							double left = Math.max(finalX, b.getXLoc());
-							double down = Math.min(finalY + (double) mob.collider.getHeight(), b.getYLoc() + (double) b.getSpriteSize());
-							double up = Math.max(finalY, b.getYLoc());
-							double overlapX = right - left;
-							double overlapY = down - up;
-							if (overlapX > 0 && overlapY > 0) {
-								double centerX = finalX + (double) mob.collider.getWidth() * 0.5;
-								double centerY = finalY + (double) mob.collider.getHeight() * 0.5;
-								double tileCenterX = b.getXLoc() + (double) b.getSpriteSize() * 0.5;
-								double tileCenterY = b.getYLoc() + (double) b.getSpriteSize() * 0.5;
-								double angle = Math.atan2(centerY - tileCenterY, centerX - tileCenterX);
-								double normalX = Math.cos(angle);
-								double normalY = Math.sin(angle);
-								if (Math.abs(normalX) > 1.0 / Math.sqrt(2.0)) {
-									normalX = normalX > 0.0 ? 1.0 : -1.0;
-								} else {
-									normalX = 0.0;
-								}
-								if (Math.abs(normalY) > 1.0 / Math.sqrt(2.0)) {
-									normalY = normalY > 0.0 ? 1.0 : -1.0;
-								} else {
-									normalY = 0.0;
-								}
-								double offX = overlapX * normalX;
-								double offY = overlapY * normalY;
-								double adjX = 0;
-								double adjY = 0;
-								if (Math.abs(mob.getYVel()) > 0) {
-									adjX = mob.getXVel() * overlapY / mob.getYVel() * normalY;
-								}
-								if (Math.abs(mob.getXVel()) > 0) {
-									adjY = mob.getYVel() * overlapX / mob.getXVel() * normalX;
-								}
-								//System.out.println(normalX + ", " + normalY);
-								mob.setLoc(finalX + offX + adjX, finalY + offY + adjY);
-								//mob.setLoc(finalX - fuckX, finalY - offY);
-								
-								//mob.setLoc(mob.getXLoc() + mob.getXVel() - offX, mob.getYLoc());
-								//mob.setLoc(mob.getXLoc(), mob.getYLoc() + mob.getYVel() - offY);
-								//if (mob.getXVel() * mob.getYVel() == 0) {
-								//	mob.setLoc(mob.getXLoc() - overlapX * Math.signum(mob.getXVel()), mob.getYLoc() - overlapY * Math.signum(mob.getYVel()));
-								//}
+				//System.out.println(mob.getPosition());
+
+				// Vector2D v = new Vector2D();
+				for (Tile b : tiles()) {
+					if (b.isSolid()) {
+						double finalX = mob.getXLoc();
+						double finalY = mob.getYLoc();
+						double right = Math.min(finalX + mob.collider.getWidth(), b.getXLoc() + (double) b.getSpriteSize());
+						double left = Math.max(finalX, b.getXLoc());
+						double down = Math.min(finalY + mob.collider.getHeight(), b.getYLoc() + (double) b.getSpriteSize());
+						double up = Math.max(finalY, b.getYLoc());
+						double overlapX = right - left;
+						double overlapY = down - up;
+						if (overlapX > 0 && overlapY > 0) {
+							/*Vector2D normal = null;
+							double normalX = 0;
+							double normalY = 0;
+							try {
+								normal = new RectangleCollider2D(b.getXLoc() - finalX, b.getYLoc() - finalY, (double) b.getSpriteSize(), (double) b.getSpriteSize()).rectCast(mob.collider, mob.getXVel(), mob.getYVel()).getNormal();
+								normalX = normal.getX();
+								normalY = normal.getY();
+							} catch(Exception e) {continue;}
+							System.out.println(normal);
+							double centerX = finalX + mob.collider.getCenterX() * 0.5;
+							double centerY = finalY + mob.collider.getCenterY() * 0.5;
+							double tileCenterX = b.getXLoc() + (double) b.getSpriteSize() * 0.5;
+							double tileCenterY = b.getYLoc() + (double) b.getSpriteSize() * 0.5;
+							double angle = Math.atan2(centerY - tileCenterY, centerX - tileCenterX);
+							double normalX = Math.cos(angle);
+							double normalY = Math.sin(angle);
+							if (Math.abs(normalX) > 1.0 / Math.sqrt(2.0)) {
+								normalX = normalX > 0.0 ? 1.0 : -1.0;
+							} else {
+								normalX = 0.0;
 							}
+							if (Math.abs(normalY) > 1.0 / Math.sqrt(2.0)) {
+								normalY = normalY > 0.0 ? 1.0 : -1.0;
+							} else {
+								normalY = 0.0;
+							}*/
+							double normalX = 0;
+							double normalY = 0;
+							if (mob.getXLoc() <= mob.collider.getWidth() || mob.getXLoc() >= 2432 - mob.collider.getWidth()) {
+								normalX = mob.getXLoc() <= mob.collider.getWidth() ? 1 : -1;
+							}
+							if (mob.getYLoc() <= mob.collider.getHeight() || mob.getYLoc() >= 1024 - mob.collider.getHeight()) {
+								normalY = mob.getYLoc() <= mob.collider.getHeight() ? 1 : -1;
+							}
+							double offX = overlapX * normalX;
+							double offY = overlapY * normalY;
+							double adjX = 0;
+							double adjY = 0;
+							if (Math.abs(mob.getYVel()) > 0) {
+								adjX = mob.getXVel() * overlapY / mob.getYVel() * normalY;
+							}
+							if (Math.abs(mob.getXVel()) > 0) {
+								adjY = mob.getYVel() * overlapX / mob.getXVel() * normalX;
+							}
+							mob.setLoc(finalX + offX + adjX, finalY + offY + adjY);
+							mob.move(mob.getXVel() * Math.abs(normalY), mob.getYVel() * Math.abs(normalX));
+							//mob.velocity.setX(mob.getXVel() * Math.abs(normalY) * 0.1);
+							//mob.velocity.setY(mob.getYVel() * Math.abs(normalX) * 0.1);
+							//mob.setLoc(mob.getXLoc() + mob.getXVel() * Math.abs(normalY) * 0.1, mob.getYLoc() + mob.getYVel() * Math.abs(normalX) * 0.1);
+							//v.add(overlapX * Math.abs(normalY), overlapY * Math.abs(normalX));
+							//mob.setLoc(mob.getXLoc() + offX, mob.getYLoc() + offY);
 						}
 					}
 				}
+				//mob.setLoc(mob.getXLoc() + v.getX(), mob.getYLoc() + v.getY());
 			}
 		}
 	}
+
 	
 	/***********************************************************************
 	* @param AnimatedSprite
@@ -660,8 +699,8 @@ public class Judgement extends Game {
 		}
 	}
 	public void checkInput() {
-		int xa = 0;
-		int ya = 0;
+		double xa = 0;
+		double ya = 0;
 		
 	
 		/********************************************
@@ -1173,15 +1212,62 @@ public class Judgement extends Game {
 			 }
 			 player.setLoc(data().getPlayerX(), data().getPlayerY());
 			 sprites().add(player);
+			// sprites().add(randomNPC);
 			 for(int i = 0; i < currentMap.getWidth() * currentMap.getHeight(); i++){
 					addTile(currentMap.accessTile(i));
 					addTile(currentOverlay.accessTile(i));
 					if(currentMap.accessTile(i).hasMob()) sprites().add(currentMap.accessTile(i).mob());
 					if(currentOverlay.accessTile(i).hasMob()) sprites().add(currentOverlay.accessTile(i).mob());
 			}//end for
+			 
+			 //Spawns the enemy every X seconds depending on the score
+			Timer timer = new Timer();
+			 timer.scheduleAtFixedRate(new TimerTask() {
+				  @Override
+				  public void run() {
+					setIsSpawning(true);
+				    spawnEnemy();
+				    setIsSpawning(false);
+				  }
+				}, 0, spawnRate*1000);
+			 
 			System.out.println("Load Successful");
 		 } //end file is not empty check
 	 } //end load method
 
+	public void checkScore(){
+		/**
+		if (score-scoreCounter == 100){
+			spawnRate-= 3;
+			scoreCounter = score;
+	}
+	*/
+	}
+	
+	/************
+	 * spawnEnemy:
+	 * 	Initializes an enemy at a random corner on the map
+	 * 
+	 ************/
+	 public void spawnEnemy(){
+		 Enemy enemy = new Enemy(this, graphics(), zombie, 40, TYPE.NPC, "npc");
+			enemy.setMultBounds(6, 50, 95, 37, 88, 62, 92, 62, 96);
+			enemy.setMoveAnim(32, 48, 40, 56, 3, 8);
+			enemy.addAttack("sword", 0, 5);
+			enemy.getAttack("sword").addMovingAnim(17, 25, 9, 1, 3, 8);
+			enemy.getAttack("sword").addAttackAnim(20, 28, 12, 4, 3, 6);
+			enemy.getAttack("sword").addInOutAnim(16, 24, 8, 0, 1, 10);
+			enemy.setCurrentAttack("sword"); //Starting attack
+			enemy.setHealth(35); //If you change the starting max health, dont forget to change it in inGameMenu.java max health also
+			
+			int[] enemyX = {200, 2100}; // left or right corner
+			int[] enemyY = {200, 800}; //top or bottom corner
+			int randomX = (int)(Math.random()*2);
+			int randomY = (int)(Math.random()*2);
+			enemy.setLoc(enemyX[randomX], enemyY[randomY]); //sets the location of the enemy at a random corner
+			
+			enemies.add(enemy);
+			sprites().add(enemy);
+			}
 
 } //end class
