@@ -39,6 +39,7 @@ import javax.swing.JFrame;
 
 import axohEngine2.entities.AnimatedSprite;
 import axohEngine2.entities.Camera;
+import axohEngine2.entities.DIRECTION;
 import axohEngine2.entities.Enemy;
 import axohEngine2.entities.Hero;
 import axohEngine2.entities.ImageEntity;
@@ -54,6 +55,7 @@ import axohEngine2.project.TYPE;
 import axohEngine2.project.TitleMenu;
 import axohEngine2.util.RectangleCollider2D;
 import axohEngine2.util.Vector2D;
+import axohEngine2.util.*;
 
 //Start class by also extending the 'Game.java' engine interface
 public class Judgement extends Game {
@@ -146,7 +148,7 @@ public class Judgement extends Game {
 	//Player and NPCs
 	Mob player;
 	Mob randomNPC;
-	
+	Enemy enemy; 
 	
 	/*********************************************************************** 
 	 * Constructor
@@ -276,13 +278,65 @@ public class Judgement extends Game {
 		
 		// Makes the enemies follow the player based on their location
 		for (int i = 0; i < enemies.size(); i++ ){
-		double dx = player.getXLoc() - enemies.get(i).getXLoc(); 
-		double dy = player.getYLoc() - enemies.get(i).getYLoc(); 
-		dx = Math.min(Math.abs(dx),  player.getSpeed() * 0.5) *Math.signum(dx); 
-		dy = Math.min(Math.abs(dy),  player.getSpeed() * 0.5) *Math.signum(dy); 
-		enemies.get(i).move(dx, dy);
+			//if (enemies.get(i) != null) {
+				double dx = player.getXLoc() - enemies.get(i).getXLoc(); 
+				double dy = player.getYLoc() - enemies.get(i).getYLoc(); 
+				dx = Math.min(Math.abs(dx),  player.getSpeed() * 0.5) *Math.signum(dx); 
+				dy = Math.min(Math.abs(dy),  player.getSpeed() * 0.5) *Math.signum(dy); 
+				enemies.get(i).move(dx, dy);
+			//}
 		}
-		
+		if (attackCounter > 15) {
+			player.attacking = false;
+		}
+		if (player.attacking()) {
+		Rectangle2D ass = null;
+		if (player.direction == DIRECTION.LEFT) {
+			ass = new Rectangle2D(player.getXLoc(), player.getYLoc() + 50, player.collider.getWidth(), player.collider.getHeight());
+		}
+		if (player.direction == DIRECTION.RIGHT) {
+			ass = new Rectangle2D(player.getXLoc() + 80, player.getYLoc() + 50, player.collider.getWidth(), player.collider.getHeight());
+		}
+		if (player.direction == DIRECTION.UP) {
+			ass = new Rectangle2D(player.getXLoc() + 40, player.getYLoc() + 80, player.collider.getWidth(), player.collider.getHeight());
+		}
+		if (player.direction == DIRECTION.DOWN) {
+			ass = new Rectangle2D(player.getXLoc() + 40, player.getYLoc(), player.collider.getWidth(), player.collider.getHeight());
+		}
+		for (int i = 0; i < enemies.size(); ++i) {
+			//for (Mob shit : enemies) {
+			Mob shit = enemies.get(i);
+			
+				if (ass.intersects(shit.getXLoc(), shit.getYLoc(), shit.collider.getWidth(), shit.collider.getHeight())) {
+					//System.out.println("REEEEE");
+					enemies.remove(i);
+					--i;
+				}
+			//}
+		}
+		}
+		/*if ((player.getXLoc() - enemy.getXLoc() > -5) && (player.getXLoc() - enemy.getXLoc() <= 0)) {
+			if(player.direction == DIRECTION.LEFT && player.attacking()) {
+				//delete enemy gameobject
+				System.out.println("triggered Left");
+			}
+		} else if ((player.getXLoc() - enemy.getXLoc() >= 0) && (player.getXLoc() - enemy.getXLoc() < 5)) {
+			if(player.direction == DIRECTION.RIGHT && player.attacking()) {
+				//delete enemy gameobject
+				System.out.println("triggered Right");
+			}
+		} else if ((player.getYLoc() - enemy.getYLoc() > -5) && (player.getYLoc() - enemy.getYLoc() <= 0)) {
+				if(player.direction == DIRECTION.UP && player.attacking()) {
+					//delete enemy gameobject
+					System.out.println("triggered Up");
+			}
+		} else if ((player.getYLoc() - enemy.getYLoc() > 0) && (player.getYLoc() - enemy.getYLoc() <= 5)) {
+			if(player.direction == DIRECTION.DOWN && player.attacking()) {
+				//delete enemy gameobject
+				System.out.println("triggered Down");
+			}
+		}*/
+			
 		//Update certain specifics based on certain game States
 		if(getGameState() == State.TITLE) title.update(option, titleLocation); //Title Menu update
 		if(getGameState() == State.INGAMEMENU) inMenu.update(option, isSaved(), sectionLoc, player.health()); //In Game Menu update

@@ -48,15 +48,15 @@ public class Mob extends AnimatedSprite{
 	private int health;
 	private TYPE ai;
 	
-	private boolean attacking;
+	public boolean attacking;
 	private boolean takenOut = false;
 	private Attack currentAttack;
 
 	//moveDir - Direction the mob was moving
 	//direction - The direction the Mob is facing
 	//randomDir - The random choice of a direction used in random movements
-	private DIRECTION moveDir;
-	private DIRECTION direction;
+	public DIRECTION moveDir;
+	public DIRECTION direction;
 	//Graphics and Window objects the mob needs for display
 	protected Graphics2D g2d;
 	protected Judgement game;
