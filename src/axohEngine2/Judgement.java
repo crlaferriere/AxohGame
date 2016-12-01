@@ -290,24 +290,24 @@ public class Judgement extends Game {
 			player.attacking = false;
 		}
 		if (player.attacking()) {
-		Rectangle2D ass = null;
+		Rectangle2D box = null;
 		if (player.direction == DIRECTION.LEFT) {
-			ass = new Rectangle2D(player.getXLoc(), player.getYLoc() + 50, player.collider.getWidth(), player.collider.getHeight());
+			box = new Rectangle2D(player.getXLoc(), player.getYLoc() + 50, player.collider.getWidth(), player.collider.getHeight());
 		}
 		if (player.direction == DIRECTION.RIGHT) {
-			ass = new Rectangle2D(player.getXLoc() + 80, player.getYLoc() + 50, player.collider.getWidth(), player.collider.getHeight());
+			box = new Rectangle2D(player.getXLoc() + 80, player.getYLoc() + 50, player.collider.getWidth(), player.collider.getHeight());
 		}
 		if (player.direction == DIRECTION.UP) {
-			ass = new Rectangle2D(player.getXLoc() + 40, player.getYLoc() + 80, player.collider.getWidth(), player.collider.getHeight());
+			box = new Rectangle2D(player.getXLoc() + 40, player.getYLoc() + 80, player.collider.getWidth(), player.collider.getHeight());
 		}
 		if (player.direction == DIRECTION.DOWN) {
-			ass = new Rectangle2D(player.getXLoc() + 40, player.getYLoc(), player.collider.getWidth(), player.collider.getHeight());
+			box = new Rectangle2D(player.getXLoc() + 40, player.getYLoc(), player.collider.getWidth(), player.collider.getHeight());
 		}
 		for (int i = 0; i < enemies.size(); ++i) {
 			//for (Mob shit : enemies) {
-			Mob shit = enemies.get(i);
+			Mob elephant = enemies.get(i);
 			
-				if (ass.intersects(shit.getXLoc(), shit.getYLoc(), shit.collider.getWidth(), shit.collider.getHeight())) {
+				if (box.intersects(elephant.getXLoc(), elephant.getYLoc(), elephant.collider.getWidth(), elephant.collider.getHeight())) {
 					//System.out.println("REEEEE");
 					enemies.remove(i);
 					--i;
